@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.stav.mobilesafe.activity.AToolsActivity">
+    
+    <TextView
+        style="@style/TitleTheme"
+        android:text="高级工具" />
+
+    <TextView
+        android:id="@+id/tv_query_phone_address"
+        android:text="归属地查询"
+        style="@style/AToolsStyle"/>
+    <TextView
+        android:id="@+id/tv_sms_backup"
+        android:text="短信备份"
+        style="@style/AToolsStyle"/>
+    <ProgressBar
+        android:id="@+id/pb_bar"
+        android:visibility="gone"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:id="@+id/tv_commonnumber_query"
+        android:text="常用号码查询"
+        style="@style/AToolsStyle"/>
+
+    <TextView
+        android:id="@+id/tv_app_lock"
+        android:text="程序锁"
+        style="@style/AToolsStyle"/>
+
+</LinearLayout>

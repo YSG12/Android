@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <!-- -100%p 表示负一屏幕宽度的大小值-->
+<translate xmlns:android="http://schemas.android.com/apk/res/android"
+    android:fromXDelta="-100%p"
+    android:toYDelta="0"
+    android:duration="500">
+
+</translate>

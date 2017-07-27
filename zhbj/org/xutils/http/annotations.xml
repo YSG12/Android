@@ -1,0 +1,5 @@
+<root>
+    <item name='org.xutils.http.HttpMethod'>
+        <annotation name='java.lang.Deprecated' />
+    </item>
+</root>

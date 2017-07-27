@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.stav.mobilesafe.activity.HomeActivity">
+
+    <!-- 将对应属性抽取到样式中去 -->
+    <TextView
+        style="@style/TitleTheme"
+        android:text="功能列表" />
+
+    <!-- android:ellipsize="end" 添加省略点的位置 -->
+    <!-- 跑马灯效果 比需要获取焦点 -->
+    <!-- 自定义控件达到滚动控件（其实就是重写原有的textview，让其能够一直获取焦点） -->
+    <com.stav.mobilesafe.view.FocusTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ellipsize="marquee"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:padding="5dp"
+        android:singleLine="true"
+        android:text="秋天秋天悄悄过去，留下小秘密。压心底压心底就不告诉你，啊啊啊啊啊啊啊啊啊啊。。。"
+        android:textColor="#000"
+        android:textSize="14sp" />
+
+    <LinearLayout
+        android:id="@+id/adLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal">
+    </LinearLayout>
+
+    <!-- android:verticalSpacing="20sp" 指定内部条目竖直方向上的间距 -->
+    <GridView
+        android:id="@+id/gv_home"
+        android:numColumns="3"
+        android:paddingTop="20dp"
+        android:verticalSpacing="30sp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+
+    </GridView>
+
+</LinearLayout>
