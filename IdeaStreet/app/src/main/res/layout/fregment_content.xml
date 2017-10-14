@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <com.stav.ideastreet.ui.view.NoScrollViewPager
+        android:id="@+id/vp_content"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+    </com.stav.ideastreet.ui.view.NoScrollViewPager>
+
+    <RadioGroup
+        android:id="@+id/rg_group"
+        android:background="@mipmap/bottom_tab_bg"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center">
+
+        <RadioButton
+            android:id="@+id/rb_home"
+            android:checked="true"
+            android:drawableTop="@drawable/tab_home_selector"
+            android:text="逛一逛"
+            style="@style/Bottom_Tab_Style" />
+        <RadioButton
+            android:id="@+id/rb_special"
+            android:text="专栏"
+            android:drawableTop="@drawable/tab_special_selector"
+            style="@style/Bottom_Tab_Style"/>
+        <!--<RadioButton-->
+            <!--android:id="@+id/rb_publish"-->
+            <!--android:text="专栏"-->
+            <!--android:drawableTop="@drawable/tab_special_selector"-->
+            <!--style="@style/Bottom_Tab_Style"/>-->
+        <RadioButton
+            android:id="@+id/rb_publish"
+            android:button="@null"
+            android:gravity="center"
+            android:background="@android:color/transparent"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:drawableTop="@drawable/tab_publish_selector"/>
+
+        <RadioButton
+            android:id="@+id/discover"
+            style="@style/Bottom_Tab_Style"
+            android:drawableTop="@drawable/tab_discover_selector"
+            android:text="发现"/>
+
+        <RadioButton
+            android:id="@+id/rb_center"
+            android:text="我"
+            android:drawableTop="@drawable/tab_center_selector"
+            style="@style/Bottom_Tab_Style" />
+
+    </RadioGroup>
+
+</LinearLayout>

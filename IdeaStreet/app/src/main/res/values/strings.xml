@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">陶瓷创意街</string>
+
+    <string-array name="menu_names">
+        <item>用户中心</item>
+        <item>专栏特色</item>
+        <item>发布创意</item>
+        <item>创意展示</item>
+        <item>平台互动</item>
+    </string-array>
+</resources>
