@@ -10,7 +10,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.util.Log;
-import android.view.LayoutInflater;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,12 +22,16 @@ import android.widget.Toast;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.stav.ideastreet.R;
+import com.stav.ideastreet.base.AppContext;
+import com.stav.ideastreet.base.AppManager;
 import com.stav.ideastreet.bean.NewsList;
 import com.stav.ideastreet.fragment.AFragment;
 import com.stav.ideastreet.fragment.BFragment;
 import com.stav.ideastreet.fragment.CFragment;
 import com.stav.ideastreet.fragment.DFragment;
 import com.stav.ideastreet.ui.dialog.QuickOptionDialog;
+import com.stav.ideastreet.utils.ConstantValue;
+import com.stav.ideastreet.utils.PrefUtils;
 import com.stav.ideastreet.utils.XmlUtils;
 
 import org.apache.http.Header;
@@ -37,6 +41,8 @@ import java.lang.reflect.Method;
 
 import cn.sharesdk.onekeyshare.OnekeyShare;
 
+import static com.stav.ideastreet.base.BaseApplication.showToast;
+
 public class MainActivity extends ActionBarActivity {
 
     private ActionBar mActionBar;
@@ -44,11 +50,14 @@ public class MainActivity extends ActionBarActivity {
     private ActionBarDrawerToggle mActionBarDrawerToggle;
     private FragmentTabHost mTabHost;
 
+    //记录用户首次点击返回键的时间
+    private long firstTime=0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setOverflowShowingAlways();
 
+        setOverflowShowingAlways();
 
         setContentView(R.layout.activity_main);
 
@@ -174,10 +183,13 @@ public class MainActivity extends ActionBarActivity {
         }
         switch (item.getItemId()){
             case R.id.search:
-                Toast.makeText(this, "search", 0).show();
+//                Toast.makeText(this, "search", 0).show();
+                AppManager.getAppManager().AppExit(this);
+
                 break;
             case R.id.add:
-                Toast.makeText(this, "add", 0).show();
+                System.exit(0);
+//                Toast.makeText(this, "add", 0).show();
                 break;
             case R.id.send:
                 showShare();
@@ -214,6 +226,24 @@ public class MainActivity extends ActionBarActivity {
         dialog.setCancelable(true);
         dialog.setCanceledOnTouchOutside(true);
         dialog.show();
+    }
+
+    /**
+     * 监听返回--是否退出程序
+     */
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(keyCode==KeyEvent.KEYCODE_BACK && event.getAction()==KeyEvent.ACTION_DOWN){
+            if (System.currentTimeMillis()-firstTime>2000){
+                showToast(R.string.tip_double_click_exit);
+                firstTime=System.currentTimeMillis();
+            }else{
+                finish();
+                System.exit(0);
+            }
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
     private void showShare() {

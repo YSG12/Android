@@ -1,7 +1,9 @@
-package com.stav.ideastreet;
+package com.stav.ideastreet.test;
 
 import android.app.Activity;
 import android.os.Bundle;
+
+import com.stav.ideastreet.R;
 
 public class Main2Activity extends Activity {
 

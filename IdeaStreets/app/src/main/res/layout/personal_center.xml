@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+      android:orientation="vertical"
+      android:background="@color/gray"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent">
+
+
+    <LinearLayout
+          android:visibility="gone"
+          android:id="@+id/ll_unlogin"
+          android:orientation="vertical"
+          android:background="#eff2f6"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:background="@drawable/unlogin_bg"
+            android:layout_width="match_parent"
+            android:layout_height="200dp">
+
+            <ImageView
+                android:background="@drawable/ic_launcher"
+                android:layout_centerInParent="true"
+                android:layout_width="@dimen/space_60"
+                android:layout_height="@dimen/space_60"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/tv_content"
+                android:gravity="center"
+                android:text="登录后，你的创意、个人资料会提示在这里，展示给别人"
+                android:textSize="@dimen/text_size_14"
+                android:layout_width="@dimen/space_200"
+                android:layout_marginBottom="@dimen/space_10"
+                android:layout_height="wrap_content"/>
+
+            <LinearLayout
+                android:layout_below="@+id/tv_content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <Button
+                    android:id="@+id/bt_login"
+                    android:text="登录"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <Button
+                    android:id="@+id/bt_register"
+                    android:text="注册"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+          android:id="@+id/ll_personal_center"
+          android:orientation="vertical"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_marginTop="@dimen/space_10"
+            android:background="#fff"
+            android:padding="@dimen/space_10"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/iv_icon"
+                android:layout_centerVertical="true"
+                android:src="@drawable/ic_launcher"
+                android:layout_width="50dp"
+                android:layout_height="50dp"/>
+
+            <TextView
+                android:id="@+id/tv_user"
+                android:layout_toRightOf="@id/iv_icon"
+                android:layout_marginTop="@dimen/space_2"
+                android:layout_marginLeft="@dimen/space_10"
+                android:textSize="@dimen/text_size_20"
+                android:textColor="@color/black"
+                android:text="stav"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:layout_toRightOf="@id/iv_icon"
+                android:layout_below="@id/tv_user"
+                android:textSize="@dimen/text_size_14"
+                android:layout_marginLeft="@dimen/space_10"
+                android:textColor="@color/gray"
+                android:id="@+id/tv_intro"
+                android:text="我就是自己的神!"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <ImageButton
+                android:layout_alignParentRight="true"
+                android:id="@+id/ib_qrcode"
+                android:scaleType="fitXY"
+                android:background="@null"
+                android:layout_centerVertical="true"
+                android:src="@drawable/qr_code"
+                android:layout_width="40dp"
+                android:layout_height="40dp"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_notice"
+            android:layout_marginTop="@dimen/space_10"
+            android:background="#fff"
+            android:padding="@dimen/space_10"
+            android:clickable="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/iv_notice"
+                android:background="@drawable/drawer_menu_icon_quest_secletor"
+                android:layout_width="@dimen/space_30"
+                android:layout_height="@dimen/space_30"/>
+
+            <TextView
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/iv_notice"
+                android:layout_marginLeft="@dimen/space_6"
+                android:id="@+id/tv_notice"
+                android:text="@string/my_notice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <ImageView
+                android:layout_alignParentRight="true"
+                android:background="@drawable/ic_diary_forward_secletor"
+                android:layout_centerVertical="true"
+                android:layout_width="@dimen/space_20"
+                android:layout_height="@dimen/space_20"/>
+
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_infomation"
+            android:layout_marginTop="@dimen/space_10"
+            android:background="#fff"
+            android:padding="@dimen/space_10"
+            android:clickable="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/iv_infomation"
+                android:background="@drawable/drawer_menu_icon_blog_secletor"
+                android:layout_width="@dimen/space_30"
+                android:layout_height="@dimen/space_30"/>
+
+            <TextView
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/iv_infomation"
+                android:layout_marginLeft="@dimen/space_6"
+                android:id="@+id/tv_infomation"
+                android:text="@string/my_infomation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <ImageView
+                android:layout_alignParentRight="true"
+                android:background="@drawable/ic_diary_forward_secletor"
+                android:layout_centerVertical="true"
+                android:layout_width="@dimen/space_20"
+                android:layout_height="@dimen/space_20"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_settings"
+            android:layout_marginTop="@dimen/space_10"
+            android:background="#fff"
+            android:clickable="true"
+            android:padding="@dimen/space_10"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/iv_settings"
+                android:background="@drawable/drawer_menu_icon_setting_secletor"
+                android:layout_width="@dimen/space_30"
+                android:layout_height="@dimen/space_30"/>
+
+            <TextView
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/iv_settings"
+                android:layout_marginLeft="@dimen/space_6"
+                android:id="@+id/tv_settings"
+                android:text="@string/my_enshrine"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <ImageView
+                android:layout_alignParentRight="true"
+                android:background="@drawable/ic_diary_forward_secletor"
+                android:layout_centerVertical="true"
+                android:layout_width="@dimen/space_20"
+                android:layout_height="@dimen/space_20"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_enshrine"
+            android:layout_marginTop="@dimen/space_10"
+            android:background="#fff"
+            android:clickable="true"
+            android:padding="@dimen/space_10"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/iv_enshrine"
+                android:background="@drawable/drawer_menu_icon_setting_secletor"
+                android:layout_width="@dimen/space_30"
+                android:layout_height="@dimen/space_30"/>
+
+            <TextView
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/iv_enshrine"
+                android:layout_marginLeft="@dimen/space_6"
+                android:id="@+id/tv_enshrine"
+                android:text="@string/menu_setting"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <ImageView
+                android:layout_alignParentRight="true"
+                android:background="@drawable/ic_diary_forward_secletor"
+                android:layout_centerVertical="true"
+                android:layout_width="@dimen/space_20"
+                android:layout_height="@dimen/space_20"/>
+
+        </RelativeLayout>
+
+        <Button
+            android:layout_marginTop="@dimen/space_10"
+            android:id="@+id/bt_logout"
+            android:layout_width="160dp"
+            android:gravity="center"
+            android:paddingTop="@dimen/space_8"
+            android:paddingBottom="@dimen/space_8"
+            android:text="@string/logout"
+            android:textColor="@android:color/black"
+            android:layout_gravity="center_horizontal"
+            android:textSize="18sp"
+            android:background="@drawable/btn_register_bg"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+</LinearLayout>

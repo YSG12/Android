@@ -284,7 +284,7 @@
     <string name="tip_report_success">举报成功</string>
     <string name="tip_report_faile">举报失败</string>
 
-    <string name="tip_double_click_exit">再次点击退出开源中国</string>
+    <string name="tip_double_click_exit">再次点击退出玩转创意街</string>
 
 
     <string name="team_dynamic">团队动态</string>
@@ -306,4 +306,14 @@
     <string name="drawer_open">open</string>
     <string name="drawer_close">close</string>
     <string name="share">陶瓷创意街</string>
+    <string name="user_name">用户名</string>
+    <string name="user_password">密码</string>
+    <string name="register">注册</string>
+    <string name="user_confirmpassword">请确认密码</string>
+    <string name="user_phone">请输入电话号码</string>
+
+    <string name="my_notice">我的消息</string>
+    <string name="my_infomation">我的资料</string>
+    <string name="my_enshrine">我的收藏</string>
+    <string name="logout">退出登录</string>
 </resources>

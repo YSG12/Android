@@ -71,6 +71,12 @@
     <color name="project_listitem_description">#515151</color>
     <color name="project_listitem_someinfo">#b6b6b6</color>
 
+    <!--注册登录按钮颜色-->
+    <color name="btn_login_normal">#0DB22E</color>
+    <color name="btn_login_pressed">#660DB22E</color>
+    <color name="btn_register_normal">#ffffff</color>
+    <color name="btn_register_pressed">#0DB22E</color>
+
     <!-- 动弹列表背景颜色 -->
     <color name="tweet_bg">#f9f7f7</color>
     <color name="tweet_item_bg">#ffffff</color>

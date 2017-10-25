@@ -1,7 +1,10 @@
 package com.stav.ideastreet.ui.dialog;
 
 import com.stav.ideastreet.R;
+import com.stav.ideastreet.test.Main2Activity;
 import com.stav.ideastreet.ui.NewsDetailActivity;
+import com.stav.ideastreet.utils.UIHelper;
+
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
@@ -29,7 +32,7 @@ public class QuickOptionDialog extends Dialog implements
     }
 
     private OnQuickOptionformClick mListener;
-	private LinearLayout ly_quick_option_text;
+	private LinearLayout ly_quick_option_text, ly_quick_option_album, ly_quick_option_photo;
 
     @SuppressLint("InflateParams")
     private QuickOptionDialog(Context context, int defStyle) {
@@ -38,7 +41,11 @@ public class QuickOptionDialog extends Dialog implements
                 R.layout.dialog_quick_option, null);
         mClose = (ImageView) contentView.findViewById(R.id.iv_close);
         ly_quick_option_text = (LinearLayout) contentView.findViewById(R.id.ly_quick_option_text);
+        ly_quick_option_album = (LinearLayout) contentView.findViewById(R.id.ly_quick_option_album);
+        ly_quick_option_photo = (LinearLayout) contentView.findViewById(R.id.ly_quick_option_photo);
         ly_quick_option_text.setOnClickListener(this);
+        ly_quick_option_album.setOnClickListener(this);
+        ly_quick_option_photo.setOnClickListener(this);
 
         Animation operatingAnim = AnimationUtils.loadAnimation(getContext(),
                 R.anim.quick_option_close);
@@ -94,10 +101,18 @@ public class QuickOptionDialog extends Dialog implements
         case R.id.ly_quick_option_text:
         	getContext().startActivity(new Intent(getContext(),NewsDetailActivity.class));
         	dismiss();
+            break;
+        case R.id.ly_quick_option_album:
+            getContext().startActivity(new Intent(getContext(),Main2Activity.class));
+            dismiss();
+            break;
+        case R.id.ly_quick_option_photo:
+            getContext().startActivity(new Intent(getContext(),Main2Activity.class));
+            dismiss();
+            break;
         default:
             break;
         }
     }
-
 
 }

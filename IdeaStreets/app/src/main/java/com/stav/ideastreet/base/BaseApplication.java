@@ -1,7 +1,5 @@
 package com.stav.ideastreet.base;
 
-import com.stav.ideastreet.R;
-import com.stav.ideastreet.utils.StringUtils;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -19,7 +17,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.stav.ideastreet.R;
+import com.stav.ideastreet.utils.ConstantValue;
+import com.stav.ideastreet.utils.PrefUtils;
+import com.stav.ideastreet.utils.StringUtils;
+
+import cn.bmob.v3.Bmob;
 import cn.jpush.android.api.JPushInterface;
+import rx.Subscription;
+import rx.subscriptions.CompositeSubscription;
 
 @SuppressLint("InflateParams")
 public class BaseApplication extends Application {
@@ -30,7 +36,9 @@ public class BaseApplication extends Application {
 	private static String lastToast = "";
 	private static long lastToastTime;
 
+
 	private static boolean sIsAtLeastGB;
+	public static String APPID = "73be482259546dce10268f6f48349f09";
 
 	static {
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
@@ -42,7 +50,10 @@ public class BaseApplication extends Application {
 	public void onCreate() {
 
 		super.onCreate();
+		//bmob默认初始化
+		Bmob.initialize(this, APPID);
 
+		PrefUtils.setBoolean(getApplicationContext(), ConstantValue.IS_LOGIN,false);
 		JPushInterface.setDebugMode(true);
 		JPushInterface.init(this);
 
@@ -74,6 +85,8 @@ public class BaseApplication extends Application {
 		editor.putString(key, value);
 		apply(editor);
 	}
+
+
 
 	/**
 	 * 读取是否是已读的文章列表

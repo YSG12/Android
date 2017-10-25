@@ -45,35 +45,33 @@ public class NewsDetailActivity extends ActionBarActivity {
 		super.onCreate(savedInstanceState);
 		customActionbar();
 		setContentView(R.layout.newsdetail);
-		initWebView();
-		getDataFromServer();
+//		initWebView();
+//		getDataFromServer();
 	}
 	private void customActionbar() {
 		mActionBar = getSupportActionBar();
 		// 设置使用自定义布局
 		mActionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-		
+
 		View view = View.inflate(this, R.layout.actionbar_custom_backtitle,
 				null);
-		ImageButton back = (ImageButton) view.findViewById(R.id.btn_back);
+		View back = view.findViewById(R.id.btn_back);
 		back.setOnClickListener(new OnClickListener() {
 
-            @Override
-            public void onClick(View v) {
+			@Override
+			public void onClick(View v) {
 				finish();
-				back.setBackgroundResource(R.drawable.actionbar_icon_add);
 			}
-        });
+		});
 		mTvActionTitle = (TextView) view
-                .findViewById(R.id.tv_actionbar_title);
+				.findViewById(R.id.tv_actionbar_title);
 		mTvActionTitle.setText("发表文字");
-		
-		LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT,
-                LayoutParams.MATCH_PARENT);
-		mActionBar.setCustomView(view, params);
 
+		LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT,
+				LayoutParams.MATCH_PARENT);
+		mActionBar.setCustomView(view, params);
 	}
-	
+
 	private void getDataFromServer() {
 		AsyncHttpClient httpClient = new AsyncHttpClient();
 		httpClient.get("http://47.94.129.228/oschina/detail/news_detail/64311.xml", new AsyncHttpResponseHandler() {
@@ -91,6 +89,7 @@ public class NewsDetailActivity extends ActionBarActivity {
 			}
 		});
 	}
+
 	private void initWebView() {
 		mTvTitle = (TextView) findViewById(R.id.tv_title);
 		mTvSource = (TextView) findViewById(R.id.tv_source);
@@ -111,6 +110,7 @@ public class NewsDetailActivity extends ActionBarActivity {
         webView.setWebViewClient(getWebViewClient());
         
     }
+
 	public WebViewClient getWebViewClient() {
 
         return new WebViewClient() {

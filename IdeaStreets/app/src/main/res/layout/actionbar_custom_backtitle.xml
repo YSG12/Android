@@ -12,7 +12,7 @@
         android:contentDescription="@null"
         android:paddingLeft="@dimen/space_1"
         android:paddingRight="@dimen/space_1"
-        android:src="@drawable/ic_drawer" />
+        android:src="@drawable/actionbar_back_icon_normal" />
 
     <View
         android:id="@+id/line"
