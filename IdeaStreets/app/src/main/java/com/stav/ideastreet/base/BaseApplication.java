@@ -91,7 +91,7 @@ public class BaseApplication extends Application {
 	/**
 	 * 读取是否是已读的文章列表
 	 * 
-	 * @param id
+	 * @param
 	 * @return
 	 */
 	public static boolean isOnReadedPostList(String prefFileName, String key) {

@@ -9,7 +9,9 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.stav.ideastreet.R;
+import com.stav.ideastreet.bean.MyUser;
 import com.stav.ideastreet.fragment.DFragment;
+import com.stav.ideastreet.test.Main2Activity;
 import com.stav.ideastreet.utils.ConstantValue;
 import com.stav.ideastreet.utils.PrefUtils;
 
@@ -18,13 +20,20 @@ import org.json.JSONObject;
 
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.LogInListener;
+import cn.bmob.v3.listener.SaveListener;
 import rx.Subscriber;
+import rx.Subscription;
+import rx.subscriptions.CompositeSubscription;
 
+import static com.stav.ideastreet.base.BaseActivity.log;
 import static com.stav.ideastreet.base.BaseApplication.showToast;
 
 public class LoginActivity extends Activity implements View.OnClickListener {
-    private Button btLogin,btRegister;
+    private Button btLogin,btRegister,btSmsLogin;
     private EditText etUsername,etPassword;
+
+    private CompositeSubscription mCompositeSubscription;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,24 +48,63 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         etUsername = (EditText) findViewById(R.id.et_username);
         etPassword = (EditText) findViewById(R.id.et_password);
         btLogin=(Button) findViewById(R.id.bt_login);
+        btSmsLogin=(Button) findViewById(R.id.bt_sms_login);
         btRegister=(Button) findViewById(R.id.bt_register);
 
         btLogin.setOnClickListener(this);
         btRegister.setOnClickListener(this);
+        btSmsLogin.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.bt_login:
-                login();
+                loginByPhonePwd();
                 break;
             case R.id.bt_register:
                 startActivity(new Intent(getApplicationContext(), RegisterActivity.class));
                 break;
+            case R.id.bt_sms_login:
+                startActivity(new Intent(getApplicationContext(), SmsLoginActivity.class));
+                break;
             default:
                 break;
         }
+    }
+
+    /**
+     * 解决Subscription内存泄露问题
+     * @param s
+     */
+    protected void addSubscription(Subscription s) {
+        if (this.mCompositeSubscription == null) {
+            this.mCompositeSubscription = new CompositeSubscription();
+        }
+        this.mCompositeSubscription.add(s);
+    }
+
+    /**
+     * 通过手机号码和密码登录
+     */
+    private void loginByPhonePwd() {
+        String username = etUsername.getText().toString();
+        String password = etPassword.getText().toString();
+        //输入手机号码和密码登录
+        addSubscription(BmobUser.loginByAccount(username, password, new LogInListener<MyUser>() {
+
+            @Override
+            public void done(MyUser user, BmobException e) {
+                if (user != null) {
+                    showToast("登录成功");
+                    log(user.getUsername() + "-" + user.getAge() + "-" + user.getObjectId() + "-" + user.getEmail());
+                    finish();
+                    startActivity(new Intent(getApplicationContext(),MainActivity.class));
+                } else {
+                    showToast("错误码：" + e.getErrorCode() + ",错误原因：" + e.getLocalizedMessage());
+                }
+            }
+        }));
     }
 
     /**
@@ -68,32 +116,34 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         String password = etPassword.getText().toString();
         user.setUsername(username);
         user.setPassword(password);
-        //login回调
-        /*user.login(new SaveListener<BmobUser>() {
 
-			@Override
-			public void done(BmobUser bmobUser, BmobException e) {
-				if(e==null){
-					toast(user.getUsername() + "登陆成功");
-					testGetCurrentUser();
-				}else{
-					loge(e);
-				}
-			}
-		});*/
+
+        Log.e("",username+"---"+password);
+        //login回调
+//        user.login(new SaveListener<BmobUser>() {
+//
+//			@Override
+//			public void done(BmobUser bmobUser, BmobException e) {
+//				if(e==null){
+//					showToast(user.getUsername() + "登陆成功");
+//					testGetCurrentUser();
+//				}else{
+//					Log.e("tag",e+"");
+//				}
+//			}
+//		});
         //v3.5.0开始新增加的rx风格的Api
         user.loginObservable(BmobUser.class).subscribe(new Subscriber<BmobUser>() {
             @Override
             public void onCompleted() {
                 Log.e("","----onCompleted----");
-                startActivity(new Intent(getApplicationContext(),MainActivity.class));
                 finish();
+                startActivity(new Intent(getApplicationContext(),MainActivity.class));
             }
 
             @Override
             public void onError(Throwable e) {
-                Log.e("", String.valueOf(new BmobException(e)));
-
+                Log.e("tag", String.valueOf(new BmobException(e)));
                 showToast("请输入正确的用户名和密码~");
             }
 
@@ -101,10 +151,14 @@ public class LoginActivity extends Activity implements View.OnClickListener {
             public void onNext(BmobUser bmobUser) {
                 showToast(bmobUser.getUsername() + "登陆成功");
                 testGetCurrentUser();
-                startActivity(new Intent(getApplicationContext(),MainActivity.class));
                 finish();
+                startActivity(new Intent(getApplicationContext(),MainActivity.class));
+
             }
         });
+
+
+
     }
 
     /**

@@ -8,6 +8,11 @@
 
     <color name="background_tab_pressed">#6633B5E5</color>
 
+
+    <!-- weibo 按钮 -->
+    <color name="button_press">#F1F1F1</color>
+    <color name="button_text">#000000</color>
+
     <!-- 常用颜色值 -->
     <color name="white40">#40FFFFFF</color>
     <color name="white">#FFFFFF</color>

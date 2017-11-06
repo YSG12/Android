@@ -24,7 +24,6 @@
     <!-- Required -->
     <uses-permission android:name="com.stav.ideastreet.permission.JPUSH_MESSAGE"/>
     <uses-permission android:name="android.permission.RECEIVE_USER_PRESENT"/>
-    <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
@@ -91,7 +90,7 @@
     <application
         android:name=".base.BaseApplication"
         android:allowBackup="true"
-        android:icon="@drawable/ic_launcher"
+        android:icon="@drawable/logo_2"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:theme="@style/ActionBarBaseTheme">
@@ -295,10 +294,13 @@
             android:name="JPUSH_APPKEY"
             android:value="0f3b8c7b95276028a92b6f48"/>
 
-        <activity android:name=".test.Main2Activity"></activity>
-        <activity android:name=".ui.LoginActivity"></activity>
-        <activity android:name=".ui.RegisterActivity"></activity>
-        <activity android:name=".ui.NewsDetailActivity"></activity>
+        <activity android:name=".test.Main2Activity"/>
+        <activity android:name=".ui.LoginActivity"/>
+        <activity android:name=".ui.RegisterActivity"/>
+        <activity android:name=".ui.NewsDetailActivity"/>
+        <activity android:name=".ui.CommentListActivity"/>
+        <activity android:name=".ui.SmsLoginActivity">
+        </activity>
     </application>
 
 </manifest>

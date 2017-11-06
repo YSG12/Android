@@ -41,7 +41,8 @@ public class AFragment extends Fragment {
 		// 设置滑动条的高度
 		tabs.setIndicatorHeight(3);
 		// 设置文字大小
-		tabs.setTextSize(40);
+		int size= (int) this.getResources().getDimension(R.dimen.text_size_title);
+		tabs.setTextSize(size);
 		// 设置文字字体
 		tabs.setTypeface(Typeface.DEFAULT, Typeface.BOLD);
 		
@@ -74,23 +75,22 @@ public class AFragment extends Fragment {
 
 		@Override
 		public boolean isViewFromObject(View arg0, Object arg1) {
-			return arg0==arg1;
-		}
+				return arg0==arg1;
+			}
 
-		@Override
-		public void destroyItem(ViewGroup container, int position, Object object) {
-			container.removeView((View) object);
-		}
+			@Override
+			public void destroyItem(ViewGroup container, int position, Object object) {
+				container.removeView((View) object);
+			}
 
-		@Override
-		public Object instantiateItem(ViewGroup container, int position) {
-			TextView textView = new TextView(getActivity());
-			textView.setTextSize(18);
-			textView.setText(strings[position]);
-			container.addView(textView);
-			return textView;
+			@Override
+			public Object instantiateItem(ViewGroup container, int position) {
+				TextView textView = new TextView(getActivity());
+				textView.setTextSize(18);
+				textView.setText(strings[position]);
+				container.addView(textView);
+				return textView;
 		}
-		
 		
 	}
 }

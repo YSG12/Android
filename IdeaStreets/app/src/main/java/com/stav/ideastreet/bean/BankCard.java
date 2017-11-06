@@ -1,4 +1,4 @@
-package com.stav.ideastreet.ui.bean;
+package com.stav.ideastreet.bean;
 
 /**
  * @author stav

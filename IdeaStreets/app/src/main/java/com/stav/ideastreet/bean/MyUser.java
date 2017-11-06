@@ -1,8 +1,7 @@
-package com.stav.ideastreet.ui.bean;
-
-import com.stav.ideastreet.bean.Person;
+package com.stav.ideastreet.bean;
 
 import java.util.List;
+
 import cn.bmob.v3.BmobUser;
 
 /**

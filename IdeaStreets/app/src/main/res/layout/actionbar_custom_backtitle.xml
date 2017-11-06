@@ -44,4 +44,15 @@
 
     </LinearLayout>
 
+    <Button
+        android:id="@+id/ib_publish"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        android:background="@null"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_size_18"
+        android:text="发表"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
 </RelativeLayout>

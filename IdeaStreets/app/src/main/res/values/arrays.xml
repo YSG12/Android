@@ -2,10 +2,13 @@
 <resources>
 
     <string-array name="news_viewpage_arrays">
-        <item>资讯</item>
-        <item>热点</item>
-        <item>博客</item>
-        <item>推荐</item>
+        <item>创意饰品</item>
+        <item>创意美食</item>
+        <item>创意设计</item>
+        <item>创意陶瓷</item>
+        <item>创意礼物</item>
+        <item>创意家居</item>
+        <item>人才市场</item>
     </string-array>
     <string-array name="tweets_viewpage_arrays">
         <item>最新动弹</item>

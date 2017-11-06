@@ -22,16 +22,12 @@ import android.widget.Toast;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.stav.ideastreet.R;
-import com.stav.ideastreet.base.AppContext;
-import com.stav.ideastreet.base.AppManager;
 import com.stav.ideastreet.bean.NewsList;
 import com.stav.ideastreet.fragment.AFragment;
 import com.stav.ideastreet.fragment.BFragment;
-import com.stav.ideastreet.fragment.CFragment;
+import com.stav.ideastreet.fragment.DiscoveryFragment;
 import com.stav.ideastreet.fragment.DFragment;
 import com.stav.ideastreet.ui.dialog.QuickOptionDialog;
-import com.stav.ideastreet.utils.ConstantValue;
-import com.stav.ideastreet.utils.PrefUtils;
 import com.stav.ideastreet.utils.XmlUtils;
 
 import org.apache.http.Header;
@@ -89,8 +85,8 @@ public class MainActivity extends ActionBarActivity {
         Class[] clz = new Class[]{
                 AFragment.class,
                 BFragment.class,
-                CFragment.class,
-                CFragment.class,
+                DiscoveryFragment.class,
+                DiscoveryFragment.class,
                 DFragment.class
         };
 
@@ -183,8 +179,8 @@ public class MainActivity extends ActionBarActivity {
         }
         switch (item.getItemId()){
             case R.id.search:
-//                Toast.makeText(this, "search", 0).show();
-                AppManager.getAppManager().AppExit(this);
+                Toast.makeText(this, "search", 0).show();
+//                AppManager.getAppManager().AppExit(this);
 
                 break;
             case R.id.add:
@@ -250,25 +246,26 @@ public class MainActivity extends ActionBarActivity {
         OnekeyShare oks = new OnekeyShare();
         //关闭sso授权
         oks.disableSSOWhenAuthorize();
+
         // 分享时Notification的图标和文字  2.5.9以后的版本不     调用此方法
-        //oks.setNotification(R.drawable.ic_launcher, getString(R.string.app_name));
+//        oks.setNotification(R.drawable.ic_launcher, getString(R.string.app_name));
         // title标题，印象笔记、邮箱、信息、微信、人人网和QQ空间使用
-        oks.setTitle(getString(R.string.share));
+        oks.setTitle(getString(R.string.app_name));
         // titleUrl是标题的网络链接，仅在人人网和QQ空间使用
-        oks.setTitleUrl("http://blog.csdn.net/chenshuyang716/article/details/52464454");
+        oks.setTitleUrl("http://47.94.129.228/ideastreet/");
         // text是分享文本，所有平台都需要这个字段
-        oks.setText("欢迎加入陶瓷创意街大家庭~");
+        oks.setText("欢迎加入玩转创意街大家庭~");
         // imagePath是图片的本地路径，Linked-In以外的平台都支持此参数
 //        oks.setImagePath("/sdcard/test.jpg");//确保SDcard下面存在此张图片
-//        oks.setImageUrl("http://suo.im/2vEbsx");
+//        oks.setImageUrl("http://47.94.129.228/ideastreet/images/logo-2.png");
 //        // url仅在微信（包括好友和朋友圈）中使用
-        oks.setUrl("http://blog.csdn.net/chenshuyang716/article/details/52464454");
+        oks.setUrl("http://47.94.129.228/ideastreet/");
         // comment是我对这条分享的评论，仅在人人网和QQ空间使用
-        oks.setComment("欢迎来到陶瓷创意街~");
+        oks.setComment("欢迎来到玩转创意街~");
         // site是分享此内容的网站名称，仅在QQ空间使用
         oks.setSite(getString(R.string.app_name));
         // siteUrl是分享此内容的网站地址，仅在QQ空间使用
-        oks.setSiteUrl("http://blog.csdn.net/chenshuyang716/article/details/52464454");
+        oks.setSiteUrl("http://47.94.129.228/ideastreet/");
 
         // 启动分享GUI
         oks.show(this);

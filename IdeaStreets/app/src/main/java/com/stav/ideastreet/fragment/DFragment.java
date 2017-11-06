@@ -12,8 +12,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import com.stav.ideastreet.R;
+import com.stav.ideastreet.test.Main2Activity;
 import com.stav.ideastreet.ui.LoginActivity;
 import com.stav.ideastreet.ui.MainActivity;
 import com.stav.ideastreet.ui.RegisterActivity;
@@ -24,6 +26,7 @@ import com.stav.ideastreet.utils.PrefUtils;
 import cn.bmob.v3.BmobUser;
 
 import static com.stav.ideastreet.R.id.ll_unlogin;
+import static com.stav.ideastreet.base.BaseApplication.showToast;
 
 public class DFragment extends Fragment {
 
@@ -32,6 +35,7 @@ public class DFragment extends Fragment {
 	private View view;
 	private LinearLayout llUnlogin,llCenter;
 	private android.support.v4.app.FragmentManager mFm;
+    private RelativeLayout rlNotice,rlInfomation,rlEnshrine,rlSettings;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -61,6 +65,10 @@ public class DFragment extends Fragment {
 
 		ib_qrcode=(ImageButton) view.findViewById(R.id.ib_qrcode);
         btLogout = (Button) view.findViewById(R.id.bt_logout);
+        rlNotice = (RelativeLayout) view.findViewById(R.id.rl_notice);
+        rlInfomation = (RelativeLayout) view.findViewById(R.id.rl_infomation);
+        rlEnshrine = (RelativeLayout) view.findViewById(R.id.rl_enshrine);
+        rlSettings = (RelativeLayout) view.findViewById(R.id.rl_settings);
         //显示放大二维码
         ib_qrcode.setOnClickListener(new OnClickListener() {
 			@Override
@@ -72,6 +80,7 @@ public class DFragment extends Fragment {
 				}
 			}
 		});
+
         //登出按钮
         btLogout.setOnClickListener(new OnClickListener() {
             @Override
@@ -79,6 +88,14 @@ public class DFragment extends Fragment {
                 logOut();
 				PrefUtils.setBoolean(getContext(), ConstantValue.IS_LOGIN, false);
 				unLogin();
+            }
+        });
+
+        //点击按钮修改信息
+        rlInfomation.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+				startActivity(new Intent(getActivity(), Main2Activity.class));
             }
         });
 

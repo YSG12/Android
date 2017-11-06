@@ -1,6 +1,7 @@
 package com.stav.ideastreet.utils;
 
 
+import android.content.Context;
 
 /**
  * 界面帮助类
@@ -42,4 +43,5 @@ public class UIHelper {
         }
         return body;
     }
+
 }

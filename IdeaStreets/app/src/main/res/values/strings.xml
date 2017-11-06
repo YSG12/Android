@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">陶瓷创意街</string>
+    <string name="app_name">玩转创意街</string>
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
 
@@ -78,11 +78,6 @@
     <string name="platform_sina">微博</string>
     <string name="platform_weichat">微信</string>
     <string name="platform_weichat_circle">朋友圈</string>
-    <string name="share_title">开源中国分享</string>
-    <string name="share_title_news">开源中国资讯分享</string>
-    <string name="share_title_blog">开源中国博客分享</string>
-    <string name="share_title_soft">开源中国软件分享</string>
-    <string name="share_title_post">开源中国帖子分享</string>
     <string name="tip_start_share">开始分享…</string>
     <string name="tip_share_done">分享完成</string>
 
@@ -145,7 +140,6 @@
     <string name="actionbar_title_my_friends">关注/粉丝</string>
     <string name="actionbar_title_setting">设置</string>
     <string name="actionbar_title_setting_notification">新消息提醒</string>
-    <string name="actionbar_title_about_osc">关于开源中国</string>
     <string name="actionbar_title_note">便签</string>
     <string name="actionbar_title_noteedit">编辑便签</string>
     <string name="actionbar_title_shake">摇一摇</string>
@@ -232,7 +226,7 @@
     <string name="bookmarks">收藏夹</string>
     <string name="user_score">积分</string>
 
-    <string name="active">好友圈</string>
+    <string name="active">创意圈</string>
     <string name="activities">活动</string>
     <string name="scan">扫一扫</string>
     <string name="friends">同城</string>
@@ -248,7 +242,6 @@
     <string name="double_click_exit">双击退出</string>
     <string name="loading_more">自动加载\"更多\"</string>
     <string name="update">检查新版本</string>
-    <string name="about">关于开源中国</string>
     <string name="feedback">意见反馈</string>
     <string name="exit">退出</string>
     <string name="grade">去评分</string>
@@ -306,6 +299,7 @@
     <string name="drawer_open">open</string>
     <string name="drawer_close">close</string>
     <string name="share">陶瓷创意街</string>
+    <string name="share_now">随时随刻分享~~</string>
     <string name="user_name">用户名</string>
     <string name="user_password">密码</string>
     <string name="register">注册</string>
@@ -316,4 +310,7 @@
     <string name="my_infomation">我的资料</string>
     <string name="my_enshrine">我的收藏</string>
     <string name="logout">退出登录</string>
+    <string name="publish">发布</string>
+    <string name="comment">评论</string>
+    <string name="send_sms_code">发送验证码</string>
 </resources>

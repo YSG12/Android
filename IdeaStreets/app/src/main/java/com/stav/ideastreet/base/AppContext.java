@@ -37,6 +37,8 @@ public class AppContext extends BaseApplication {
 
     }
 
+
+
     /**
      * 获得当前app运行的AppContext
      *

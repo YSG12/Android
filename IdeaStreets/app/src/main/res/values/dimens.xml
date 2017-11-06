@@ -6,6 +6,7 @@
 
     <dimen name="navigation_drawer_width">240dp</dimen>
      <!-- OSChina APP -->
+
     <dimen name="text_size_32">32.0dip</dimen>
     <dimen name="text_size_31">31.0dip</dimen>
     <dimen name="text_size_30">30.0dip</dimen>
@@ -107,7 +108,8 @@
     
     <!-- 意见反馈 -->
     <dimen name="text_size_account_info">18.0sp</dimen>
-    
+    <dimen name="text_size_title">14.0sp</dimen>
+
     <!-- 时间选择dialog -->
     <dimen name="done_label_size">14sp</dimen>
     <dimen name="date_picker_component_width">270dip</dimen>

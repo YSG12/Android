@@ -90,11 +90,21 @@
 
         </RelativeLayout>
 
+        <Button
+            android:id="@+id/bt_sms_login"
+            android:layout_marginRight="@dimen/space_20"
+            android:layout_below="@+id/rl_password"
+            android:layout_alignParentRight="true"
+            android:background="@null"
+            android:textColor="#0DB22E"
+            android:text="短信登录"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
         <LinearLayout
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
-            android:layout_marginTop="30dp"
-            android:layout_below="@+id/rl_password"
+            android:layout_below="@+id/bt_sms_login"
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">

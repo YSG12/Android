@@ -11,7 +11,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.stav.ideastreet.R;
-import com.stav.ideastreet.ui.bean.MyUser;
+import com.stav.ideastreet.bean.MyUser;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -33,7 +33,7 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
     private EditText etUsername, etPassword, etUserPhone,etSmsCode;
     private Button btSmsCode, btRegister;
     private CompositeSubscription mCompositeSubscription;
-    private String mUsername,mPassword;
+    private String mUsername,mPassword,mUserPhone,mSmsCode;
 
 
     @Override
@@ -60,11 +60,11 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.bt_sms_code:
-//                requestSms();
+                requestSmsCode();
                 break;
             case R.id.bt_register:
+                verifySmsCode();
                 SignUp();
-//                verifySmsCode();
                 break;
             default:
                 break;
@@ -75,15 +75,23 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
     private void SignUp() {
         mUsername = etUsername.getText().toString();
         mPassword = etPassword.getText().toString();
+        mUserPhone = etUserPhone.getText().toString();
+        mSmsCode = etSmsCode.getText().toString();
         final MyUser myUser = new MyUser();
         myUser.setUsername(mUsername);
         myUser.setPassword(mPassword);
+        myUser.setMobilePhoneNumber(mUserPhone);
 //        myUser.setAge(18);
         addSubscription(myUser.signUp(new SaveListener<MyUser>() {
             @Override
             public void done(MyUser s, BmobException e) {
                 if (e == null) {
-                    showToast("恭喜您，注册成功~");
+                    if (mSmsCode != null){
+                        showToast("请输入短信验证码~");
+                    } else {
+                        showToast("恭喜您，注册成功~");
+                        finish();
+                    }
                 } else {
                     Log.e("", String.valueOf(e));
                 }
@@ -159,6 +167,7 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
                 public void done(BmobException ex) {
                     if(ex==null){//短信验证码已验证成功
                         showToast("验证通过");
+                        finish();
                     }else{
                         showToast("验证失败：code ="+ex.getErrorCode()+",msg = "+ex.getLocalizedMessage());
                     }
