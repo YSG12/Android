@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.stav.ideastreet.test.Main2Activity">
+    tools:context="com.stav.ideastreet.ui.UpdateInfoActivity">
 
     <TextView
         android:text="123"

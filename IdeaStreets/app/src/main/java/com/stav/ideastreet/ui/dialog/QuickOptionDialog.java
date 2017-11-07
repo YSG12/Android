@@ -1,16 +1,14 @@
 package com.stav.ideastreet.ui.dialog;
 
 import com.stav.ideastreet.R;
-import com.stav.ideastreet.test.Main2Activity;
+import com.stav.ideastreet.ui.UpdateInfoActivity;
 import com.stav.ideastreet.ui.NewsDetailActivity;
-import com.stav.ideastreet.utils.UIHelper;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Display;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -103,11 +101,11 @@ public class QuickOptionDialog extends Dialog implements
         	dismiss();
             break;
         case R.id.ly_quick_option_album:
-            getContext().startActivity(new Intent(getContext(),Main2Activity.class));
+            getContext().startActivity(new Intent(getContext(),UpdateInfoActivity.class));
             dismiss();
             break;
         case R.id.ly_quick_option_photo:
-            getContext().startActivity(new Intent(getContext(),Main2Activity.class));
+            getContext().startActivity(new Intent(getContext(),UpdateInfoActivity.class));
             dismiss();
             break;
         default:

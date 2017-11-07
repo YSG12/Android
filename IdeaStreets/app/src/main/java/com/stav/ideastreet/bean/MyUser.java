@@ -1,5 +1,6 @@
 package com.stav.ideastreet.bean;
 
+import java.sql.Date;
 import java.util.List;
 
 import cn.bmob.v3.BmobUser;
@@ -14,7 +15,10 @@ public class MyUser extends BmobUser {
     private static final long serialVersionUID = 1L;
     private Integer age;
     private Integer num;
-    private Boolean sex;
+    private String sex;
+
+//    private Date createdAt;
+//    private Date updatedAt;
 
     private List<String> hobby;		// 对应服务端Array类型：String类型的集合
     private List<BankCard> cards;	// 对应服务端Array类型:Object类型的集合
@@ -22,10 +26,22 @@ public class MyUser extends BmobUser {
     private BankCard mainCard;      //主卡
     private Person banker;          //银行工作人员
 
-    public Boolean getSex() {
+    public String getMotto() {
+        return motto;
+    }
+
+    public void setMotto(String motto) {
+        this.motto = motto;
+    }
+
+    private String motto;          //座右铭
+
+
+
+    public String getSex() {
         return sex;
     }
-    public void setSex(Boolean sex) {
+    public void setSex(String sex) {
         this.sex = sex;
     }
     public List<String> getHobby() {
@@ -68,7 +84,8 @@ public class MyUser extends BmobUser {
 
     @Override
     public String toString() {
-        return getUsername()+"\n"+getObjectId()+"\n"+age+"\n"+num+"\n"+getSessionToken()+"\n"+getEmailVerified();
+        return getUsername()+"\n"+getObjectId()+"\n"+age+"\n" + motto +
+                "\n"+num+"\n"+getSessionToken()+"\n"+getEmailVerified();
     }
 
 }

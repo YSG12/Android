@@ -18,21 +18,165 @@
         android:padding="@dimen/space_16" >
 
         <TextView
-            android:id="@+id/text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="@dimen/space_4"
+            android:id="@+id/a"
+            android:text="@string/username"
+            style="@style/InfomationTv"/>
+
+        <TextView
+            android:id="@+id/tv_username"
+            android:layout_toRightOf="@id/a"
+            style="@style/InfomationTitle"/>
+
+        <EditText
+            android:id="@+id/et_username"
+            android:layout_toRightOf="@id/tv_username"
+            style="@style/InfomationEt"/>
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="wrap_content"
+        android:layout_height="1px"
+        android:background="@color/list_divider_color" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/list_item_background"
+        android:clickable="true"
+        android:padding="@dimen/space_16" >
+
+        <TextView
+            android:id="@+id/b"
+            android:text="@string/phone_num"
+            style="@style/InfomationTv"/>
+
+        <TextView
+            android:id="@+id/tv_phone_num"
+            android:layout_toRightOf="@id/b"
+            style="@style/InfomationTitle"/>
+
+        <EditText
+            android:id="@+id/et_num"
+            android:layout_toRightOf="@id/tv_phone_num"
+            style="@style/InfomationEt"/>
+
+    </RelativeLayout>
+
+
+    <View
+        android:layout_width="wrap_content"
+        android:layout_height="1px"
+        android:background="@color/list_divider_color" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/list_item_background"
+        android:clickable="true"
+        android:padding="@dimen/space_16" >
+
+        <TextView
+            android:id="@+id/d"
+            android:text="@string/age"
+            style="@style/InfomationTv"/>
+
+        <TextView
+            android:id="@+id/tv_age"
+            android:layout_toRightOf="@id/d"
+            style="@style/InfomationTitle"/>
+
+        <EditText
+            android:id="@+id/et_age"
+            android:layout_toRightOf="@id/tv_age"
+            style="@style/InfomationEtF"/>
+
+    </RelativeLayout>
+    <View
+        android:layout_width="wrap_content"
+        android:layout_height="1px"
+        android:background="@color/list_divider_color" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/list_item_background"
+        android:clickable="true"
+        android:padding="@dimen/space_16" >
+
+        <TextView
+            android:id="@+id/g"
+            android:text="@string/sex"
+            style="@style/InfomationTv"/>
+
+        <TextView
+            android:id="@+id/tv_sex"
+            android:layout_toRightOf="@id/g"
+            style="@style/InfomationTitle"/>
+
+        <EditText
+            android:id="@+id/et_sex"
+            android:layout_toRightOf="@id/tv_sex"
+            style="@style/InfomationEtF"/>
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="wrap_content"
+        android:layout_height="1px"
+        android:background="@color/list_divider_color" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/list_item_background"
+        android:clickable="true"
+        android:padding="@dimen/space_16" >
+
+        <TextView
+            android:id="@+id/e"
+            android:text="@string/motto"
+            style="@style/InfomationTv"/>
+
+        <TextView
+            android:id="@+id/tv_motto"
+            android:layout_toRightOf="@id/e"
+            style="@style/InfomationTitle"/>
+
+        <EditText
+            android:id="@+id/et_motto"
+            android:layout_toRightOf="@id/tv_motto"
+            style="@style/InfomationEtF"/>
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="wrap_content"
+        android:layout_height="1px"
+        android:background="@color/list_divider_color" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/list_item_background"
+        android:clickable="true"
+        android:padding="@dimen/space_16" >
+
+        <TextView
+            android:id="@+id/c"
             android:text="@string/join_time"
-            android:textColor="@color/main_gray"
-            android:textSize="@dimen/text_size_16" />
+            style="@style/InfomationTv"/>
 
         <TextView
             android:id="@+id/tv_join_time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/text"
-            android:textColor="@color/main_black"
-            android:textSize="@dimen/text_size_16" />
+            android:layout_toRightOf="@id/c"
+            style="@style/InfomationTitle"/>
+
+        <EditText
+            android:id="@+id/et_join_time"
+            android:layout_toRightOf="@id/tv_join_time"
+            style="@style/InfomationEt"/>
+
     </RelativeLayout>
 
     <View
@@ -45,87 +189,23 @@
         android:layout_height="wrap_content"
         android:background="@drawable/list_item_background"
         android:clickable="true"
-        android:orientation="horizontal"
         android:padding="@dimen/space_16" >
 
         <TextView
-            android:id="@id/text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="@dimen/space_4"
-            android:text="@string/location"
-            android:textColor="@color/main_gray"
-            android:textSize="@dimen/text_size_16" />
+            android:id="@+id/f"
+            android:text="@string/update_time"
+            style="@style/InfomationTv"/>
 
         <TextView
-            android:id="@+id/tv_location"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/text"
-            android:textColor="@color/main_black"
-            android:textSize="@dimen/text_size_16" />
-    </RelativeLayout>
+            android:id="@+id/tv_update_time"
+            android:layout_toRightOf="@id/f"
+            style="@style/InfomationTitle"/>
 
-    <View
-        android:layout_width="wrap_content"
-        android:layout_height="1px"
-        android:background="@color/list_divider_color" />
+        <EditText
+            android:id="@+id/et_update_time"
+            android:layout_toRightOf="@id/tv_update_time"
+            style="@style/InfomationEt"/>
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/list_item_background"
-        android:clickable="true"
-        android:orientation="horizontal"
-        android:padding="@dimen/space_16" >
-
-        <TextView
-            android:id="@id/text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="@dimen/space_4"
-            android:text="@string/development_platform"
-            android:textColor="@color/main_gray"
-            android:textSize="@dimen/text_size_16" />
-
-        <TextView
-            android:id="@+id/tv_development_platform"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/text"
-            android:textColor="@color/main_black"
-            android:textSize="@dimen/text_size_16" />
-    </RelativeLayout>
-
-    <View
-        android:layout_width="wrap_content"
-        android:layout_height="1px"
-        android:background="@color/list_divider_color" />
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/list_item_background"
-        android:clickable="true"
-        android:orientation="horizontal"
-        android:padding="@dimen/space_16" >
-
-        <TextView
-            android:id="@id/text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="@dimen/space_4"
-            android:text="@string/academic_focus"
-            android:textColor="@color/main_gray"
-            android:textSize="@dimen/text_size_16" />
-
-        <TextView
-            android:id="@+id/tv_academic_focus"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/text"
-            android:textColor="@color/main_black"
-            android:textSize="@dimen/text_size_16" />
     </RelativeLayout>
 
 </LinearLayout>

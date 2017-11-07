@@ -44,6 +44,22 @@
                 android:visibility="visible" />
 
             <include layout="@layout/fragment_user_center_information" />
+
+
+            <Button
+                android:layout_marginTop="@dimen/space_10"
+                android:onClick="modify_infomation"
+                android:layout_width="160dp"
+                android:gravity="center"
+                android:paddingTop="@dimen/space_8"
+                android:paddingBottom="@dimen/space_8"
+                android:text="@string/modify_infomation"
+                android:textColor="@android:color/black"
+                android:layout_gravity="center_horizontal"
+                android:textSize="18sp"
+                android:background="@drawable/btn_register_bg"
+                android:layout_height="wrap_content"/>
+
         </LinearLayout>
     </com.stav.ideastreet.widget.CustomerScrollView>
 
@@ -51,6 +67,7 @@
         android:id="@+id/error_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="visible" />
+        android:visibility="gone" />
+
 
 </RelativeLayout>

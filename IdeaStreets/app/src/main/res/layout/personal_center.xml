@@ -70,6 +70,7 @@
             android:orientation="vertical" >
 
             <RelativeLayout
+                android:id="@+id/rl_info"
                 android:layout_marginTop="@dimen/space_10"
                 android:background="#fff"
                 android:padding="@dimen/space_10"
@@ -100,8 +101,7 @@
                     android:textSize="@dimen/text_size_14"
                     android:layout_marginLeft="@dimen/space_10"
                     android:textColor="@color/gray"
-                    android:id="@+id/tv_intro"
-                    android:text="我就是自己的神!"
+                    android:id="@+id/tv_motto"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
 

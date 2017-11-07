@@ -33,6 +33,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE"/>
 
     <!-- Optional. Required for location feature -->
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/> <!-- 用于开启 debug 版本的应用在6.0 系统上 层叠窗口权限 -->
@@ -294,7 +295,7 @@
             android:name="JPUSH_APPKEY"
             android:value="0f3b8c7b95276028a92b6f48"/>
 
-        <activity android:name=".test.Main2Activity"/>
+        <activity android:name=".ui.UpdateInfoActivity"/>
         <activity android:name=".ui.LoginActivity"/>
         <activity android:name=".ui.RegisterActivity"/>
         <activity android:name=".ui.NewsDetailActivity"/>

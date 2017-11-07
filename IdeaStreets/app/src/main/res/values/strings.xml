@@ -163,7 +163,13 @@
     <string name="favorite">收藏</string>
     <string name="following">关注</string>
     <string name="follower">粉丝</string>
-    <string name="join_time">加入时间:</string>
+    <string name="username">用户名:</string>
+    <string name="phone_num">电话号码:</string>
+    <string name="join_time">注册时间:</string>
+    <string name="update_time">资料更新时间:</string>
+    <string name="age">年龄:</string>
+    <string name="sex">性别:</string>
+    <string name="motto">个性签名:</string>
     <string name="location">所在地区:</string>
     <string name="development_platform">开发平台:</string>
     <string name="academic_focus">专长领域:</string>
@@ -313,4 +319,5 @@
     <string name="publish">发布</string>
     <string name="comment">评论</string>
     <string name="send_sms_code">发送验证码</string>
+    <string name="modify_infomation">修改资料</string>
 </resources>

@@ -15,4 +15,7 @@ public class ConstantValue extends Object {
      * 双击退出
      */
     public static final String KEY_DOUBLE_CLICK_EXIT = "KEY_DOUBLE_CLICK_EXIT";
+    public static final String TOKEN = "token";
+    public static final String OBJECT_ID = "objectId";
+
 }

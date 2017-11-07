@@ -10,23 +10,23 @@ import android.widget.EditText;
 
 import com.stav.ideastreet.R;
 import com.stav.ideastreet.bean.MyUser;
-import com.stav.ideastreet.fragment.DFragment;
-import com.stav.ideastreet.test.Main2Activity;
 import com.stav.ideastreet.utils.ConstantValue;
 import com.stav.ideastreet.utils.PrefUtils;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.LogInListener;
-import cn.bmob.v3.listener.SaveListener;
+import cn.bmob.v3.listener.QueryListener;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.subscriptions.CompositeSubscription;
 
 import static com.stav.ideastreet.base.BaseActivity.log;
+import static com.stav.ideastreet.base.BaseActivity.loge;
 import static com.stav.ideastreet.base.BaseApplication.showToast;
 
 public class LoginActivity extends Activity implements View.OnClickListener {
@@ -97,15 +97,19 @@ public class LoginActivity extends Activity implements View.OnClickListener {
             public void done(MyUser user, BmobException e) {
                 if (user != null) {
                     showToast("登录成功");
+                    PrefUtils.setString(getApplicationContext(),ConstantValue.TOKEN,user.getSessionToken());
+                    PrefUtils.setString(getApplicationContext(),ConstantValue.OBJECT_ID,user.getObjectId());
                     log(user.getUsername() + "-" + user.getAge() + "-" + user.getObjectId() + "-" + user.getEmail());
-                    finish();
                     startActivity(new Intent(getApplicationContext(),MainActivity.class));
+                    finish();
                 } else {
                     showToast("错误码：" + e.getErrorCode() + ",错误原因：" + e.getLocalizedMessage());
                 }
             }
         }));
     }
+
+
 
     /**
      * 注意下如果返回206错误 一般是多设备登录导致
