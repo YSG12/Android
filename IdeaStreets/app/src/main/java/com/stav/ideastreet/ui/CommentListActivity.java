@@ -3,6 +3,7 @@ package com.stav.ideastreet.ui;
 import android.content.Context;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -81,7 +82,7 @@ public class CommentListActivity extends BaseActivity {
                     adapter.notifyDataSetChanged();
                     et_content.setText("");
                 }else{
-                    loge(e);
+                    Log.d("",e+"");
                 }
             }
 
@@ -132,7 +133,7 @@ public class CommentListActivity extends BaseActivity {
                     et_content.setText("");
                     toast("评论成功");
                 }else{
-                    loge(e);
+                    Log.d("",e+"");
                 }
             }
         });

@@ -117,6 +117,7 @@
             <EditText
                 android:id="@+id/et_user_phone"
                 android:hint="@string/user_phone"
+                android:inputType="number"
                 android:layout_marginLeft="10dp"
                 android:textColorHint="#ccc"
                 android:singleLine="true"

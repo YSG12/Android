@@ -9,7 +9,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,22 +18,23 @@ import android.view.Window;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.stav.ideastreet.R;
-import com.stav.ideastreet.bean.NewsList;
-import com.stav.ideastreet.fragment.AFragment;
-import com.stav.ideastreet.fragment.BFragment;
+import com.stav.ideastreet.db.NewFriendManager;
+import com.stav.ideastreet.event.RefreshEvent;
+import com.stav.ideastreet.fragment.MainFragment;
+import com.stav.ideastreet.fragment.ChatFragment;
+import com.stav.ideastreet.fragment.CenterFragment;
 import com.stav.ideastreet.fragment.DiscoveryFragment;
-import com.stav.ideastreet.fragment.DFragment;
 import com.stav.ideastreet.ui.dialog.QuickOptionDialog;
-import com.stav.ideastreet.utils.XmlUtils;
 
-import org.apache.http.Header;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
+import cn.bmob.newim.BmobIM;
+import cn.bmob.newim.event.MessageEvent;
+import cn.bmob.newim.event.OfflineMessageEvent;
 import cn.sharesdk.onekeyshare.OnekeyShare;
 
 import static com.stav.ideastreet.base.BaseApplication.showToast;
@@ -59,9 +59,6 @@ public class MainActivity extends ActionBarActivity {
 
         initActionBar();
 
-        //从网络获取数据
-        net();
-
         //使用FragmentTabHost
         mTabHost = (FragmentTabHost) findViewById(R.id.tabhost);
         //初始化FragmentTabHost
@@ -83,11 +80,11 @@ public class MainActivity extends ActionBarActivity {
         };
 
         Class[] clz = new Class[]{
-                AFragment.class,
-                BFragment.class,
+                MainFragment.class,
+                ChatFragment.class,
                 DiscoveryFragment.class,
                 DiscoveryFragment.class,
-                DFragment.class
+                CenterFragment.class
         };
 
         for (int i = 0; i < strs.length; i++) {
@@ -119,24 +116,6 @@ public class MainActivity extends ActionBarActivity {
     }
 
 
-    /**
-     * 从网络获取数据
-     */
-    private void net() {
-        AsyncHttpClient asyncHttpClient = new AsyncHttpClient();
-        asyncHttpClient.get("http://47.94.129.228/oschina/list/news/page0.xml", new AsyncHttpResponseHandler() {
-            @Override
-            public void onSuccess(int i, Header[] headers, byte[] bytes) {
-                Log.d("tag",new String(bytes));
-                NewsList newsList = XmlUtils.toBean(NewsList.class, bytes);
-                Log.d("tag",newsList.getList().get(0).getTitle());
-            }
-            @Override
-            public void onFailure(int i, Header[] headers, byte[] bytes, Throwable throwable) {
-
-            }
-        });
-    }
 
     //设置虚拟键手指显示Overflow按钮
     private void setOverflowShowingAlways() {
@@ -183,10 +162,10 @@ public class MainActivity extends ActionBarActivity {
 //                AppManager.getAppManager().AppExit(this);
 
                 break;
-            case R.id.add:
-                System.exit(0);
-//                Toast.makeText(this, "add", 0).show();
-                break;
+//            case R.id.add:
+//                System.exit(0);
+////                Toast.makeText(this, "add", 0).show();
+//                break;
             case R.id.send:
                 showShare();
                 break;
@@ -269,6 +248,54 @@ public class MainActivity extends ActionBarActivity {
 
         // 启动分享GUI
         oks.show(this);
+    }
+
+    /**
+     * 注册消息接收事件
+     *
+     * @param event
+     */
+    //TODO 消息接收：8.3、通知有在线消息接收
+    @Subscribe
+    public void onEventMainThread(MessageEvent event) {
+        checkRedPoint();
+    }
+
+    /**
+     * 注册离线消息接收事件
+     *
+     * @param event
+     */
+    //TODO 消息接收：8.4、通知有离线消息接收
+    @Subscribe
+    public void onEventMainThread(OfflineMessageEvent event) {
+        checkRedPoint();
+    }
+
+    /**
+     * 注册自定义消息接收事件
+     *
+     * @param event
+     */
+    //TODO 消息接收：8.5、通知有自定义消息接收
+    @Subscribe
+    public void onEventMainThread(RefreshEvent event) {
+        checkRedPoint();
+    }
+
+    /**
+     *
+     */
+    private void checkRedPoint() {
+        //TODO 会话：4.4、获取全部会话的未读消息数量
+        int count = (int) BmobIM.getInstance().getAllUnReadCount();
+        if (count > 0) {
+            Toast.makeText(this, "您有新的消息~", Toast.LENGTH_SHORT).show();
+        }
+        //TODO 好友管理：是否有好友添加的请求
+        if (NewFriendManager.getInstance(this).hasNewFriendInvitation()) {
+            Toast.makeText(this, "您有好友添加消息~", Toast.LENGTH_SHORT).show();
+        }
     }
 
 }

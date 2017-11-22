@@ -7,6 +7,7 @@ import android.os.Environment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.text.Editable;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -17,6 +18,7 @@ import com.stav.ideastreet.bean.MyUser;
 import com.stav.ideastreet.ui.empty.EmptyLayout;
 import com.stav.ideastreet.utils.ConstantValue;
 import com.stav.ideastreet.utils.PrefUtils;
+import com.stav.ideastreet.widget.CircleImageView;
 
 import java.io.File;
 
@@ -27,7 +29,6 @@ import cn.bmob.v3.listener.UpdateListener;
 import rx.Subscription;
 import rx.subscriptions.CompositeSubscription;
 
-import static com.stav.ideastreet.base.BaseActivity.loge;
 import static com.stav.ideastreet.base.BaseApplication.showToast;
 
 public class UpdateInfoActivity extends ActionBarActivity {
@@ -64,6 +65,7 @@ public class UpdateInfoActivity extends ActionBarActivity {
     private EditText etMotto,etUsername,etNum,etSex,etAge,etJoin,etUpdate;
     private MyUser mUser;
     private String mToken,mObjectId;
+    private CircleImageView iv_avatar;
 
     private String motto;
 
@@ -82,7 +84,7 @@ public class UpdateInfoActivity extends ActionBarActivity {
         BmobQuery<MyUser> userInfo = new BmobQuery<>();
         addSubscription(userInfo.getObject(mObjectId, new QueryListener<MyUser>() {
                     @Override
-                    public void done(MyUser myUser, BmobException e) {
+                    public void done(final MyUser myUser, BmobException e) {
                         if (e == null) {
                             new Thread() {
                                 public void run() {
@@ -99,6 +101,7 @@ public class UpdateInfoActivity extends ActionBarActivity {
                                             etNum.setText(myUser.getMobilePhoneNumber()+"");
                                             etJoin.setText(myUser.getCreatedAt());
                                             etUpdate.setText(myUser.getUpdatedAt());
+//                                            iv_avatar.setBackgroundResource(R.mipmap.head);
                                         }
 
                                     });
@@ -106,7 +109,7 @@ public class UpdateInfoActivity extends ActionBarActivity {
                             }.start();
 
                         } else {
-                            loge(e);
+                            Log.d("",e+"");
                         }
                     }
                 })
@@ -144,7 +147,7 @@ public class UpdateInfoActivity extends ActionBarActivity {
                 if (e == null) {
                     showToast("修改成功！");
                 } else {
-                    loge(e);
+                    Log.d("",e+"");
                 }
             }
         }));

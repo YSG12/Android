@@ -1,8 +1,8 @@
 package com.stav.ideastreet.ui.dialog;
 
 import com.stav.ideastreet.R;
+import com.stav.ideastreet.ui.PublishActivity;
 import com.stav.ideastreet.ui.UpdateInfoActivity;
-import com.stav.ideastreet.ui.NewsDetailActivity;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
@@ -97,7 +97,7 @@ public class QuickOptionDialog extends Dialog implements
             dismiss();
             break;
         case R.id.ly_quick_option_text:
-        	getContext().startActivity(new Intent(getContext(),NewsDetailActivity.class));
+        	getContext().startActivity(new Intent(getContext(),PublishActivity.class));
         	dismiss();
             break;
         case R.id.ly_quick_option_album:

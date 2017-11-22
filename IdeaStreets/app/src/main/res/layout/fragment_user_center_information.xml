@@ -88,6 +88,7 @@
 
         <EditText
             android:id="@+id/et_age"
+            android:inputType="number"
             android:layout_toRightOf="@id/tv_age"
             style="@style/InfomationEtF"/>
 

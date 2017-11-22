@@ -1,5 +1,7 @@
 package com.stav.ideastreet.bean;
 
+import com.stav.ideastreet.db.NewFriend;
+
 import java.sql.Date;
 import java.util.List;
 
@@ -11,6 +13,13 @@ import cn.bmob.v3.BmobUser;
  */
 public class MyUser extends BmobUser {
 
+    public MyUser(){}
+
+    public MyUser(NewFriend friend){
+        setObjectId(friend.getUid());
+        setUsername(friend.getName());
+        setAvatar(friend.getAvatar());
+    }
 
     private static final long serialVersionUID = 1L;
     private Integer age;
@@ -35,6 +44,7 @@ public class MyUser extends BmobUser {
     }
 
     private String motto;          //座右铭
+    private String avatar;
 
 
 
@@ -82,6 +92,12 @@ public class MyUser extends BmobUser {
         this.banker = banker;
     }
 
+    public String getAvatar() {
+        return avatar;
+    }
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
     @Override
     public String toString() {
         return getUsername()+"\n"+getObjectId()+"\n"+age+"\n" + motto +

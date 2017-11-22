@@ -29,7 +29,7 @@
             <TextView
                 android:id="@+id/tv_content"
                 android:gravity="center"
-                android:text="登录后，你的创意、个人资料会提示在这里，展示给别人"
+                android:text="@string/intro_info"
                 android:textSize="@dimen/text_size_14"
                 android:layout_width="@dimen/space_200"
                 android:layout_marginBottom="@dimen/space_10"
@@ -80,7 +80,6 @@
                 <ImageView
                     android:id="@+id/iv_icon"
                     android:layout_centerVertical="true"
-                    android:src="@drawable/ic_launcher"
                     android:layout_width="50dp"
                     android:layout_height="50dp"/>
 
@@ -91,7 +90,6 @@
                     android:layout_marginLeft="@dimen/space_10"
                     android:textSize="@dimen/text_size_20"
                     android:textColor="@color/black"
-                    android:text="stav"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
 
@@ -118,7 +116,7 @@
             </RelativeLayout>
 
             <RelativeLayout
-                android:id="@+id/rl_notice"
+                android:id="@+id/rl_list"
                 style="@style/option_item_rl"
                 android:layout_marginTop="@dimen/space_20" >
 
@@ -132,7 +130,7 @@
                 <TextView
                     android:layout_toRightOf="@+id/a"
                     style="@style/option_item_text"
-                    android:text="@string/my_notice" />
+                    android:text="@string/friend_list" />
 
                 <ImageView
                     style="@style/option_item_more"/>

@@ -77,6 +77,24 @@
     <uses-permission android:name="android.permission.BROADCAST_STICKY"/>
     <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
     <uses-permission android:name="android.permission.CALL_PHONE"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <!-- 监听网络的变化 -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"/>
+    <!-- 设备休眠 -->
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <!-- sd卡存储 -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <!-- 摄像头 -->
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <!-- 录音 -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+    <!-- 通知震动 -->
+    <uses-permission android:name="android.permission.VIBRATE"/>
+    <!-- WIFI状态 -->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
 
     <uses-feature android:name="android.hardware.camera"/>
     <uses-feature android:name="android.hardware.camera.autofocus"/>
@@ -105,7 +123,6 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name="ui.NewsDetailActivity"/>
         <activity
             android:name="com.mob.tools.MobUIShell"
             android:configChanges="keyboardHidden|orientation|screenSize"
@@ -136,6 +153,11 @@
         <meta-data
             android:name="Mob-AppSecret"
             android:value="65c833f8a767512c5d4e008fab639648"/>
+
+        <!-- TODO 集成：1.3、配置Bmob平台的应用密钥 -->
+        <meta-data
+            android:name="Bmob_APP_KEY"
+            android:value="73be482259546dce10268f6f48349f09"/>
 
         <activity
             android:name="cn.sharesdk.tencent.qq.ReceiveActivity"
@@ -211,6 +233,23 @@
                 <data android:scheme="package"/>
             </intent-filter>
         </receiver>
+        <receiver android:name="cn.bmob.newim.core.ConnectChangeReceiver">
+            <intent-filter>
+                <action android:name="cn.bmob.action.RECONNECT"/>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.intent.action.USER_PRESENT"/>
+            </intent-filter>
+        </receiver>
+
+        <service
+            android:name="cn.bmob.newim.core.service.BmobIMService"
+            android:process=":bmobcore"/>
+        <service
+            android:name="cn.bmob.newim.core.service.NotifyService"
+            android:process=":bmobcore"/>
+        <service android:name="cn.bmob.newim.core.service.ReConnectService"/>
+        <service android:name="cn.bmob.newim.core.service.HeartBeatService"/>
 
         <!-- Required SDK核心功能 -->
         <activity
@@ -298,10 +337,14 @@
         <activity android:name=".ui.UpdateInfoActivity"/>
         <activity android:name=".ui.LoginActivity"/>
         <activity android:name=".ui.RegisterActivity"/>
-        <activity android:name=".ui.NewsDetailActivity"/>
         <activity android:name=".ui.CommentListActivity"/>
-        <activity android:name=".ui.SmsLoginActivity">
-        </activity>
+        <activity android:name=".ui.SmsLoginActivity"/>
+        <activity android:name=".ui.SearchUserActivity"/>
+        <activity android:name=".ui.UserInfoActivity"/>
+        <activity android:name=".ui.ChatActivity"/>
+        <activity android:name=".ui.NewFriendActivity"/>
+        <activity android:name=".ui.ContactActivity"/>
+        <activity android:name=".ui.PublishActivity"/>
     </application>
 
 </manifest>

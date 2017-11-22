@@ -1,25 +1,33 @@
 package com.stav.ideastreet.base;
 
 
+import com.orhanobut.logger.Logger;
+import com.stav.ideastreet.Config;
 import com.stav.ideastreet.base.AppContext;
 import com.stav.ideastreet.R;
 import com.stav.ideastreet.interf.BaseFragmentInterface;
 import com.stav.ideastreet.ui.dialog.DialogControl;
 import com.stav.ideastreet.ui.dialog.WaitDialog;
+
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Toast;
 
 /**
  * 碎片基类
  * @author stav
  * @date 2017/11/6 14:31
  */
-public class BaseFragment extends Fragment implements
-        android.view.View.OnClickListener, BaseFragmentInterface {
+public class BaseFragment extends Fragment {
     public static final int STATE_NONE = 0;
     public static final int STATE_REFRESH = 1;
     public static final int STATE_LOADMORE = 2;
@@ -31,42 +39,6 @@ public class BaseFragment extends Fragment implements
 
     public AppContext getApplication() {
         return (AppContext) getActivity().getApplication();
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        this.mInflater = inflater;
-        View view = super.onCreateView(inflater, container, savedInstanceState);
-        return view;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-    }
-
-    protected int getLayoutId() {
-        return 0;
-    }
-
-    protected View inflateView(int resId) {
-        return this.mInflater.inflate(resId, null);
     }
 
     public boolean onBackPressed() {
@@ -100,19 +72,57 @@ public class BaseFragment extends Fragment implements
         return null;
     }
 
-    @Override
-    public void initView(View view) {
 
+    protected void runOnMain(Runnable runnable) {
+        getActivity().runOnUiThread(runnable);
     }
 
-    @Override
-    public void initData() {
+    protected final static String NULL = "";
+    private Toast toast;
+    public void toast(final Object obj) {
+        try {
+            runOnMain(new Runnable() {
 
+                @Override
+                public void run() {
+                    if (toast == null)
+                        toast = Toast.makeText(getActivity(), NULL,Toast.LENGTH_SHORT);
+                    toast.setText(obj.toString());
+                    toast.show();
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
-    @Override
-    public void onClick(View v) {
-
+    public void hideSoftInput(IBinder token) {
+        if (token != null) {
+            InputMethodManager im = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            im.hideSoftInputFromWindow(token,InputMethodManager.HIDE_NOT_ALWAYS);
+        }
     }
+
+    /**启动指定Activity
+     * @param target
+     * @param bundle
+     */
+    public void startActivity(Class<? extends Activity> target, Bundle bundle) {
+        Intent intent = new Intent();
+        intent.setClass(getActivity(), target);
+        if (bundle != null)
+            intent.putExtra(getActivity().getPackageName(), bundle);
+        getActivity().startActivity(intent);
+    }
+
+    /**Log日志
+     * @param msg
+     */
+    public void log(String msg){
+        if(Config.DEBUG){
+            Logger.i(msg);
+        }
+    }
+
 }
 

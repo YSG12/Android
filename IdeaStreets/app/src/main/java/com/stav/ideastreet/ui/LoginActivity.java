@@ -25,8 +25,6 @@ import rx.Subscriber;
 import rx.Subscription;
 import rx.subscriptions.CompositeSubscription;
 
-import static com.stav.ideastreet.base.BaseActivity.log;
-import static com.stav.ideastreet.base.BaseActivity.loge;
 import static com.stav.ideastreet.base.BaseApplication.showToast;
 
 public class LoginActivity extends Activity implements View.OnClickListener {
@@ -99,7 +97,9 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                     showToast("登录成功");
                     PrefUtils.setString(getApplicationContext(),ConstantValue.TOKEN,user.getSessionToken());
                     PrefUtils.setString(getApplicationContext(),ConstantValue.OBJECT_ID,user.getObjectId());
-                    log(user.getUsername() + "-" + user.getAge() + "-" + user.getObjectId() + "-" + user.getEmail());
+                    PrefUtils.setBoolean(getApplicationContext(),ConstantValue.IS_LOGIN,true);
+
+                    Log.d("",user.getUsername() + "-" + user.getAge() + "-" + user.getObjectId() + "-" + user.getEmail());
                     startActivity(new Intent(getApplicationContext(),MainActivity.class));
                     finish();
                 } else {

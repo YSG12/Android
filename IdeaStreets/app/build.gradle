@@ -26,12 +26,6 @@ android {
             jniLibs.srcDirs = ['libs']
         }
     }
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
-    }
     useLibrary 'org.apache.http.legacy'
 
     //删除META-INF信息
@@ -44,6 +38,37 @@ android {
         exclude 'META-INF/maven/com.google.code.gson/gson/pom.xml'
         exclude 'META-INF/maven/com.google.code.gson/gson/pom.properties'
     }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            //自动删除 unaligned .apks
+            applicationVariants.all { variant ->
+                variant.assemble.doLast {
+                    variant.outputs.each { output ->
+                        File unaligned = output.packageApplication.outputFile;
+                        File aligned = output.outputFile
+                        if (!unaligned.getName().equalsIgnoreCase(aligned.getName())) {
+                            println "deleting " + unaligned.getName()
+                            unaligned.delete()
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    lintOptions {
+        abortOnError false
+        //忽略警告
+        ignoreWarnings true
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
+    }
 }
 
 
@@ -54,23 +79,32 @@ dependencies {
     })
     compile files('libs/android-async-http-1.4.5.jar')
     compile files('libs/xstream-1.4.8.jar')
-    compile files('libs/butterknife-7.0.1.jar')
     compile files('libs/MobCommons-2017.0914.1125.jar')
     //以下SDK开发者请根据需要自行选择
     //bmob-sdk：Bmob的android sdk包，包含了Bmob的数据存储、文件等服务，以下是最新的bmob-sdk:
     //3.5.5：请务必查看下面注释[1]
-    compile 'cn.bmob.android:bmob-sdk:3.5.0'
     //bmob-push：Bmob的推送包
-    compile 'cn.bmob.android:bmob-push:0.8'
     //bmob-im：Bmob的即时通讯包，注意每个版本的im依赖特定版本的bmob-sdk，具体的依赖关系可查看下面注释[2]
-    compile 'cn.bmob.android:bmob-im:2.0.6@aar'
-    compile 'cn.bmob.android:bmob-sdk:3.5.0-aar'
     //bmob-sms ：Bmob单独为短信服务提供的包
-    compile 'cn.bmob.android:bmob-sms:1.0.1'
     //如果你想应用能够兼容Android6.0，请添加此依赖(org.apache.http.legacy.jar)
+    compile files('libs/androidasync-2.1.6.jar')
+    compile files('libs/BmobNewIM_2.0.9_20170731.jar')
+    compile files('libs/BmobSDK_3.5.6_20170705.jar')
+    compile files('libs/okhttp-3.3.1.jar')
+    compile files('libs/okio-1.12.0.jar')
+    compile files('libs/org.apache.http.legacy.jar')
+    compile files('libs/rxandroid-1.2.0.jar')
+    compile files('libs/rxjava-1.1.6.jar')
+    compile files('libs/universal-image-loader-1.9.5.jar')
+    compile files('libs/android-support-v7-recyclerview.jar')
+    compile files('libs/xUtils-2.6.14.jar')
+    compile 'cn.bmob.android:bmob-sdk:3.5.0'
+    compile 'cn.bmob.android:bmob-push:0.8'
+    compile 'cn.bmob.android:bmob-sms:1.0.1'
     compile 'cn.bmob.android:http-legacy:1.0'
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    compile 'com.orhanobut:logger:1.4'
+    compile 'org.greenrobot:eventbus:3.0.0'
     testCompile 'junit:junit:4.12'
-    compile files('libs/KJFrameForAndroid_v2.223.jar')
 }
