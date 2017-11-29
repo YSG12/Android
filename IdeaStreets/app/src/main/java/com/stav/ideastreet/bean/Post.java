@@ -33,6 +33,18 @@ public class Post extends BmobObject {
      */
     private String title;
 
+
+
+    /**
+     *  帖子分类
+     */
+    private int test;
+
+    /**
+     *  帖子分类
+     */
+    private String selector;
+
     /**
      *  帖子内容
      */
@@ -82,6 +94,18 @@ public class Post extends BmobObject {
     }
     public void setAuthor(MyUser author) {
         this.author = author;
+    }
+    public int getTest() {
+        return test;
+    }
+    public void setTest(int test) {
+        this.test = test;
+    }
+    public String getSelector() {
+        return selector;
+    }
+    public void setSelector(String selector) {
+        this.selector = selector;
     }
 
 //	/**

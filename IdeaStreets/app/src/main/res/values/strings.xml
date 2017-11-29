@@ -361,4 +361,6 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_user_info">UserInfoActivity</string>
     <string name="intro_info">登录后，你的创意、个人资料会提示在这里，展示给别人</string>
+    <string name="idea_default">创意美食</string>
+    <string name="limit_font">140</string>
 </resources>

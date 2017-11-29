@@ -2,23 +2,40 @@ package com.stav.ideastreet.ui;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.text.Html;
+import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.TextPaint;
 import android.text.TextUtils;
+import android.text.method.LinkMovementMethod;
+import android.text.style.AbsoluteSizeSpan;
+import android.text.style.ClickableSpan;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.ImageSpan;
+import android.text.style.URLSpan;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.stav.ideastreet.R;
 import com.stav.ideastreet.base.ParentWithNaviActivity;
 import com.stav.ideastreet.bean.MyUser;
 import com.stav.ideastreet.bean.Post;
+import com.stav.ideastreet.utils.UIHelper;
+import com.stav.ideastreet.widget.MyLinkMovementMethod;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,12 +56,8 @@ import static com.stav.ideastreet.base.BaseApplication.showToast;
 public class PublishActivity extends ParentWithNaviActivity {
 
 
-    ListView listView;
     EditText et_content;
     ImageButton btn_publish;
-
-    static List<Post> weibos = new ArrayList<Post>();
-     MyAdapter adapter;
 
     @Override
     protected String title() {
@@ -77,50 +90,31 @@ public class PublishActivity extends ParentWithNaviActivity {
         setContentView(R.layout.activity_publish);
         initNaviView();
         initUI();
-        listView.setAdapter(adapter);
         btn_publish.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                publishWeibo(et_content.getText().toString());
+//                publishWeibo(et_content.getText().toString());
+                startActivity(new Intent(getApplicationContext(),WriteActivity.class));
             }
         });
 
-        findWeibos();
+//        findWeibos();
+
+//        TextView textView = (TextView) findViewById(R.id.tv);
+////		htmltext(textView);
+////		clicktext(textView);
+//		fontAndSizetext(textView);
+////        imgtext(textView);
     }
+
 
     private void initUI() {
-        adapter = new MyAdapter(this);
         et_content = (EditText) findViewById(R.id.et_content);
         btn_publish = (ImageButton) findViewById(R.id.btn_publish);
-        listView = (ListView) findViewById(R.id.listview);
     }
 
 
-    /**
-     * 查询微博
-     */
-    private void findWeibos(){
-        MyUser user = BmobUser.getCurrentUser(MyUser.class);
-        BmobQuery<Post> query = new BmobQuery<Post>();
-        query.addWhereEqualTo("author", user);	// 查询当前用户的所有微博
-        query.order("-updatedAt");
-        query.include("author");// 希望在查询微博信息的同时也把发布人的信息查询出来，可以使用include方法
-        query.findObjects(new FindListener<Post>() {
-            @Override
-            public void done(List<Post> object, BmobException e) {
-                if(e==null){
-                    weibos = object;
-                    adapter.notifyDataSetChanged();
-                    et_content.setText("");
-                }else{
-                    Log.e("tag", "done: ",e);
-                }
-            }
-
-        });
-
-    }
 
     /**
      * 发布微博，发表微博时关联了用户类型，是一对一的体现
@@ -144,7 +138,6 @@ public class PublishActivity extends ParentWithNaviActivity {
             public void done(String s, BmobException e) {
                 if(e==null){
                     showToast("发布成功");
-                    findWeibos();
                 }else{
                     Log.e("tag", "done: "+(e));
                 }
@@ -152,74 +145,98 @@ public class PublishActivity extends ParentWithNaviActivity {
         });
     }
 
+    private void imgtext(TextView textView) {
+        String source = "周末一小时运动量达标，[饭]";
+        SpannableString imgtext = new SpannableString(source);
+        ImageSpan imageSpan = new ImageSpan(getApplicationContext(), R.drawable.smiley_61);
+        // 参数2：start 包含，参数3：end 不包含
+        imgtext.setSpan(imageSpan, source.indexOf("["),
+                source.indexOf("]")+1, 0);
+        textView.setText(imgtext);
+    }
 
-    private static class MyAdapter extends BaseAdapter {
+    private void fontAndSizetext(TextView textView){
+        String title = "Android属性动画(详解)";
+        String source = "发表了博客" + title;//发表了博客Android属性动画(详解)
+        SpannableString sp = new SpannableString(source);
+        int start = source.indexOf(title);
+        int end = source.length();
+        sp.setSpan(new AbsoluteSizeSpan(26, true), start, end,
+                0);
+        sp.setSpan(
+                new ForegroundColorSpan(Color.parseColor("#0e5986")),
+                start, end, 0);
+        textView.setText(sp);
+    }
 
-        private LayoutInflater mInflater;
+    private void htmltext(TextView textView) {
+        String message = "<html> <head></head> <body> 哈哈哈 <a href=\"http://m.oschina.net/u/993896\" class=\"referer\">@itheima</a> 我点你了噢 </body> </html>";
+        Spanned fromHtml = Html.fromHtml(message);
+        textView.setText(fromHtml);
 
-        private Context mContext;
-
-        public MyAdapter(Context context) {
-            mContext = context;
-            mInflater = LayoutInflater.from(context);
-        }
-
-        static class ViewHolder {
-            TextView tv_content;
-            TextView tv_author;
-        }
-
-        @Override
-        public int getCount() {
-            return weibos.size();
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return position;
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            final MyAdapter.ViewHolder holder;
-            if (convertView == null) {
-                convertView = mInflater.inflate(R.layout.list_item_weibo, null);
-
-                holder = new MyAdapter.ViewHolder();
-                holder.tv_content = (TextView) convertView.findViewById(R.id.tv_content);
-                holder.tv_author = (TextView) convertView.findViewById(R.id.tv_author);
-
-                convertView.setTag(holder);
-            } else {
-                holder = (MyAdapter.ViewHolder) convertView.getTag();
-            }
-
-            // Bind the data efficiently with the holder.
-            final Post weibo = weibos.get(position);
-            MyUser user = weibo.getAuthor();
-            holder.tv_author.setText("发布人："+(user==null?"":user.getUsername()));
-
-            final String str = weibo.getContent();
-
-            holder.tv_content.setText(str);
-
-            convertView.setOnClickListener(new View.OnClickListener() {
+        URLSpan[] urls = fromHtml.getSpans(0, fromHtml.length(), URLSpan.class);
+        SpannableStringBuilder ss = new SpannableStringBuilder(textView.getText());
+        for (URLSpan url : urls) {
+            // 移除之前的html样式
+            ss.removeSpan(url);
+            ss.setSpan(new URLSpan(url.getURL()){
 
                 @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(mContext, CommentListActivity.class);
-                    intent.putExtra("objectId", weibo.getObjectId());
-                    mContext.startActivity(intent);
+                public void onClick(View widget) {
+                    Toast.makeText(getApplicationContext(), "点击了链接："+getURL(), 0).show();
+//					super.onClick(widget);
                 }
-            });
-
-            return convertView;
+                @Override
+                public void updateDrawState(TextPaint ds) {
+                    super.updateDrawState(ds);
+//					ds.setUnderlineText(false);
+//					ds.setColor(Color.RED);
+                }
+            }, fromHtml.getSpanStart(url), fromHtml.getSpanEnd(url), 0);
         }
+        textView.setText(ss);
+//		textView.setMovementMethod(LinkMovementMethod.getInstance());
+        // 点击链接选中效果
+        textView.setMovementMethod(MyLinkMovementMethod.a());
+    }
+
+    private void clicktext(TextView textView) {
+        SpannableStringBuilder ss = new SpannableStringBuilder("张三,李四");
+        ClickableSpan span = new ClickableSpan() {
+
+            @Override
+            public void onClick(View widget) {
+                Toast.makeText(getApplicationContext(), "张三", 0).show();
+            }
+
+            @Override
+            public void updateDrawState(TextPaint ds) {
+                super.updateDrawState(ds);
+                // 去掉下划线
+//				ds.setUnderlineText(false);
+            }
+        };
+        ss.setSpan(span, 0, 2, 0);// start 包含，end 不包含
+        ClickableSpan span2 = new ClickableSpan() {
+
+            @Override
+            public void onClick(View widget) {
+                Toast.makeText(getApplicationContext(), "李四", 0).show();
+            }
+
+            @Override
+            public void updateDrawState(TextPaint ds) {
+                super.updateDrawState(ds);
+                ds.setColor(Color.RED);
+                ds.setUnderlineText(false);
+            }
+        };
+        ss.setSpan(span2, 3, 5, 0);
+
+        ss.append("觉得很赞");
+        textView.setText(ss);
+        // 让span 可以点击
+        textView.setMovementMethod(LinkMovementMethod.getInstance());
     }
 
 }

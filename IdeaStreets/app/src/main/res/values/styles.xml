@@ -421,4 +421,10 @@
         <item name="android:gravity">center</item>
     </style>
 
+    <style name="Button.Style" parent="@android:style/Widget.Button">
+        <item name="android:background">@color/blue</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:layout_marginTop">10dp</item>
+    </style>
+
 </resources>

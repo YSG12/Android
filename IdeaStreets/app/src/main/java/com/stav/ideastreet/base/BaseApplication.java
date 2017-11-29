@@ -80,15 +80,12 @@ public class BaseApplication extends Application {
 			BmobIM.registerDefaultMessageHandler(new DemoMessageHandler(this));
 		}
 
-		PrefUtils.setBoolean(getApplicationContext(), ConstantValue.IS_LOGIN,false);
 		JPushInterface.setDebugMode(true);
 		JPushInterface.init(this);
 
 		_context = getApplicationContext();
 		_resource = _context.getResources();
 	}
-
-
 
 	/**
 	 * 获取当前运行的进程名

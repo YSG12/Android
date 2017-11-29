@@ -1,14 +1,21 @@
 package com.stav.ideastreet.utils;
 
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.os.Build;
+import android.view.View;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
+import android.widget.ZoomButtonsController;
 
 /**
  * 界面帮助类
- * 
+ *
  * @author FireAnt（http://my.oschina.net/LittleDY）
  * @version 创建时间：2014年10月10日 下午3:33:36
- * 
+ *
  */
 public class UIHelper {
 
@@ -43,5 +50,40 @@ public class UIHelper {
         }
         return body;
     }
+
+    @SuppressLint({ "JavascriptInterface", "SetJavaScriptEnabled" })
+    public static void initWebView(WebView webView) {
+        WebSettings settings = webView.getSettings();
+        settings.setDefaultFontSize(15);
+        settings.setJavaScriptEnabled(true);
+        settings.setSupportZoom(true);
+        settings.setBuiltInZoomControls(true);
+        int sysVersion = Build.VERSION.SDK_INT;
+        if (sysVersion >= 11) {
+            settings.setDisplayZoomControls(false);
+        } else {
+            ZoomButtonsController zbc = new ZoomButtonsController(webView);
+            zbc.getZoomControls().setVisibility(View.GONE);
+        }
+        webView.setWebViewClient(UIHelper.getWebViewClient());
+    }
+
+    /**
+     * 获取webviewClient对象
+     *
+     * @return
+     */
+    public static WebViewClient getWebViewClient() {
+
+        return new WebViewClient() {
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+//                showUrlRedirect(view.getContext(), url);
+                return true;
+            }
+        };
+    }
+
+
 
 }

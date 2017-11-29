@@ -1,9 +1,5 @@
 package com.stav.ideastreet.ui.dialog;
 
-import com.stav.ideastreet.R;
-import com.stav.ideastreet.ui.PublishActivity;
-import com.stav.ideastreet.ui.UpdateInfoActivity;
-
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
@@ -19,6 +15,10 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+
+import com.stav.ideastreet.R;
+import com.stav.ideastreet.ui.UpdateInfoActivity;
+import com.stav.ideastreet.ui.WriteActivity;
 
 public class QuickOptionDialog extends Dialog implements
         View.OnClickListener {
@@ -97,7 +97,7 @@ public class QuickOptionDialog extends Dialog implements
             dismiss();
             break;
         case R.id.ly_quick_option_text:
-        	getContext().startActivity(new Intent(getContext(),PublishActivity.class));
+        	getContext().startActivity(new Intent(getContext(),WriteActivity.class));
         	dismiss();
             break;
         case R.id.ly_quick_option_album:

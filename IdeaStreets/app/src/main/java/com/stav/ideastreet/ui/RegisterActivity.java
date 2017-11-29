@@ -136,7 +136,7 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
         String number = etUserPhone.getText().toString();
 
         if(!TextUtils.isEmpty(number)){
-            BmobSMS.requestSMSCode(number, "注册模板",new QueryListener<Integer>() {
+            BmobSMS.requestSMSCode(number, "ideastreet",new QueryListener<Integer>() {
 
                 @Override
                 public void done(Integer smsId, BmobException ex) {

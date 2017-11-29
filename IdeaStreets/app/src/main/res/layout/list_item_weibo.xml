@@ -11,55 +11,70 @@
         android:layout_height="wrap_content">
 
 
-        <ImageView
-            android:id="@+id/iv_author"
+        <ImageButton
+            android:id="@+id/ib_author"
             android:src="@mipmap/head"
             android:scaleType="fitXY"
+            android:background="@null"
             android:layout_width="50dp"
             android:layout_height="50dp"/>
 
         <LinearLayout
             android:orientation="vertical"
-            android:layout_toRightOf="@+id/iv_author"
+            android:layout_toRightOf="@+id/ib_author"
             android:layout_centerVertical="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
         <TextView
             android:id="@+id/tv_author"
-            android:layout_marginTop="@dimen/space_4"
             android:layout_marginLeft="@dimen/space_10"
-            android:text="stav"
+            android:textStyle="bold"
             android:textSize="@dimen/text_size_18"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
         <TextView
-            android:text="2018.04.06"
             android:layout_marginTop="@dimen/space_4"
             android:layout_marginLeft="@dimen/space_10"
+            android:textSize="@dimen/text_size_10"
             android:id="@+id/tv_createAt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
         </LinearLayout>
 
-        <ImageButton
-            android:layout_centerVertical="true"
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_alignParentRight="true"
-            android:background="@null"
-            android:src="@drawable/base_action_bar_enshrine_bg_selector"
-            android:layout_marginRight="@dimen/space_10"
-            android:id="@+id/ib_enshrine"
-            android:scaleType="fitXY"
-            android:layout_width="22dp"
-            android:layout_height="22dp"/>
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/space_15"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageButton
+                android:background="@null"
+                android:src="@drawable/base_action_bar_enshrine_bg_selector"
+                android:id="@+id/ib_enshrine"
+                android:padding="@dimen/space_5"
+                android:scaleType="fitXY"
+                android:layout_width="@dimen/space_35"
+                android:layout_height="@dimen/space_35"/>
+
+            <TextView
+                android:id="@+id/tv_selector"
+                android:textColor="@color/swiperefresh_color3"
+                android:textSize="@dimen/text_size_10"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+
 
     </RelativeLayout>
 
     <TextView
         android:id="@+id/tv_content"
-        android:text="上岛咖啡好几十复合大师飞机了开机多少"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
