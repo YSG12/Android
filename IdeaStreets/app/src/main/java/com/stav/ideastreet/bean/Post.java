@@ -33,12 +33,15 @@ public class Post extends BmobObject {
      */
     private String title;
 
-
-
     /**
      *  帖子分类
      */
     private int test;
+
+    /**
+        *  点赞数
+        */
+    private int likeNum;
 
     /**
      *  帖子分类
@@ -49,6 +52,16 @@ public class Post extends BmobObject {
      *  帖子内容
      */
     private String content;
+
+    /**
+     *  是否点赞
+     */
+    private boolean zanFocus;
+
+    /**
+       *  是否点赞
+       */
+      private boolean enshrine;
 
     /**
      *  微博发布者
@@ -107,6 +120,25 @@ public class Post extends BmobObject {
     public void setSelector(String selector) {
         this.selector = selector;
     }
+    public int getLikeNum() {
+        return likeNum;
+    }
+    public void setLikeNum(int likeNum) {
+        this.likeNum = likeNum;
+    }
+    public boolean isZanFocus() {
+        return zanFocus;
+    }
+    public void setZanFocus(boolean zanFocus) {
+        this.zanFocus = zanFocus;
+    }
+    public boolean isEnshrine() {
+        return enshrine;
+    }
+    public void setEnshrine(boolean enshrine) {
+        this.enshrine = enshrine;
+    }
+
 
 //	/**
 //	 * 微博的评论，一条微博是对应多条评论的，像这种一对多的情形，请使用BmobRelation类型

@@ -1,13 +1,7 @@
 package com.stav.ideastreet.bean;
 
 
-
 import cn.bmob.v3.BmobObject;
-
-
-import com.stav.ideastreet.bean.MyUser;
-import cn.bmob.v3.BmobObject;
-
 /**
  * 评论实体
  * @author stav

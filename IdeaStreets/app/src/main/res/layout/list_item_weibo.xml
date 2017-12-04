@@ -53,13 +53,14 @@
             android:layout_height="wrap_content">
 
             <ImageButton
-                android:background="@null"
-                android:src="@drawable/base_action_bar_enshrine_bg_selector"
+                android:background="@mipmap/base_action_bar_enshrine_bg_n"
                 android:id="@+id/ib_enshrine"
                 android:padding="@dimen/space_5"
+                android:layout_marginLeft="@dimen/space_5"
+                android:layout_marginBottom="@dimen/space_5"
                 android:scaleType="fitXY"
-                android:layout_width="@dimen/space_35"
-                android:layout_height="@dimen/space_35"/>
+                android:layout_width="@dimen/space_25"
+                android:layout_height="@dimen/space_25"/>
 
             <TextView
                 android:id="@+id/tv_selector"
@@ -92,10 +93,10 @@
             <ImageButton
                 android:id="@+id/ib_commment"
                 android:layout_centerInParent="true"
-                android:src="@drawable/ic_comment_count"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@null"/>
+                android:padding="@dimen/space_5"
+                android:layout_width="@dimen/space_20"
+                android:layout_height="@dimen/space_20"
+                android:background="@drawable/ic_comment_count"/>
 
             <TextView
                 android:id="@+id/tv_comment_num"
@@ -115,15 +116,15 @@
 
             <ImageButton
                 android:id="@+id/ib_like"
-                android:src="@drawable/base_action_bar_like_bg_selector"
-                android:background="@null"
+                android:padding="@dimen/space_5"
+                android:background="@drawable/ic_unlike"
+                android:scaleType="fitXY"
                 android:layout_centerInParent="true"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_width="20dp"
+                android:layout_height="20dp"/>
 
             <TextView
                 android:id="@+id/tv_like_num"
-                android:text="10"
                 android:layout_centerInParent="true"
                 android:layout_marginLeft="@dimen/space_3"
                 android:layout_toRightOf="@id/ib_like"

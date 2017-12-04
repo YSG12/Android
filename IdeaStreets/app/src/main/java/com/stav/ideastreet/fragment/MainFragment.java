@@ -1,5 +1,6 @@
 package com.stav.ideastreet.fragment;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -22,9 +23,13 @@ import android.widget.Toast;
 import com.stav.ideastreet.R;
 import com.stav.ideastreet.bean.MyUser;
 import com.stav.ideastreet.bean.Post;
+import com.stav.ideastreet.bean.PostOther;
 import com.stav.ideastreet.ui.CommentListActivity;
 import com.stav.ideastreet.ui.LoginActivity;
+import com.stav.ideastreet.ui.SearchUserActivity;
+import com.stav.ideastreet.ui.UserInfoActivity;
 import com.stav.ideastreet.util.StringUtils;
+import com.stav.ideastreet.utils.AnimationTools;
 import com.stav.ideastreet.widget.PagerSlidingTabStrip;
 
 import java.util.ArrayList;
@@ -37,9 +42,15 @@ import cn.bmob.v3.datatype.BmobQueryResult;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.SQLQueryListener;
+import cn.bmob.v3.listener.UpdateListener;
+import rx.Subscription;
+import rx.subscriptions.CompositeSubscription;
+
+import static com.stav.ideastreet.base.BaseApplication.showToast;
 
 public class MainFragment extends Fragment {
     protected PagerSlidingTabStrip tabs;
+    private CompositeSubscription mCompositeSubscription;
     protected ViewPager pager;
     private String[] strings;
     public List<View> viewPagerItems;//每一页显示的View
@@ -477,11 +488,11 @@ public class MainFragment extends Fragment {
             TextView tv_selector;
             TextView tv_createAt;
 //            TextView tv_comment_num;
-//            TextView tv_like_num;
-//            ImageButton ib_enshrine;
-//            ImageButton ib_author;
-//            ImageButton ib_commment;
-//            ImageButton ib_like;
+            TextView tv_like_num;
+            ImageButton ib_enshrine;
+            ImageButton ib_author;
+            ImageButton ib_commment;
+            ImageButton ib_like;
         }
 
         @Override
@@ -511,11 +522,11 @@ public class MainFragment extends Fragment {
                 holder.tv_selector = (TextView) convertView.findViewById(R.id.tv_selector);
                 holder.tv_createAt = (TextView) convertView.findViewById(R.id.tv_createAt);
 //                holder.tv_comment_num = (TextView) convertView.findViewById(R.id.tv_comment_num);
-//                holder.tv_like_num = (TextView) convertView.findViewById(R.id.tv_like_num);
-//                holder.ib_enshrine = (ImageButton) convertView.findViewById(R.id.ib_enshrine);
-//                holder.ib_author = (ImageButton) convertView.findViewById(R.id.ib_author);
-//                holder.ib_commment = (ImageButton) convertView.findViewById(R.id.ib_commment);
-//                holder.ib_like = (ImageButton) convertView.findViewById(R.id.ib_like);
+                holder.tv_like_num = (TextView) convertView.findViewById(R.id.tv_like_num);
+                holder.ib_enshrine = (ImageButton) convertView.findViewById(R.id.ib_enshrine);
+                holder.ib_author = (ImageButton) convertView.findViewById(R.id.ib_author);
+                holder.ib_commment = (ImageButton) convertView.findViewById(R.id.ib_commment);
+                holder.ib_like = (ImageButton) convertView.findViewById(R.id.ib_like);
 
                 convertView.setTag(holder);
             } else {
@@ -524,25 +535,110 @@ public class MainFragment extends Fragment {
 
             // Bind the data efficiently with the holder.
             final Post weibo = weibos.get(position);
-            MyUser user = weibo.getAuthor();
+            final MyUser user = weibo.getAuthor();
             holder.tv_author.setText(user==null?"":user.getUsername()); //发布人
             holder.tv_createAt.setText(weibo.getCreatedAt());   //创意发布时间
             holder.tv_selector.setText(weibo.getSelector());    //创意分类
 
-            final String str = weibo.getContent();
+            holder.tv_like_num.setText(weibo.getLikeNum()+"");  //点赞数
+            notifyDataSetChanged();
+            //当点赞数为0时不显示
+            if (holder.tv_like_num.getText() == 0+"") {
+                holder.tv_like_num.setVisibility(View.INVISIBLE);
+            }
+            //点击点击按钮
+            holder.ib_like.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int likeNum = weibo.getLikeNum();
+                    boolean flag = weibo.isZanFocus();
+                    // 判断当前flag是点赞还是取消赞,是的话就给bean值减1，否则就加1
+                    if (flag) {
+                        weibo.setLikeNum(likeNum - 1);
+                        holder.tv_like_num.setText((likeNum-1)+"");
+                        holder.ib_like.setBackgroundResource(R.drawable.ic_unlike);
+                    } else {
+                        weibo.setLikeNum(likeNum + 1);
+                        holder.tv_like_num.setText((likeNum+1)+"");
+                        holder.ib_like.setBackgroundResource(R.drawable.ic_likeed);
+                    }
+                    // 反向存储记录，实现取消点赞功能
+                    weibo.setZanFocus(!flag);
+                    AnimationTools.scale(holder.ib_like);
 
-//            holder.tv_content.setText(str);
+                    addSubscription(weibo.update(new UpdateListener() {
+                        @Override
+                        public void done(BmobException e) {
+                            if (e == null) {
+                                showToast("");
+                            } else {
+                                Log.d("",e+"");
+                            }
+                        }
+                    }));
+                }
+            });
+
+            if (weibo.isEnshrine()) {
+                holder.ib_enshrine.setBackgroundResource(R.mipmap.base_action_bar_enshrine_bg_p);
+            } else {
+                holder.ib_enshrine.setBackgroundResource(R.mipmap.base_action_bar_enshrine_bg_n);
+            }
+            //点击收藏按钮
+            holder.ib_enshrine.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    boolean flag = weibo.isEnshrine();
+                    // 判断当前flag是点赞还是取消赞,是的话就给bean值减1，否则就加1
+                    if (flag) {
+                        holder.ib_enshrine.setBackgroundResource(R.mipmap.base_action_bar_enshrine_bg_n);
+                        weibo.setEnshrine(false);
+                    } else {
+                        holder.ib_enshrine.setBackgroundResource(R.mipmap.base_action_bar_enshrine_bg_p);
+                        weibo.setEnshrine(true);
+                    }
+                    // 反向存储记录，实现取消点赞功能
+                    weibo.setEnshrine(!flag);
+                    AnimationTools.scale(holder.ib_enshrine);
+
+                    addSubscription(weibo.update(new UpdateListener() {
+                        @Override
+                        public void done(BmobException e) {
+                            if (e == null) {
+                                showToast("");
+                            } else {
+                                Log.d("",e+"");
+                            }
+                        }
+                    }));
+                }
+            });
+
+
+
+            final String str = weibo.getContent();
             // 特殊文字处理,将表情等转换一下
             holder.tv_content.setText(StringUtils.getEmotionContent(getContext(), holder.tv_content, str)); //发布创意内容
 
-
-            convertView.setOnClickListener(new View.OnClickListener() {
+            //点击进入创意评论页
+            holder.ib_commment.setOnClickListener(new View.OnClickListener() {
 
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(mContext, CommentListActivity.class);
                     intent.putExtra("objectId", weibo.getObjectId());
                     mContext.startActivity(intent);
+                }
+            });
+
+            //点击进入添加好友页
+            holder.ib_author.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Bundle bundle = new Bundle();
+                    MyUser user = weibo.getAuthor();
+                    bundle.putSerializable("u", user);
+                    startActivity(UserInfoActivity.class, bundle, false);
                 }
             });
 
@@ -570,5 +666,26 @@ public class MainFragment extends Fragment {
         tabs.setSelectedTabColor(0xff0b9a27);
 
     }
+
+    /**
+     * 解决Subscription内存泄露问题
+     * @param s
+     */
+    public void addSubscription(Subscription s) {
+        if (this.mCompositeSubscription == null) {
+            this.mCompositeSubscription = new CompositeSubscription();
+        }
+        this.mCompositeSubscription.add(s);
+    }
+
+    public void startActivity(Class<? extends Activity> target, Bundle bundle, boolean finish) {
+        Intent intent = new Intent();
+        intent.setClass(getActivity(), target);
+        if (bundle != null)
+            intent.putExtra(getActivity().getPackageName(), bundle);
+        startActivity(intent);
+    }
+
+
 
 }
