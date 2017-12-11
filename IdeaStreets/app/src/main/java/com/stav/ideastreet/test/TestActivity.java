@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -31,24 +32,42 @@ import cn.bmob.v3.listener.SaveListener;
  */
 public class TestActivity extends AppCompatActivity {
 
+    private Post mWeibo;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
 
+        mWeibo = new Post();
+        mWeibo.setObjectId(getIntent().getStringExtra("objectId"));
+
+
     }
 
     public void test(View view) {
-        PostOther p2 = new PostOther();
-        p2.setName("lucky");
-        p2.setAddress("北京海淀");
-        p2.save(new SaveListener<String>() {
+
+        MyUser user = BmobUser.getCurrentUser(MyUser.class);
+        if(user == null){
+            Toast.makeText(this, "发表评论前请先登陆", Toast.LENGTH_SHORT).show();
+            return;
+        }else if(TextUtils.isEmpty("123")){
+            Toast.makeText(this, "发表评论不能为空", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        final PostOther comment = new PostOther();
+//        comment.setPost(mWeibo);
+//        comment.setUser(user);
+        comment.setEnshrine(false);
+        comment.save(new SaveListener<String>() {
+
             @Override
-            public void done(String objectId,BmobException e) {
+            public void done(String s, BmobException e) {
                 if(e==null){
-                    Toast.makeText(TestActivity.this, "添加数据成功，返回objectId为："+objectId, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "评论成功", Toast.LENGTH_SHORT).show();
                 }else{
-                    Toast.makeText(TestActivity.this, "创建数据失败：" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Log.d("",e+"");
                 }
             }
         });

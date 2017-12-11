@@ -6,6 +6,7 @@ import java.sql.Date;
 import java.util.List;
 
 import cn.bmob.v3.BmobUser;
+import cn.bmob.v3.datatype.BmobRelation;
 
 /**
  * @author stav
@@ -25,6 +26,10 @@ public class MyUser extends BmobUser {
     private Integer age;
     private Integer num;
     private String sex;
+
+
+
+    private BmobRelation favorite;
 
 //    private Date createdAt;
 //    private Date updatedAt;
@@ -91,7 +96,12 @@ public class MyUser extends BmobUser {
     public void setBanker(Person banker) {
         this.banker = banker;
     }
-
+    public BmobRelation getFavorite() {
+        return favorite;
+    }
+    public void setFavorite(BmobRelation favorite) {
+        this.favorite = favorite;
+    }
     public String getAvatar() {
         return avatar;
     }

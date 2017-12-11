@@ -123,17 +123,19 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+        <activity android:name=".test.TestActivity"/>
 
-        <!--<activity-->
-            <!--android:name=".test.TestActivity"-->
-            <!--android:launchMode="singleTask"-->
-            <!--android:screenOrientation="portrait">-->
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.MAIN"/>-->
+        <!-- <activity -->
+        <!-- android:name=".test.TestActivity" -->
+        <!-- android:launchMode="singleTask" -->
+        <!-- android:screenOrientation="portrait"> -->
+        <!-- <intent-filter> -->
+        <!-- <action android:name="android.intent.action.MAIN"/> -->
 
-                <!--<category android:name="android.intent.category.LAUNCHER"/>-->
-            <!--</intent-filter>-->
-        <!--</activity>-->
+
+        <!-- <category android:name="android.intent.category.LAUNCHER"/> -->
+        <!-- </intent-filter> -->
+        <!-- </activity> -->
 
         <activity
             android:name="com.mob.tools.MobUIShell"
@@ -358,6 +360,8 @@
         <activity android:name=".ui.ContactActivity"/>
         <activity android:name=".ui.PublishActivity"/>
         <activity android:name=".ui.WriteActivity"/>
+        <activity android:name=".EnshrineActivity">
+        </activity>
     </application>
 
 </manifest>

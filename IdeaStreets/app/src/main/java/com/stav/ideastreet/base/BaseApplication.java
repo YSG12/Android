@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.orhanobut.logger.Logger;
 import com.stav.ideastreet.R;
+import com.stav.ideastreet.bean.MyUser;
 import com.stav.ideastreet.utils.ConstantValue;
 import com.stav.ideastreet.utils.PrefUtils;
 import com.stav.ideastreet.utils.StringUtils;
@@ -29,6 +30,7 @@ import java.io.FileReader;
 
 import cn.bmob.newim.BmobIM;
 import cn.bmob.v3.Bmob;
+import cn.bmob.v3.BmobUser;
 import cn.jpush.android.api.JPushInterface;
 import rx.Subscription;
 import rx.subscriptions.CompositeSubscription;
@@ -41,7 +43,7 @@ public class BaseApplication extends Application {
 	static Resources _resource;
 	private static String lastToast = "";
 	private static long lastToastTime;
-
+	private static BaseApplication myApplication = null;
 
 	private static boolean sIsAtLeastGB;
 	public static String APPID = "73be482259546dce10268f6f48349f09";
@@ -55,6 +57,18 @@ public class BaseApplication extends Application {
 
 	private static BaseApplication INSTANCE;
 
+	public static BaseApplication getInstance(){
+		return myApplication;
+	}
+
+	public MyUser getCurrentUser() {
+		MyUser user = BmobUser.getCurrentUser(MyUser.class);
+		if(user!=null){
+			return user;
+		}
+		return null;
+	}
+
 	public static BaseApplication INSTANCE() {
 		return INSTANCE;
 	}
@@ -62,6 +76,7 @@ public class BaseApplication extends Application {
 	private void setInstance(BaseApplication app) {
 		setBaseApplication(app);
 	}
+
 
 	private static void setBaseApplication(BaseApplication a) {
 		BaseApplication.INSTANCE = a;

@@ -480,9 +480,10 @@ public class WriteActivity extends ParentWithNaviActivity implements AdapterView
         Post weibo = new Post();
         weibo.setContent(content);
         weibo.setSelector(mSelect);
-        weibo.setLikeNum(0);
-        weibo.setEnshrine(false);
-        weibo.setZanFocus(false);   //数值初始化点赞状态为0
+        weibo.setLove(0);
+        weibo.setPass(true);
+//        weibo.setMyLove(false);
+//        weibo.setZanFocus(false);   //数值初始化点赞状态为0
 
         String[] str1 = new String[] {"创意饰品","创意美食","创意设计","创意陶瓷","创意礼物","创意家居","人才市场"};
         int[] intTemp = new int[str1.length];

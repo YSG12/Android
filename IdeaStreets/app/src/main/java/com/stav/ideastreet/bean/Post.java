@@ -27,55 +27,22 @@ public class Post extends BmobObject {
      *
      */
     private static final long serialVersionUID = 1L;
+    private String title;   //帖子标题
+    private int test;   //帖子分类
+    private int love;   //点赞个数
+    private String selector;    //帖子分类
+    private String content; //帖子内容
+    private MyUser author;  // 微博发布者
+    private BmobFile image; //微博图片
 
-    /**
-     *  帖子标题
-     */
-    private String title;
-
-    /**
-     *  帖子分类
-     */
-    private int test;
-
-    /**
-        *  点赞数
-        */
-    private int likeNum;
-
-    /**
-     *  帖子分类
-     */
-    private String selector;
-
-    /**
-     *  帖子内容
-     */
-    private String content;
-
-    /**
-     *  是否点赞
-     */
-    private boolean zanFocus;
-
-    /**
-       *  是否点赞
-       */
-      private boolean enshrine;
-
-    /**
-     *  微博发布者
-     */
-    private MyUser author;
-    /**
-     *  微博图片
-     */
-    private BmobFile image;
 
     /**
      *  一对多关系：用于存储喜欢该帖子的所有用户
      */
-    private BmobRelation likes;
+    private BmobRelation relation;
+    private boolean myFav;//收藏
+    private boolean myLove;//赞
+    private boolean isPass;//赞
 
 
     public String getTitle() {
@@ -83,12 +50,6 @@ public class Post extends BmobObject {
     }
     public void setTitle(String title) {
         this.title = title;
-    }
-    public BmobRelation getLikes() {
-        return likes;
-    }
-    public void setLikes(BmobRelation likes) {
-        this.likes = likes;
     }
     public BmobFile getImage() {
         return image;
@@ -120,25 +81,36 @@ public class Post extends BmobObject {
     public void setSelector(String selector) {
         this.selector = selector;
     }
-    public int getLikeNum() {
-        return likeNum;
+    public int getLove() {
+        return love;
     }
-    public void setLikeNum(int likeNum) {
-        this.likeNum = likeNum;
+    public void setLove(int love) {
+        this.love = love;
     }
-    public boolean isZanFocus() {
-        return zanFocus;
+    public boolean isMyFav() {
+        return myFav;
     }
-    public void setZanFocus(boolean zanFocus) {
-        this.zanFocus = zanFocus;
+    public void setMyFav(boolean myFav) {
+        this.myFav = myFav;
     }
-    public boolean isEnshrine() {
-        return enshrine;
+    public boolean isMyLove() {
+        return myLove;
     }
-    public void setEnshrine(boolean enshrine) {
-        this.enshrine = enshrine;
+    public void setMyLove(boolean myLove) {
+        this.myLove = myLove;
     }
-
+    public boolean isPass() {
+        return isPass;
+    }
+    public void setPass(boolean isPass) {
+        this.isPass = isPass;
+    }
+    public BmobRelation getRelation() {
+        return relation;
+    }
+    public void setRelation(BmobRelation relation) {
+        this.relation = relation;
+    }
 
 //	/**
 //	 * 微博的评论，一条微博是对应多条评论的，像这种一对多的情形，请使用BmobRelation类型

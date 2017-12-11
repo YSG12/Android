@@ -15,6 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.stav.ideastreet.EnshrineActivity;
 import com.stav.ideastreet.R;
 import com.stav.ideastreet.bean.MyUser;
 import com.stav.ideastreet.ui.ContactActivity;
@@ -124,6 +125,14 @@ public class CenterFragment extends Fragment {
             @Override
             public void onClick(View v) {
 				startActivity(new Intent(getContext(), ContactActivity.class));
+            }
+        });
+
+		//点击按钮添加好友
+		rlEnshrine.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+				startActivity(new Intent(getContext(), EnshrineActivity.class));
             }
         });
 

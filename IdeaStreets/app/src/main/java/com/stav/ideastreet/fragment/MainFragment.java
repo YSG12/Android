@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,14 +17,20 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.lidroid.xutils.util.LogUtils;
 import com.stav.ideastreet.R;
+import com.stav.ideastreet.adapter.MAdapter;
+import com.stav.ideastreet.bean.Comment;
 import com.stav.ideastreet.bean.MyUser;
 import com.stav.ideastreet.bean.Post;
 import com.stav.ideastreet.bean.PostOther;
+import com.stav.ideastreet.db.DatabaseUtil;
+import com.stav.ideastreet.test.TestActivity;
 import com.stav.ideastreet.ui.CommentListActivity;
 import com.stav.ideastreet.ui.LoginActivity;
 import com.stav.ideastreet.ui.SearchUserActivity;
@@ -34,14 +41,18 @@ import com.stav.ideastreet.widget.PagerSlidingTabStrip;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.logging.Logger;
 
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
+import cn.bmob.v3.datatype.BmobPointer;
 import cn.bmob.v3.datatype.BmobQueryResult;
+import cn.bmob.v3.datatype.BmobRelation;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.SQLQueryListener;
+import cn.bmob.v3.listener.SaveListener;
 import cn.bmob.v3.listener.UpdateListener;
 import rx.Subscription;
 import rx.subscriptions.CompositeSubscription;
@@ -62,7 +73,9 @@ public class MainFragment extends Fragment {
     ImageButton btn_publish;
 
     static List<Post> weibos = new ArrayList<>();
-    MainFragment.MAdapter adapter;
+    static List<PostOther> postOthers = new ArrayList<>();
+//    MainFragment.MAdapter adapter;
+    MAdapter adapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -111,7 +124,7 @@ public class MainFragment extends Fragment {
      * 人才市场pager
      */
     private void pagerTalentMarket() {
-        adapter = new MainFragment.MAdapter(getActivity());
+        adapter = new MAdapter(getActivity(),weibos);
         lv7 = (ListView) pagerTalentMarket.findViewById(R.id.listview);
         lv7.setAdapter(adapter);
         findWeibo_g();
@@ -121,7 +134,7 @@ public class MainFragment extends Fragment {
      * 创意家居pager
      */
     private void pagerCreativeLiving() {
-        adapter = new MainFragment.MAdapter(getActivity());
+        adapter = new MAdapter(getActivity(),weibos);
         lv6 = (ListView) pagerCreativeLiving.findViewById(R.id.listview);
         lv6.setAdapter(adapter);
         findWeibo_f();
@@ -131,7 +144,7 @@ public class MainFragment extends Fragment {
      * 创意礼物pager
      */
     private void pagerCreativeGifts() {
-        adapter = new MainFragment.MAdapter(getActivity());
+        adapter = new MAdapter(getActivity(),weibos);
         lv5 = (ListView) pagerCreativeGifts.findViewById(R.id.listview);
         lv5.setAdapter(adapter);
         findWeibo_e();
@@ -141,7 +154,7 @@ public class MainFragment extends Fragment {
      * 创意陶瓷pager
      */
     private void pagerCreativeCeramic() {
-        adapter = new MainFragment.MAdapter(getActivity());
+        adapter = new MAdapter(getActivity(),weibos);
         lv4 = (ListView) pagerCreativeCeramic.findViewById(R.id.listview);
         lv4.setAdapter(adapter);
         findWeibo_d();
@@ -151,7 +164,7 @@ public class MainFragment extends Fragment {
      * 创意设计pager
      */
     private void pagerCreativeDesign() {
-        adapter = new MainFragment.MAdapter(getActivity());
+        adapter = new MAdapter(getActivity(),weibos);
         lv3 = (ListView) pagerCreativeDesign.findViewById(R.id.listview);
         lv3.setAdapter(adapter);
         findWeibo_c();
@@ -162,7 +175,7 @@ public class MainFragment extends Fragment {
      * 创意美食pager
      */
     private void pagerCuisine() {
-        adapter = new MainFragment.MAdapter(getActivity());
+        adapter = new MAdapter(getActivity(),weibos);
         lv2 = (ListView) pagerCuisine.findViewById(R.id.listview);
         lv2.setAdapter(adapter);
         findWeibo_b();
@@ -173,7 +186,7 @@ public class MainFragment extends Fragment {
      * 创意饰品pager
      */
     private void pagerCreativeOrnament() {
-        adapter = new MainFragment.MAdapter(getActivity());
+        adapter = new MAdapter(getActivity(),weibos);
         lv1 = (ListView) pagerCreativeOrnament.findViewById(R.id.listview);
         lv1.setAdapter(adapter);
 
@@ -431,8 +444,6 @@ public class MainFragment extends Fragment {
 
     }
 
-
-
     public class MyAdapter extends PagerAdapter{
 
 
@@ -467,182 +478,6 @@ public class MainFragment extends Fragment {
         public Object instantiateItem(ViewGroup container, int position) {
             container.addView(views.get(position), 0);
             return views.get(position);
-        }
-    }
-
-    public class MAdapter extends BaseAdapter {
-
-
-        private LayoutInflater mInflater;
-
-        private Context mContext;
-
-        public MAdapter(Context context) {
-            mContext = context;
-            mInflater = LayoutInflater.from(context);
-        }
-
-        class ViewHolder {
-            TextView tv_content;
-            TextView tv_author;
-            TextView tv_selector;
-            TextView tv_createAt;
-//            TextView tv_comment_num;
-            TextView tv_like_num;
-            ImageButton ib_enshrine;
-            ImageButton ib_author;
-            ImageButton ib_commment;
-            ImageButton ib_like;
-        }
-
-        @Override
-        public int getCount() {
-            return weibos.size();
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return position;
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            final MainFragment.MAdapter.ViewHolder holder;
-            if (convertView == null) {
-                convertView = mInflater.inflate(R.layout.list_item_weibo, null);
-
-                holder = new MainFragment.MAdapter.ViewHolder();
-                holder.tv_content = (TextView) convertView.findViewById(R.id.tv_content);
-                holder.tv_author = (TextView) convertView.findViewById(R.id.tv_author);
-                holder.tv_selector = (TextView) convertView.findViewById(R.id.tv_selector);
-                holder.tv_createAt = (TextView) convertView.findViewById(R.id.tv_createAt);
-//                holder.tv_comment_num = (TextView) convertView.findViewById(R.id.tv_comment_num);
-                holder.tv_like_num = (TextView) convertView.findViewById(R.id.tv_like_num);
-                holder.ib_enshrine = (ImageButton) convertView.findViewById(R.id.ib_enshrine);
-                holder.ib_author = (ImageButton) convertView.findViewById(R.id.ib_author);
-                holder.ib_commment = (ImageButton) convertView.findViewById(R.id.ib_commment);
-                holder.ib_like = (ImageButton) convertView.findViewById(R.id.ib_like);
-
-                convertView.setTag(holder);
-            } else {
-                holder = (MainFragment.MAdapter.ViewHolder) convertView.getTag();
-            }
-
-            // Bind the data efficiently with the holder.
-            final Post weibo = weibos.get(position);
-            final MyUser user = weibo.getAuthor();
-            holder.tv_author.setText(user==null?"":user.getUsername()); //发布人
-            holder.tv_createAt.setText(weibo.getCreatedAt());   //创意发布时间
-            holder.tv_selector.setText(weibo.getSelector());    //创意分类
-
-            holder.tv_like_num.setText(weibo.getLikeNum()+"");  //点赞数
-            notifyDataSetChanged();
-            //当点赞数为0时不显示
-            if (holder.tv_like_num.getText() == 0+"") {
-                holder.tv_like_num.setVisibility(View.INVISIBLE);
-            }
-            //点击点击按钮
-            holder.ib_like.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int likeNum = weibo.getLikeNum();
-                    boolean flag = weibo.isZanFocus();
-                    // 判断当前flag是点赞还是取消赞,是的话就给bean值减1，否则就加1
-                    if (flag) {
-                        weibo.setLikeNum(likeNum - 1);
-                        holder.tv_like_num.setText((likeNum-1)+"");
-                        holder.ib_like.setBackgroundResource(R.drawable.ic_unlike);
-                    } else {
-                        weibo.setLikeNum(likeNum + 1);
-                        holder.tv_like_num.setText((likeNum+1)+"");
-                        holder.ib_like.setBackgroundResource(R.drawable.ic_likeed);
-                    }
-                    // 反向存储记录，实现取消点赞功能
-                    weibo.setZanFocus(!flag);
-                    AnimationTools.scale(holder.ib_like);
-
-                    addSubscription(weibo.update(new UpdateListener() {
-                        @Override
-                        public void done(BmobException e) {
-                            if (e == null) {
-                                showToast("");
-                            } else {
-                                Log.d("",e+"");
-                            }
-                        }
-                    }));
-                }
-            });
-
-            if (weibo.isEnshrine()) {
-                holder.ib_enshrine.setBackgroundResource(R.mipmap.base_action_bar_enshrine_bg_p);
-            } else {
-                holder.ib_enshrine.setBackgroundResource(R.mipmap.base_action_bar_enshrine_bg_n);
-            }
-            //点击收藏按钮
-            holder.ib_enshrine.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    boolean flag = weibo.isEnshrine();
-                    // 判断当前flag是点赞还是取消赞,是的话就给bean值减1，否则就加1
-                    if (flag) {
-                        holder.ib_enshrine.setBackgroundResource(R.mipmap.base_action_bar_enshrine_bg_n);
-                        weibo.setEnshrine(false);
-                    } else {
-                        holder.ib_enshrine.setBackgroundResource(R.mipmap.base_action_bar_enshrine_bg_p);
-                        weibo.setEnshrine(true);
-                    }
-                    // 反向存储记录，实现取消点赞功能
-                    weibo.setEnshrine(!flag);
-                    AnimationTools.scale(holder.ib_enshrine);
-
-                    addSubscription(weibo.update(new UpdateListener() {
-                        @Override
-                        public void done(BmobException e) {
-                            if (e == null) {
-                                showToast("");
-                            } else {
-                                Log.d("",e+"");
-                            }
-                        }
-                    }));
-                }
-            });
-
-
-
-            final String str = weibo.getContent();
-            // 特殊文字处理,将表情等转换一下
-            holder.tv_content.setText(StringUtils.getEmotionContent(getContext(), holder.tv_content, str)); //发布创意内容
-
-            //点击进入创意评论页
-            holder.ib_commment.setOnClickListener(new View.OnClickListener() {
-
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(mContext, CommentListActivity.class);
-                    intent.putExtra("objectId", weibo.getObjectId());
-                    mContext.startActivity(intent);
-                }
-            });
-
-            //点击进入添加好友页
-            holder.ib_author.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Bundle bundle = new Bundle();
-                    MyUser user = weibo.getAuthor();
-                    bundle.putSerializable("u", user);
-                    startActivity(UserInfoActivity.class, bundle, false);
-                }
-            });
-
-            return convertView;
         }
     }
 
@@ -685,7 +520,5 @@ public class MainFragment extends Fragment {
             intent.putExtra(getActivity().getPackageName(), bundle);
         startActivity(intent);
     }
-
-
 
 }

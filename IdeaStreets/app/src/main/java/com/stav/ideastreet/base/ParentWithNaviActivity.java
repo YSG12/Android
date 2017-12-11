@@ -6,6 +6,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -136,7 +137,6 @@ public abstract class ParentWithNaviActivity extends BaseActivity {
     public Drawable getDrawableResources(int id){
         return getResources().getDrawable(id);
     }
-
     public interface ToolBarListener {
         void clickLeft();
 
