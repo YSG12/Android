@@ -360,7 +360,7 @@
         <activity android:name=".ui.ContactActivity"/>
         <activity android:name=".ui.PublishActivity"/>
         <activity android:name=".ui.WriteActivity"/>
-        <activity android:name=".EnshrineActivity">
+        <activity android:name=".ui.EnshrineActivity">
         </activity>
     </application>
 

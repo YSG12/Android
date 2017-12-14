@@ -48,6 +48,7 @@ public class ReceiveImageHolder extends BaseViewHolder {
     //用户信息的获取必须在buildFromDB之前，否则会报错'Entity is detached from DAO context'
     final BmobIMUserInfo info = msg.getBmobIMUserInfo();
     ImageLoaderFactory.getLoader().loadAvator(iv_avatar,info != null ? info.getAvatar() : null, R.mipmap.head);
+    
     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy年MM月dd日 HH:mm");
     String time = dateFormat.format(msg.getCreateTime());
     tv_time.setText(time);

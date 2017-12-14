@@ -6,6 +6,7 @@ import java.sql.Date;
 import java.util.List;
 
 import cn.bmob.v3.BmobUser;
+import cn.bmob.v3.datatype.BmobFile;
 import cn.bmob.v3.datatype.BmobRelation;
 
 /**
@@ -21,37 +22,27 @@ public class MyUser extends BmobUser {
         setUsername(friend.getName());
         setAvatar(friend.getAvatar());
     }
+    public MyUser(BmobFile bmobFile) {
+        this.ivAvatar = bmobFile;
+    }
 
     private static final long serialVersionUID = 1L;
     private Integer age;
     private Integer num;
     private String sex;
 
-
-
     private BmobRelation favorite;
-
 //    private Date createdAt;
 //    private Date updatedAt;
-
     private List<String> hobby;		// 对应服务端Array类型：String类型的集合
     private List<BankCard> cards;	// 对应服务端Array类型:Object类型的集合
 
     private BankCard mainCard;      //主卡
     private Person banker;          //银行工作人员
 
-    public String getMotto() {
-        return motto;
-    }
-
-    public void setMotto(String motto) {
-        this.motto = motto;
-    }
-
     private String motto;          //座右铭
     private String avatar;
-
-
+    private BmobFile ivAvatar;
 
     public String getSex() {
         return sex;
@@ -80,7 +71,6 @@ public class MyUser extends BmobUser {
     public Integer getAge() {
         return age;
     }
-
     public void setAge(Integer age) {
         this.age = age;
     }
@@ -108,6 +98,19 @@ public class MyUser extends BmobUser {
     public void setAvatar(String avatar) {
         this.avatar = avatar;
     }
+    public BmobFile getIvAvatar() {
+        return ivAvatar;
+    }
+    public void setIvAvatar(BmobFile ivAvatar) {
+        this.ivAvatar = ivAvatar;
+    }
+    public String getMotto() {
+        return motto;
+    }
+    public void setMotto(String motto) {
+        this.motto = motto;
+    }
+
     @Override
     public String toString() {
         return getUsername()+"\n"+getObjectId()+"\n"+age+"\n" + motto +

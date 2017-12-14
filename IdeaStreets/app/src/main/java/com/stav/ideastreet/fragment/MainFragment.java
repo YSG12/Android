@@ -1,7 +1,6 @@
 package com.stav.ideastreet.fragment;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -9,7 +8,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,42 +15,30 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.lidroid.xutils.util.LogUtils;
 import com.stav.ideastreet.R;
-import com.stav.ideastreet.adapter.MAdapter;
-import com.stav.ideastreet.bean.Comment;
 import com.stav.ideastreet.bean.MyUser;
 import com.stav.ideastreet.bean.Post;
 import com.stav.ideastreet.bean.PostOther;
 import com.stav.ideastreet.db.DatabaseUtil;
-import com.stav.ideastreet.test.TestActivity;
 import com.stav.ideastreet.ui.CommentListActivity;
 import com.stav.ideastreet.ui.LoginActivity;
-import com.stav.ideastreet.ui.SearchUserActivity;
 import com.stav.ideastreet.ui.UserInfoActivity;
 import com.stav.ideastreet.util.StringUtils;
-import com.stav.ideastreet.utils.AnimationTools;
 import com.stav.ideastreet.widget.PagerSlidingTabStrip;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-import java.util.logging.Logger;
 
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
-import cn.bmob.v3.datatype.BmobPointer;
 import cn.bmob.v3.datatype.BmobQueryResult;
 import cn.bmob.v3.datatype.BmobRelation;
 import cn.bmob.v3.exception.BmobException;
-import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.SQLQueryListener;
-import cn.bmob.v3.listener.SaveListener;
 import cn.bmob.v3.listener.UpdateListener;
 import rx.Subscription;
 import rx.subscriptions.CompositeSubscription;
@@ -124,7 +110,7 @@ public class MainFragment extends Fragment {
      * 人才市场pager
      */
     private void pagerTalentMarket() {
-        adapter = new MAdapter(getActivity(),weibos);
+        adapter = new MAdapter();
         lv7 = (ListView) pagerTalentMarket.findViewById(R.id.listview);
         lv7.setAdapter(adapter);
         findWeibo_g();
@@ -134,7 +120,7 @@ public class MainFragment extends Fragment {
      * 创意家居pager
      */
     private void pagerCreativeLiving() {
-        adapter = new MAdapter(getActivity(),weibos);
+        adapter = new MAdapter();
         lv6 = (ListView) pagerCreativeLiving.findViewById(R.id.listview);
         lv6.setAdapter(adapter);
         findWeibo_f();
@@ -144,7 +130,7 @@ public class MainFragment extends Fragment {
      * 创意礼物pager
      */
     private void pagerCreativeGifts() {
-        adapter = new MAdapter(getActivity(),weibos);
+        adapter = new MAdapter();
         lv5 = (ListView) pagerCreativeGifts.findViewById(R.id.listview);
         lv5.setAdapter(adapter);
         findWeibo_e();
@@ -154,7 +140,7 @@ public class MainFragment extends Fragment {
      * 创意陶瓷pager
      */
     private void pagerCreativeCeramic() {
-        adapter = new MAdapter(getActivity(),weibos);
+        adapter = new MAdapter();
         lv4 = (ListView) pagerCreativeCeramic.findViewById(R.id.listview);
         lv4.setAdapter(adapter);
         findWeibo_d();
@@ -164,7 +150,7 @@ public class MainFragment extends Fragment {
      * 创意设计pager
      */
     private void pagerCreativeDesign() {
-        adapter = new MAdapter(getActivity(),weibos);
+        adapter = new MAdapter();
         lv3 = (ListView) pagerCreativeDesign.findViewById(R.id.listview);
         lv3.setAdapter(adapter);
         findWeibo_c();
@@ -175,7 +161,7 @@ public class MainFragment extends Fragment {
      * 创意美食pager
      */
     private void pagerCuisine() {
-        adapter = new MAdapter(getActivity(),weibos);
+        adapter = new MAdapter();
         lv2 = (ListView) pagerCuisine.findViewById(R.id.listview);
         lv2.setAdapter(adapter);
         findWeibo_b();
@@ -186,7 +172,7 @@ public class MainFragment extends Fragment {
      * 创意饰品pager
      */
     private void pagerCreativeOrnament() {
-        adapter = new MAdapter(getActivity(),weibos);
+        adapter = new MAdapter();
         lv1 = (ListView) pagerCreativeOrnament.findViewById(R.id.listview);
         lv1.setAdapter(adapter);
 
@@ -513,12 +499,249 @@ public class MainFragment extends Fragment {
         this.mCompositeSubscription.add(s);
     }
 
-    public void startActivity(Class<? extends Activity> target, Bundle bundle, boolean finish) {
-        Intent intent = new Intent();
-        intent.setClass(getActivity(), target);
-        if (bundle != null)
-            intent.putExtra(getActivity().getPackageName(), bundle);
-        startActivity(intent);
+
+    public class MAdapter extends BaseAdapter {
+
+        class ViewHolder {
+            TextView tv_content;
+            TextView tv_author;
+            TextView tv_selector;
+            TextView tv_createAt;
+            //            TextView tv_comment_num;
+            TextView tv_like_num;
+            ImageButton ib_enshrine;
+            ImageButton ib_author;
+            ImageButton ib_commment;
+            ImageButton ib_like;
+        }
+
+        @Override
+        public int getCount() {
+            return weibos.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return position;
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public View getView(final int position, View convertView, ViewGroup parent) {
+            final ViewHolder holder;
+            if (convertView == null) {
+                convertView = View.inflate(getActivity(),R.layout.list_item_weibo, null);
+
+                holder = new ViewHolder();
+                holder.tv_content = (TextView) convertView.findViewById(R.id.tv_content);
+                holder.tv_author = (TextView) convertView.findViewById(R.id.tv_author);
+                holder.tv_selector = (TextView) convertView.findViewById(R.id.tv_selector);
+                holder.tv_createAt = (TextView) convertView.findViewById(R.id.tv_createAt);
+//                holder.tv_comment_num = (TextView) convertView.findViewById(R.id.tv_comment_num);
+                holder.tv_like_num = (TextView) convertView.findViewById(R.id.tv_like_num);
+                holder.ib_enshrine = (ImageButton) convertView.findViewById(R.id.ib_enshrine);
+                holder.ib_author = (ImageButton) convertView.findViewById(R.id.ib_author);
+                holder.ib_commment = (ImageButton) convertView.findViewById(R.id.ib_commment);
+                holder.ib_like = (ImageButton) convertView.findViewById(R.id.ib_like);
+
+                convertView.setTag(holder);
+            } else {
+                holder = (ViewHolder) convertView.getTag();
+            }
+
+            // Bind the data efficiently with the holder.
+            final Post weibo = weibos.get(position);
+            final MyUser user = weibo.getAuthor();
+            holder.tv_author.setText(user == null ? "" : user.getUsername()); //发布人
+            holder.tv_createAt.setText(weibo.getCreatedAt());   //创意发布时间
+            holder.tv_selector.setText(weibo.getSelector());    //创意分类
+
+            //当点赞数为0时不显示
+            if (holder.tv_like_num.getText() == 0 + "") {
+                holder.tv_like_num.setVisibility(View.INVISIBLE);
+            }
+            holder.tv_like_num.setText(weibo.getLove() + "");  //点赞数
+
+            if (DatabaseUtil.getInstance(getActivity()).isLoved(weibo)) {
+                holder.tv_like_num.setTextColor(Color.parseColor("#D95555"));
+                holder.ib_like.setBackgroundResource(R.drawable.ic_likeed);
+            } else {
+                holder.tv_like_num.setTextColor(Color.parseColor("#000000"));
+                holder.ib_like.setBackgroundResource(R.drawable.ic_unlike);
+            }
+            //点击点赞按钮
+            holder.ib_like.setOnClickListener(new View.OnClickListener() {
+                boolean oldFav = weibo.isMyFav();
+
+                @Override
+                public void onClick(View v) {
+                    if (user == null) {
+                        showToast("请先登录。");
+                        return;
+                    }
+                    if (weibo.isMyLove()) {
+                        showToast("您已赞过啦");
+                        return;
+                    }
+
+                    if (DatabaseUtil.getInstance(getActivity()).isLoved(weibo)) {
+                        showToast("您已赞过啦");
+                        weibo.setMyLove(true);
+//                        weibo.setLove(weibo.getLove() + 1);
+//                        holder.tv_like_num.setTextColor(Color.parseColor("#D95555"));
+//                        holder.tv_like_num.setText(weibo.getLove() + "");
+                        return;
+                    }
+
+                    weibo.setLove(weibo.getLove() + 1);
+                    holder.tv_like_num.setTextColor(Color.parseColor("#D95555"));
+                    holder.ib_like.setBackgroundResource(R.drawable.ic_likeed);
+                    holder.tv_like_num.setText(weibo.getLove() + "");
+
+                    weibo.increment("love", 1);
+                    if (weibo.isMyFav()) {
+                        weibo.setMyFav(false);
+                    }
+                    weibo.update(new UpdateListener() {
+                        @Override
+                        public void done(BmobException e) {
+
+                            if (e == null) {
+                                weibo.setMyLove(true);
+                                weibo.setMyFav(oldFav);
+                                DatabaseUtil.getInstance(getActivity()).insertFav(weibo);
+                                Log.i("stav", "点赞成功~");
+                            } else {
+                                weibo.setMyLove(true);
+                                weibo.setMyFav(oldFav);
+                            }
+                        }
+                    });
+                }
+            });
+// && DatabaseUtil.getInstance(getActivity()).isLoved(weibo)
+            if (weibo.isMyFav()) {
+                holder.ib_enshrine.setBackgroundResource(R.mipmap.base_action_bar_enshrine_bg_p);
+            } else {
+                holder.ib_enshrine.setBackgroundResource(R.mipmap.base_action_bar_enshrine_bg_n);
+            }
+            //点击收藏按钮
+            holder.ib_enshrine.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onClickFav(v, weibo, holder);
+                }
+            });
+
+
+            final String str = weibo.getContent();
+            // 特殊文字处理,将表情等转换一下
+            holder.tv_content.setText(StringUtils.getEmotionContent(getActivity(), holder.tv_content, str)); //发布创意内容
+
+            //点击进入创意评论页
+            holder.ib_commment.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getActivity(), CommentListActivity.class);
+                    intent.putExtra("objectId", weibo.getObjectId());
+                    getActivity().startActivity(intent);
+                }
+            });
+
+            //点击进入添加好友页
+            holder.ib_author.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Bundle bundle = new Bundle();
+                    MyUser user = weibo.getAuthor();
+                    bundle.putSerializable("u", user);
+                    startActivity(UserInfoActivity.class, bundle, false);
+                }
+            });
+
+
+            return convertView;
+        }
+
+        private void onClickFav(View v, final Post weibo, ViewHolder holder) {
+            // TODO Auto-generated method stub
+            MyUser user = BmobUser.getCurrentUser(MyUser.class);
+            if (user != null && user.getSessionToken() != null) {
+                BmobRelation favRelaton = new BmobRelation();
+
+                weibo.setMyFav(!weibo.isMyFav());
+                if (weibo.isMyFav()) {
+                    holder.ib_enshrine.setBackgroundResource(R.mipmap.base_action_bar_enshrine_bg_p);
+
+//                    ((ImageView) v).setImageResource(R.mipmap.base_action_bar_enshrine_bg_p);
+                    favRelaton.add(weibo);
+                    user.setFavorite(favRelaton);
+                    user.update(new UpdateListener() {
+
+                        @Override
+                        public void done(BmobException e) {
+                            if (e == null) {
+                                DatabaseUtil.getInstance(getActivity()).insertFav(weibo);
+                                Log.i("stav", "收藏成功。");
+                                weibo.setMyFav(true);
+                                weibo.update(new UpdateListener() {
+                                    @Override
+                                    public void done(BmobException e) {
+
+                                    }
+                                });
+                            } else {
+                                // TODO Auto-generated method stub
+                                Log.i("stav", "收藏失败。请检查网络~");
+                                showToast("收藏失败。请检查网络~" + e);
+                            }
+                        }
+                    });
+
+                } else {
+                    holder.ib_enshrine.setBackgroundResource(R.mipmap.base_action_bar_enshrine_bg_n);
+
+//                    ((ImageView) v).setImageResource(R.mipmap.base_action_bar_enshrine_bg_n);
+                    favRelaton.remove(weibo);
+                    user.setFavorite(favRelaton);
+                    user.update(new UpdateListener() {
+                        @Override
+                        public void done(BmobException e) {
+                            if (e == null) {
+                                DatabaseUtil.getInstance(getActivity()).deleteFav(weibo);
+                                Log.i("stav", "取消收藏。");
+                                weibo.setMyFav(false);
+                                weibo.update(new UpdateListener() {
+                                    @Override
+                                    public void done(BmobException e) {
+
+                                    }
+                                });
+                            } else {
+                                showToast("取消收藏失败。请检查网络~" + e);
+                            }
+                        }
+                    });
+                }
+
+            } else {
+                // 前往登录注册界面
+                showToast("收藏前请先登录。");
+            }
+        }
+
+        public void startActivity(Class<? extends Activity> target, Bundle bundle, boolean finish) {
+            Intent intent = new Intent();
+            intent.setClass(getActivity(), target);
+            if (bundle != null)
+                intent.putExtra(getActivity().getPackageName(), bundle);
+            getActivity().startActivity(intent);
+        }
     }
 
 }

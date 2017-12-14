@@ -1,4 +1,4 @@
-package com.stav.ideastreet;
+package com.stav.ideastreet.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.lidroid.xutils.util.LogUtils;
+import com.stav.ideastreet.R;
 import com.stav.ideastreet.adapter.BaseContentAdapter;
 import com.stav.ideastreet.adapter.MAdapter;
 import com.stav.ideastreet.base.ParentWithNaviActivity;

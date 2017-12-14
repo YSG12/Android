@@ -15,17 +15,19 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.stav.ideastreet.EnshrineActivity;
+import com.stav.ideastreet.ui.EnshrineActivity;
 import com.stav.ideastreet.R;
 import com.stav.ideastreet.bean.MyUser;
 import com.stav.ideastreet.ui.ContactActivity;
-import com.stav.ideastreet.ui.SearchUserActivity;
 import com.stav.ideastreet.ui.UpdateInfoActivity;
 import com.stav.ideastreet.ui.LoginActivity;
 import com.stav.ideastreet.ui.RegisterActivity;
 import com.stav.ideastreet.ui.dialog.MyImageDialog;
 import com.stav.ideastreet.utils.ConstantValue;
 import com.stav.ideastreet.utils.PrefUtils;
+
+import org.xutils.image.ImageOptions;
+import org.xutils.x;
 
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
@@ -155,7 +157,19 @@ public class CenterFragment extends Fragment {
 											//更新UI
 											tvMotto.setText(myUser.getMotto());
 											tvUser.setText(myUser.getUsername());
-											ivIcon.setBackgroundResource(R.mipmap.head);
+											ImageOptions options=new ImageOptions.Builder()
+													//设置加载过程中的图片
+													.setLoadingDrawableId(R.drawable.ic_launcher)
+													//设置加载失败后的图片
+													.setFailureDrawableId(R.drawable.ic_launcher)
+													//设置使用缓存
+													.setUseMemCache(true)
+													//设置显示圆形图片
+													.setCircular(false)
+													//设置支持gif
+													.setIgnoreGif(false)
+													.build();
+											x.image().bind(ivIcon, myUser.getAvatar(), options);
 										}
 
 									});
