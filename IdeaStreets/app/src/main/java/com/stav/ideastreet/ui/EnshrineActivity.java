@@ -265,12 +265,4 @@ public class EnshrineActivity extends ParentWithNaviActivity {
         return new MAdapter(getApplicationContext(), mListItems);
     }
 
-
-//    private void setInitialFragment() {
-//        FragmentManager fragmentManager = getSupportFragmentManager();
-//        FragmentTransaction fragmentTransaction = fragmentManager
-//                .beginTransaction();
-//        fragmentTransaction.add(R.id.content_frame_fav, FavFragment.newInstance())
-//                .commit();
-//    }
 }

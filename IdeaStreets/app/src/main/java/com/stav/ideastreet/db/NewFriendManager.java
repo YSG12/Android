@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import com.stav.ideastreet.Config;
+import com.stav.ideastreet.utils.Config;
 import com.stav.ideastreet.bean.MyUser;
 import com.stav.ideastreet.db.dao.DaoMaster;
 import com.stav.ideastreet.db.dao.DaoSession;

@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.text.TextUtils;
 
 import com.stav.ideastreet.base.BaseApplication;
-import com.stav.ideastreet.Config;
+import com.stav.ideastreet.utils.Config;
 import com.stav.ideastreet.R;
 import com.stav.ideastreet.db.NewFriend;
 import com.stav.ideastreet.db.NewFriendManager;

@@ -1,12 +1,16 @@
 package com.stav.ideastreet.ui;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -43,10 +47,15 @@ import com.stav.ideastreet.util.EmotionPagerAdapter;
 import com.stav.ideastreet.util.EmotionUtils;
 import com.stav.ideastreet.util.StringUtils;
 import com.stav.ideastreet.util.Tools;
+import com.stav.ideastreet.utils.CacheUtils;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -59,9 +68,15 @@ import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.datatype.BatchResult;
 import cn.bmob.v3.datatype.BmobFile;
 import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.ProgressCallback;
 import cn.bmob.v3.listener.QueryListListener;
 import cn.bmob.v3.listener.SaveListener;
 import cn.bmob.v3.listener.UploadBatchListener;
+import cn.bmob.v3.listener.UploadFileListener;
+import rx.Observable;
+import rx.Subscriber;
+import rx.functions.Action1;
+import rx.functions.Func1;
 
 import static com.stav.ideastreet.base.BaseApplication.showToast;
 
@@ -70,12 +85,18 @@ import static com.stav.ideastreet.base.BaseApplication.showToast;
  * @author :stav
  * @date :2017-10-25
  */
-public class WriteActivity extends ParentWithNaviActivity implements AdapterView.OnItemClickListener {
+public class WriteActivity extends ParentWithNaviActivity implements AdapterView.OnItemClickListener,View.OnClickListener {
 
     @ViewInject(R.id.write)
     private EditText write;
-    @ViewInject(R.id.images)
-    private GridView gridView;
+    @ViewInject(R.id.open_pic)
+    private ImageView open_pic;
+    @ViewInject(R.id.open_layout)
+    private LinearLayout open_layout;
+    @ViewInject(R.id.take_layout)
+    private LinearLayout take_layout;
+//    @ViewInject(R.id.images)
+//    private GridView gridView;
     @ViewInject(R.id.total_text_num)
     private TextView total_text_num = null;
     @ViewInject(R.id.ll_emotion_dashboard)
@@ -93,8 +114,12 @@ public class WriteActivity extends ParentWithNaviActivity implements AdapterView
     private ArrayList<HashMap<String, Object>> imageItem;
     private SimpleAdapter simpleAdapter;     //适配器
     private Tools tools;
+    private String dateTime;
     private EmotionPagerAdapter emotionPagerGvAdapter;
-
+    private static final int REQUEST_CODE_ALBUM = 1;
+    private static final int REQUEST_CODE_CAMERA = 2;
+    String imgUrl;
+    String targeturl = null;
     /**
      * 设置actionBar
      * @return
@@ -113,9 +138,8 @@ public class WriteActivity extends ParentWithNaviActivity implements AdapterView
             //退出该页面
             @Override
             public void clickLeft() {
-//                finish();
-                Log.e("stav1",imagepaths+"");
-                insertBatchDatasWithOne();
+                finish();
+//                showToast(imgUrl+"");
             }
 
             //发表微博
@@ -126,6 +150,62 @@ public class WriteActivity extends ParentWithNaviActivity implements AdapterView
         };
     }
 
+    private void uploadImg(){
+        final BmobFile bmobFile = new BmobFile(new File(targeturl));
+        bmobFile.uploadObservable(new ProgressCallback() {
+            @Override
+            public void onProgress(Integer integer, long l) {
+
+            }
+        }).doOnNext(new Action1<Void>() {
+            @Override
+            public void call(Void aVoid) {
+                String url = bmobFile.getUrl();
+                log("上传成功："+url+","+bmobFile.getFilename());
+                imgUrl = url;
+            }
+        }).concatMap(new Func1<Void, Observable<String>>() {//将bmobFile保存到movie表中
+            @Override
+            public Observable<String> call(Void aVoid) {
+                return saveObservable(new Avatar("冰封：重生之门",bmobFile));
+            }
+        }).concatMap(new Func1<String, Observable<String>>() {//下载文件
+            @Override
+            public Observable<String> call(String s) {
+                return bmobFile.downloadObservable(new ProgressCallback() {
+                    @Override
+                    public void onProgress(Integer value, long total) {
+                        log("download-->onProgress:"+value+","+total);
+                    }
+                });
+            }
+        }).subscribe(new Subscriber<String>() {
+            @Override
+            public void onCompleted() {
+                log("--onCompleted--");
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                log("--onError--:"+e.getMessage());
+            }
+
+            @Override
+            public void onNext(String s) {
+                log("download的文件地址："+s);
+            }
+        });
+    }
+
+    /**
+     * save的Observable
+     * @param obj
+     * @return
+     */
+    private Observable<String> saveObservable(BmobObject obj){
+        return obj.saveObservable();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -133,6 +213,7 @@ public class WriteActivity extends ParentWithNaviActivity implements AdapterView
         initNaviView();
         ViewUtils.inject(this);
         imagepaths = new ArrayList<>();
+
         initData();
 
         //注册输入框内容监听器
@@ -163,15 +244,13 @@ public class WriteActivity extends ParentWithNaviActivity implements AdapterView
             }
         });
 
-        //初始化九宫格布局
-        initGridView();
-
         //初始化表情包加载
         initEmotion();
     }
 
     //发布创意
     private void publish() {
+        uploadImg();
         String mText = write.getText().toString();
         int len = mText.length();
         if (len == 0) {
@@ -200,63 +279,59 @@ public class WriteActivity extends ParentWithNaviActivity implements AdapterView
     }
 
 
-    //初始化GridView
-    private void initGridView() {
-        bmp = BitmapFactory.decodeResource(getResources(), R.drawable.add);
-        imageItem = new ArrayList<HashMap<String, Object>>();
-        HashMap<String, Object> map = new HashMap<String, Object>();
-        map.put("itemImage", bmp);
-        imageItem.add(map);
-        simpleAdapter = new SimpleAdapter(this,
-                imageItem, R.layout.griditem_addpic,
-                new String[]{"itemImage"}, new int[]{R.id.imageView});
-        simpleAdapter.setViewBinder(new SimpleAdapter.ViewBinder() {
-            @Override
-            public boolean setViewValue(View view, Object data,
-                                        String textRepresentation) {
-                if (view instanceof ImageView && data instanceof Bitmap) {
-                    ImageView i = (ImageView) view;
-                    i.setImageBitmap((Bitmap) data);
-                    return true;
-                }
-                return false;
-            }
-        });
-        gridView.setAdapter(simpleAdapter);
-        /**
-         * 监听GridView点击事件
-         */
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-                if (imageItem.size() == 10) { //第一张为默认图片
-                    Toast.makeText(WriteActivity.this, "图片数9张已满", Toast.LENGTH_SHORT).show();
-                } else if (position == 0) { //点击图片位置为+ 0对应0张图片
-                    //选择图片
-                    Intent intent = new Intent(Intent.ACTION_PICK,
-                            android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                    startActivityForResult(intent, 1);
-                    //通过onResume()刷新数据
-                } else {
-                    dialog(position);
-
-                }
-            }
-        });
-    }
-
     //初始化数据
     private void initData() {
         // 隐藏或显示表情面板
-        ib_add_emotion.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
+        ib_add_emotion.setOnClickListener(this);
+        open_layout.setOnClickListener(this);
+        take_layout.setOnClickListener(this);
+        open_pic.setOnClickListener(this);
+
+
+
+    }
+
+    @Override
+    public void onClick(View v) {//        initGridView();
+        // TODO Auto-generated method stub
+        switch (v.getId()) {
+
+            case R.id.ib_add_emotion:
                 ll_emotion_dashboard.setVisibility(
                         ll_emotion_dashboard.getVisibility() == View.VISIBLE ?
                                 View.GONE : View.VISIBLE);
-            }
-        });
+                break;
+            case R.id.open_layout:
+                Date date1 = new Date(System.currentTimeMillis());
+                dateTime = date1.getTime() + "";
+                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                intent.setDataAndType(MediaStore.Images.Media.INTERNAL_CONTENT_URI, "image/*");
+                startActivityForResult(intent, REQUEST_CODE_ALBUM);
+                break;
+            case R.id.take_layout:
+                Date date = new Date(System.currentTimeMillis());
+                dateTime = date.getTime() + "";
+                File f = new File(CacheUtils.getCacheDirectory(this, true, "pic") + dateTime);
+                if (f.exists()) {
+                    f.delete();
+                }
+                try {
+                    f.createNewFile();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                Uri uri = Uri.fromFile(f);
+                Log.e("uri", uri + "");
 
-
+                Intent camera = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                camera.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+                startActivityForResult(camera, REQUEST_CODE_CAMERA);
+                break;
+            case R.id.open_pic:
+                break;
+            default:
+                break;
+        }
     }
 
     //选择发布创意的分类
@@ -294,89 +369,98 @@ public class WriteActivity extends ParentWithNaviActivity implements AdapterView
         picker.show();
     }
 
-    //获取图片路径 响应startActivityForResult
+    @SuppressLint("NewApi")
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        //打开图片
-        if (resultCode == RESULT_OK && requestCode == 1) {
-            Uri uri = data.getData();
-            if (!TextUtils.isEmpty(uri.getAuthority())) {
-                //查询选择图片
-                Cursor cursor = getContentResolver().query(
-                        uri,
-                        new String[]{MediaStore.Images.Media.DATA},
-                        null,
-                        null,
-                        null);
-                //返回 没找到选择图片
-                if (null == cursor) {
-                    return;
-                }
-                //光标移动至开头 获取图片路径
-                cursor.moveToFirst();
-                image_path = cursor.getString(cursor
-                        .getColumnIndex(MediaStore.Images.Media.DATA));
-            }
-        }  //end if 打开图片
-    }
-
-    //刷新图片
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (!TextUtils.isEmpty(image_path)) {
-            Bitmap addbmp = BitmapFactory.decodeFile(image_path);
-            HashMap<String, Object> map = new HashMap<String, Object>();
-            map.put("itemImage", addbmp);
-            imageItem.add(map);
-            simpleAdapter = new SimpleAdapter(this,
-                    imageItem, R.layout.griditem_addpic,
-                    new String[]{"itemImage"}, new int[]{R.id.imageView});
-            simpleAdapter.setViewBinder(new SimpleAdapter.ViewBinder() {
-                @Override
-                public boolean setViewValue(View view, Object data,
-                                            String textRepresentation) {
-                    if (view instanceof ImageView && data instanceof Bitmap) {
-                        ImageView i = (ImageView) view;
-                        i.setImageBitmap((Bitmap) data);
-                        return true;
+        Log.i("stav1", "get album:");
+        if (resultCode == RESULT_OK) {
+            switch (requestCode) {
+                case REQUEST_CODE_ALBUM:
+                    String fileName = null;
+                    if (data != null) {
+                        Uri originalUri = data.getData();
+                        ContentResolver cr = getContentResolver();
+                        Cursor cursor = cr.query(originalUri, null, null, null, null);
+                        if (cursor.moveToFirst()) {
+                            do {
+                                fileName = cursor.getString(cursor.getColumnIndex("_data"));
+                                Log.i("stav1", "get album:" + fileName);
+                            } while (cursor.moveToNext());
+                        }
+                        Bitmap bitmap = compressImageFromFile(fileName);
+                        targeturl = saveToSdCard(bitmap);
+                        open_pic.setBackgroundDrawable(new BitmapDrawable(bitmap));
+                        take_layout.setVisibility(View.GONE);
                     }
-                    return false;
-                }
-            });
-            gridView.setAdapter(simpleAdapter);
-            simpleAdapter.notifyDataSetChanged();
-            imagepaths.add(image_path);
-            //刷新后释放防止手机休眠后自动添加
-            image_path = null;
+                    break;
+                case REQUEST_CODE_CAMERA:
+                    String files = CacheUtils.getCacheDirectory(this, true, "pic") + dateTime;
+                    File file = new File(files);
+                    if (file.exists()) {
+                        Bitmap bitmap = compressImageFromFile(files);
+                        targeturl = saveToSdCard(bitmap);
+                        open_pic.setBackgroundDrawable(new BitmapDrawable(bitmap));
+                        open_layout.setVisibility(View.GONE);
+                    } else {
+
+                    }
+                    break;
+                default:
+                    break;
+            }
         }
     }
 
-    /**
-     * Dialog对话框提示用户删除操作
-     * position为删除图片位置
-     */
-    protected void dialog(final int position) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(WriteActivity.this);
-        builder.setMessage("确认移除已添加图片吗？");
-        builder.setTitle("提示");
-        builder.setPositiveButton("确认", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-                imageItem.remove(position);
-                imagepaths.remove(position - 1);
-                simpleAdapter.notifyDataSetChanged();
+    public String saveToSdCard(Bitmap bitmap) {
+        String files = CacheUtils.getCacheDirectory(this, true, "pic") + dateTime + "_11.png";
+        File file = new File(files);
+        try {
+            FileOutputStream out = new FileOutputStream(file);
+            if (bitmap.compress(Bitmap.CompressFormat.JPEG, 50, out)) {
+                out.flush();
+                out.close();
             }
-        });
-        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
-        builder.create().show();
+        } catch (FileNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        Log.i("stav1", file.getAbsolutePath());
+        return file.getAbsolutePath();
     }
+    private Bitmap compressImageFromFile(String srcPath) {
+        BitmapFactory.Options newOpts = new BitmapFactory.Options();
+        newOpts.inJustDecodeBounds = true;//只读边,不读内容
+        Bitmap bitmap = BitmapFactory.decodeFile(srcPath, newOpts);
+
+        newOpts.inJustDecodeBounds = false;
+        int w = newOpts.outWidth;
+        int h = newOpts.outHeight;
+        float hh = 800f;//
+        float ww = 480f;//
+        int be = 1;
+        if (w > h && w > ww) {
+            be = (int) (newOpts.outWidth / ww);
+        } else if (w < h && h > hh) {
+            be = (int) (newOpts.outHeight / hh);
+        }
+        if (be <= 0)
+            be = 1;
+        newOpts.inSampleSize = be;//设置采样率
+
+        newOpts.inPreferredConfig = Bitmap.Config.ARGB_8888;//该模式是默认的,可不设
+        newOpts.inPurgeable = true;// 同时设置才会有效
+        newOpts.inInputShareable = true;//。当系统内存不够时候图片自动被回收
+
+        bitmap = BitmapFactory.decodeFile(srcPath, newOpts);
+//		return compressBmpFromBmp(bitmap);//原来的方法调用了这个方法企图进行二次压缩
+        //其实是无效的,大家尽管尝试
+        return bitmap;
+    }
+
     /**
      *  初始化表情面板内容
      */
@@ -472,7 +556,6 @@ public class WriteActivity extends ParentWithNaviActivity implements AdapterView
         }
     }
 
-
     /**
      * 发布微博，发表微博时关联了用户类型，是一对一的体现
      */
@@ -491,9 +574,13 @@ public class WriteActivity extends ParentWithNaviActivity implements AdapterView
         weibo.setContent(content);
         weibo.setSelector(mSelect);
         weibo.setLove(0);
+        if (imgUrl == null){
+            weibo.setUpdownImg("");
+        }else {
+            weibo.setUpdownImg(imgUrl);
+        }
         weibo.setPass(true);
-//        weibo.setMyLove(false);
-//        weibo.setZanFocus(false);   //数值初始化点赞状态为0
+
 
         String[] str1 = new String[] {"创意饰品","创意美食","创意设计","创意陶瓷","创意礼物","创意家居","人才市场"};
         int[] intTemp = new int[str1.length];
@@ -515,59 +602,6 @@ public class WriteActivity extends ParentWithNaviActivity implements AdapterView
                     showToast("发布成功");
                 }else{
                     Log.e("tag", "done: "+(e));
-                }
-            }
-        });
-    }
-    List<BmobObject> movies = new ArrayList<BmobObject>();
-    /**
-     * 此方法适用于批量更新数据且每条数据只有一个BmobFile字段
-     * 例如：批量上传电影Movies
-     * @Title: insertBatchDatasWithOne
-     * @throws
-     */
-    public void insertBatchDatasWithOne(){
-
-        String[] filePaths = new String[2];
-        filePaths[0] = imagepaths.get(0);
-        filePaths[1] = imagepaths.get(1);
-        BmobFile.uploadBatch(filePaths, new UploadBatchListener() {
-
-            @Override
-            public void onSuccess(List<BmobFile> files, List<String> urls) {
-                log("insertDataWithMany -onSuccess :"+urls.size()+"-----"+files+"----"+urls);
-                if(urls.size()==2){//如果全部上传完，则更新该条记录
-                    Song song =new Song("汪峰0","北京北京0",files.get(0),files.get(1));
-                    insertObject(song);
-                }else{
-                    //有可能上传不完整，中间可能会存在未上传成功的情况，你可以自行处理
-                }
-            }
-            @Override
-            public void onError(int statuscode, String errormsg) {
-                showToast("错误码"+statuscode +",错误描述："+errormsg);
-            }
-            @Override
-            public void onProgress(int curIndex, int curPercent, int total,int totalPercent) {
-                log("insertDataWithMany -onProgress :"+curIndex+"---"+curPercent+"---"+total+"----"+totalPercent);
-            }
-        });
-    }
-
-    /** 创建操作
-     * insertObject
-     * @return void
-     * @throws
-     */
-    private void insertObject(final BmobObject obj){
-        obj.save(new SaveListener<String>() {
-
-            @Override
-            public void done(String s, BmobException e) {
-                if(e==null){
-                    showToast("-->创建数据成功：" + s);
-                }else{
-                    showToast("-->创建数据失败：" + e.getErrorCode()+",msg = "+e.getMessage());
                 }
             }
         });

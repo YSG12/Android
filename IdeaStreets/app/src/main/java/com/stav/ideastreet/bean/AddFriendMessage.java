@@ -6,7 +6,7 @@ import com.orhanobut.logger.Logger;
 
 import org.json.JSONObject;
 
-import com.stav.ideastreet.Config;
+import com.stav.ideastreet.utils.Config;
 import com.stav.ideastreet.db.NewFriend;
 import cn.bmob.newim.bean.BmobIMExtraMessage;
 import cn.bmob.newim.bean.BmobIMMessage;

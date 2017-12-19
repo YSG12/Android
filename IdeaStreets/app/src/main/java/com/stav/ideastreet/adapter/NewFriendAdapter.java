@@ -9,7 +9,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.stav.ideastreet.Config;
+import com.stav.ideastreet.utils.Config;
 import com.stav.ideastreet.R;
 import com.stav.ideastreet.adapter.base.BaseRecyclerAdapter;
 import com.stav.ideastreet.adapter.base.BaseRecyclerHolder;

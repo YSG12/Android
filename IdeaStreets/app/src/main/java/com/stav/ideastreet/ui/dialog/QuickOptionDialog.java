@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.stav.ideastreet.R;
+import com.stav.ideastreet.ui.PublishActivity;
 import com.stav.ideastreet.ui.UpdateInfoActivity;
 import com.stav.ideastreet.ui.WriteActivity;
 
@@ -97,15 +98,15 @@ public class QuickOptionDialog extends Dialog implements
             dismiss();
             break;
         case R.id.ly_quick_option_text:
-        	getContext().startActivity(new Intent(getContext(),WriteActivity.class));
+            getContext().startActivity(new Intent(getContext(),PublishActivity.class));
         	dismiss();
             break;
         case R.id.ly_quick_option_album:
-            getContext().startActivity(new Intent(getContext(),UpdateInfoActivity.class));
+            getContext().startActivity(new Intent(getContext(),WriteActivity.class));
             dismiss();
             break;
         case R.id.ly_quick_option_photo:
-            getContext().startActivity(new Intent(getContext(),UpdateInfoActivity.class));
+            getContext().startActivity(new Intent(getContext(),WriteActivity.class));
             dismiss();
             break;
         default:

@@ -1,4 +1,4 @@
-package com.stav.ideastreet;
+package com.stav.ideastreet.utils;
 
 /**
  * @author :smile

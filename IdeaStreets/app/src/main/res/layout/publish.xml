@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:id="@+id/ly_main_weixin"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent"
+              android:orientation="vertical">
+
+    <include android:id="@+id/ll" layout="@layout/include_navi"/>
+
+    <EditText
+        android:id="@+id/write"
+        android:layout_width="match_parent"
+        android:layout_height="200dip"
+        android:layout_marginLeft="@dimen/space_2"
+        android:layout_marginRight="@dimen/space_2"
+        android:layout_marginTop="@dimen/space_5"
+        android:background="@drawable/bg_edittext"
+        android:gravity="top"
+        android:hint="请在此发表您的创意~"
+        android:textColorHint="@color/gray"
+        android:paddingBottom="3dp"
+        android:paddingLeft="3dp"
+        android:paddingRight="3dp"
+        android:paddingTop="3dp"/>
+
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/total_text_num"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_margin="@dimen/space_6"
+        android:text="@string/limit_font"
+        android:textColor="#333"/>
+
+    <ImageButton
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="@dimen/space_12"
+        android:id="@+id/ib_add_emotion"
+        android:layout_centerVertical="true"
+        android:background="@drawable/base_action_bar_emotion_bg_selector"
+        android:layout_width="@dimen/space_20"
+        android:layout_height="@dimen/space_20"/>
+
+</RelativeLayout>
+
+    <Button
+        android:id="@+id/bt_select"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/space_3"
+        android:onClick="onOptionPicker"
+        android:background="@drawable/btn_login_selector"
+        android:text="@string/idea_default"/>
+
+    <LinearLayout
+        android:id="@+id/ll_emotion_dashboard"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/vp_emotion_dashboard"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        </android.support.v4.view.ViewPager>
+    </LinearLayout>
+
+</LinearLayout>

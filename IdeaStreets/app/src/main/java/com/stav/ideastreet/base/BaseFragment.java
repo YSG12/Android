@@ -2,10 +2,8 @@ package com.stav.ideastreet.base;
 
 
 import com.orhanobut.logger.Logger;
-import com.stav.ideastreet.Config;
-import com.stav.ideastreet.base.AppContext;
+import com.stav.ideastreet.utils.Config;
 import com.stav.ideastreet.R;
-import com.stav.ideastreet.interf.BaseFragmentInterface;
 import com.stav.ideastreet.ui.dialog.DialogControl;
 import com.stav.ideastreet.ui.dialog.WaitDialog;
 
@@ -17,8 +15,6 @@ import android.os.IBinder;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 

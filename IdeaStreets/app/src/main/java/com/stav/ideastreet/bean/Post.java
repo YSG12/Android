@@ -42,7 +42,9 @@ public class Post extends BmobObject {
     private BmobRelation relation;
     private boolean myFav;//收藏
     private boolean myLove;//赞
-    private boolean isPass;//赞
+    private boolean isPass;
+    private String updownImg;//创意图片
+
 
 
     public String getTitle() {
@@ -111,16 +113,10 @@ public class Post extends BmobObject {
     public void setRelation(BmobRelation relation) {
         this.relation = relation;
     }
-
-//	/**
-//	 * 微博的评论，一条微博是对应多条评论的，像这种一对多的情形，请使用BmobRelation类型
-//	 */
-//	private BmobRelation comment;
-
-//	public BmobRelation getComment() {
-//		return comment;
-//	}
-//	public void setComment(BmobRelation comment) {
-//		this.comment = comment;
-//	}
+    public String getUpdownImg() {
+        return updownImg;
+    }
+    public void setUpdownImg(String updownImg) {
+        this.updownImg = updownImg;
+    }
 }
