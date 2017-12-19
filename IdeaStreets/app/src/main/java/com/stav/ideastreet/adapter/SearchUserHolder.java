@@ -17,9 +17,6 @@ import com.stav.ideastreet.base.ImageLoaderFactory;
 import com.stav.ideastreet.bean.MyUser;
 import com.stav.ideastreet.ui.UserInfoActivity;
 
-import org.xutils.image.ImageOptions;
-import org.xutils.x;
-
 public class SearchUserHolder extends BaseViewHolder {
 
   @ViewInject(R.id.avatar)
@@ -36,23 +33,7 @@ public class SearchUserHolder extends BaseViewHolder {
   @Override
   public void bindData(Object o) {
     final MyUser user =(MyUser)o;
-
-//    ImageLoaderFactory.getLoader().loadAvator(avatar,user.getAvatar(), R.mipmap.head);
-
-    ImageOptions options=new ImageOptions.Builder()
-            //设置加载过程中的图片
-            .setLoadingDrawableId(R.drawable.ic_launcher)
-            //设置加载失败后的图片
-            .setFailureDrawableId(R.drawable.ic_launcher)
-            //设置使用缓存
-            .setUseMemCache(true)
-            //设置显示圆形图片
-            .setCircular(false)
-            //设置支持gif
-            .setIgnoreGif(false)
-            .build();
-    x.image().bind(avatar, user.getAvatar(), options);
-
+    ImageLoaderFactory.getLoader().loadAvator(avatar,user.getAvatar(), R.mipmap.head);
     name.setText(user.getUsername());
     btn_add.setOnClickListener(new View.OnClickListener() {
         @Override

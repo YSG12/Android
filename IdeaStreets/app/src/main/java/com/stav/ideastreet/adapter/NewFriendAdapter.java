@@ -82,7 +82,7 @@ public class NewFriendAdapter extends BaseRecyclerAdapter<NewFriend> {
      * @param listener
      */
     private void agreeAdd(final NewFriend add, final SaveListener<Object> listener) {
-        final MyUser user = new MyUser();
+        MyUser user = new MyUser();
         user.setObjectId(add.getUid());
         UserModel.getInstance()
                 .agreeAddFriend(user, new SaveListener<String>() {

@@ -18,7 +18,7 @@ public class BaseRecyclerHolder extends RecyclerView.ViewHolder {
     private final SparseArray<View> mViews;
     public  int layoutId;
 
-    public BaseRecyclerHolder(int layoutId,View itemView) {
+    public BaseRecyclerHolder(int layoutId, View itemView) {
         super(itemView);
         this.layoutId =layoutId;
         this.mViews = new SparseArray<>(8);

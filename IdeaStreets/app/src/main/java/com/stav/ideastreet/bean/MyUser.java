@@ -32,7 +32,7 @@ public class MyUser extends BmobUser {
     private String sex;
 
     private BmobRelation favorite;
-//    private Date createdAt;
+    //    private Date createdAt;
 //    private Date updatedAt;
     private List<String> hobby;		// 对应服务端Array类型：String类型的集合
     private List<BankCard> cards;	// 对应服务端Array类型:Object类型的集合

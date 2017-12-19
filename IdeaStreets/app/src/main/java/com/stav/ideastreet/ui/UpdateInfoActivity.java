@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.smile.filechoose.api.ChooserType;
 import com.smile.filechoose.api.ChosenFile;
@@ -175,9 +176,13 @@ public class UpdateInfoActivity extends ActionBarActivity implements FileChooser
                 user.update(new UpdateListener() {
                     @Override
                     public void done(BmobException e) {
+                        if (e==null) {
+                            showToast("123");
+                        } else {
+                            Log.d("stav1",e+"");
+                        }
                     }
                 });
-
             }
         }).concatMap(new Func1<Void, Observable<String>>() {//将bmobFile保存到movie表中
             @Override
@@ -216,29 +221,6 @@ public class UpdateInfoActivity extends ActionBarActivity implements FileChooser
             }
         });
     }
-
-    //请求网络图片
-    public Bitmap returnBitMap(String url){
-        URL myFileUrl = null;
-        Bitmap bitmap = null;
-        try {
-            myFileUrl = new URL(url);
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
-        try {
-            HttpURLConnection conn = (HttpURLConnection)myFileUrl.openConnection();
-            conn.setDoInput(true);
-            conn.connect();
-            InputStream is = conn.getInputStream();
-            bitmap = BitmapFactory.decodeStream(is);
-            is.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return bitmap;
-    }
-
     /**
      * save的Observable
      * @param obj
@@ -284,12 +266,12 @@ public class UpdateInfoActivity extends ActionBarActivity implements FileChooser
                                             etNum.setText(myUser.getMobilePhoneNumber()+"");
                                             etJoin.setText(myUser.getCreatedAt());
                                             etUpdate.setText(myUser.getUpdatedAt());
-//                                            iv_avatar.setBackgroundResource(R.mipmap.head);
+//                                            ivAvatar.setBackgroundResource(R.mipmap.head);
                                             ImageOptions options=new ImageOptions.Builder()
                                                     //设置加载过程中的图片
-                                                    .setLoadingDrawableId(R.drawable.ic_launcher)
+                                                    .setLoadingDrawableId(R.mipmap.default_head)
                                                     //设置加载失败后的图片
-                                                    .setFailureDrawableId(R.drawable.ic_launcher)
+                                                    .setFailureDrawableId(R.mipmap.default_head)
                                                     //设置使用缓存
                                                     .setUseMemCache(true)
                                                     //设置显示圆形图片
@@ -297,6 +279,7 @@ public class UpdateInfoActivity extends ActionBarActivity implements FileChooser
                                                     //设置支持gif
                                                     .setIgnoreGif(false)
                                                     .build();
+
                                             x.image().bind(ivAvatar, myUser.getAvatar(), options);
 
                                         }

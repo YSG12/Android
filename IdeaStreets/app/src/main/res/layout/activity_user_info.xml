@@ -37,10 +37,10 @@
                 android:layout_width="@dimen/height_50"
                 android:layout_height="@dimen/height_50"
                 android:layout_alignParentLeft="true"
+                android:background="@mipmap/head"
                 android:layout_marginTop="@dimen/margin_12"
                 android:layout_marginBottom="@dimen/margin_12"
-                android:layout_marginLeft="@dimen/margin_16"
-                android:src="@mipmap/head" />
+                android:layout_marginLeft="@dimen/margin_16" />
         </LinearLayout>
 
     </RelativeLayout>
@@ -70,7 +70,7 @@
     <Button
         android:id="@+id/btn_add_friend"
         style="@style/style_text_white"
-        android:background="@drawable/btn_login_selector"
+        android:background="@drawable/bt_login_bg"
         android:layout_width="match_parent"
         android:layout_height="45dp"
         android:layout_marginLeft="@dimen/activity_vertical_margin"
@@ -82,7 +82,7 @@
     <Button
         android:id="@+id/btn_chat"
         style="@style/style_text_white"
-        android:background="@drawable/btn_login_selector"
+        android:background="@drawable/bt_login_bg"
         android:layout_width="match_parent"
         android:layout_height="45dp"
         android:layout_marginLeft="@dimen/activity_vertical_margin"

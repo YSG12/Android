@@ -117,5 +117,5 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile project(':pulltorefresh')
     compile files('libs/filechoose.jar')
-    compile project(':xutils3')
+    compile project(':xutils')
 }

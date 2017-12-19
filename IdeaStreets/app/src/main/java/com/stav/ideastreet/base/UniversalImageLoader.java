@@ -2,6 +2,7 @@ package com.stav.ideastreet.base;
 
 import android.content.Context;
 import android.text.TextUtils;
+import android.util.Log;
 import android.widget.ImageView;
 
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
@@ -9,9 +10,11 @@ import com.nostra13.universalimageloader.cache.memory.impl.WeakMemoryCache;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
+import com.nostra13.universalimageloader.core.download.ImageDownloader;
 import com.nostra13.universalimageloader.core.imageaware.ImageAware;
 import com.nostra13.universalimageloader.core.imageaware.ImageViewAware;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
+import com.orhanobut.logger.Logger;
 
 import com.stav.ideastreet.utils.DisplayConfig;
 
@@ -27,13 +30,14 @@ public class UniversalImageLoader implements ILoader{
     public void loadAvator(ImageView iv, String url, int defaultRes) {
         if(!TextUtils.isEmpty(url)){
             display(iv,url,true,defaultRes,null);
+            iv.setImageResource(defaultRes);
         } else {
             iv.setImageResource(defaultRes);
         }
     }
 
     @Override
-    public void load(ImageView iv, String url, int defaultRes, ImageLoadingListener listener) {
+    public void load(ImageView iv, String url, int defaultRes,ImageLoadingListener listener) {
         if(!TextUtils.isEmpty(url)){
             display(iv,url.trim(),false,defaultRes,listener);
         } else {
@@ -48,12 +52,12 @@ public class UniversalImageLoader implements ILoader{
      * @param defaultRes
      * @param listener
      */
-    private void display(ImageView iv, String url, boolean isCircle, int defaultRes, ImageLoadingListener listener){
+    private void display(ImageView iv,String url,boolean isCircle,int defaultRes,ImageLoadingListener listener){
         if(!url.equals(iv.getTag())){//增加tag标记，减少UIL的display次数
             iv.setTag(url);
             //不直接display imageview改为ImageAware，解决ListView滚动时重复加载图片
             ImageAware imageAware = new ImageViewAware(iv, false);
-            ImageLoader.getInstance().displayImage(url, imageAware, DisplayConfig.getDefaultOptions(isCircle,defaultRes),listener);
+//            ImageLoader.getInstance().displayImage(url, imageAware, DisplayConfig.getDefaultOptions(isCircle,defaultRes),listener);
         }
     }
 

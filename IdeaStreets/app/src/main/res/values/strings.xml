@@ -363,4 +363,6 @@
     <string name="intro_info">登录后，你的创意、个人资料会提示在这里，展示给别人</string>
     <string name="idea_default">创意美食</string>
     <string name="limit_font">140</string>
+    <string name="check">查看</string>
+    <string name="search">搜索</string>
 </resources>

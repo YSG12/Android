@@ -26,6 +26,9 @@ import com.stav.ideastreet.ui.dialog.MyImageDialog;
 import com.stav.ideastreet.utils.ConstantValue;
 import com.stav.ideastreet.utils.PrefUtils;
 
+//import org.xutils.image.ImageOptions;
+//import org.xutils.x;
+
 import org.xutils.image.ImageOptions;
 import org.xutils.x;
 
@@ -48,13 +51,13 @@ public class CenterFragment extends Fragment {
 	private View view;
 	private LinearLayout llUnlogin,llCenter;
 	private android.support.v4.app.FragmentManager mFm;
-    private RelativeLayout rlList,rlInfomation,rlEnshrine,rlSettings;
+	private RelativeLayout rlList,rlInfomation,rlEnshrine,rlSettings;
 	private CompositeSubscription mCompositeSubscription;
 	private String mObjectId;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState){
+							 Bundle savedInstanceState){
 		view = View.inflate(getContext(),R.layout.personal_center,null);
 		llUnlogin = (LinearLayout) view.findViewById(ll_unlogin);
 		llCenter = (LinearLayout) view.findViewById(R.id.ll_personal_center);
@@ -82,18 +85,16 @@ public class CenterFragment extends Fragment {
 		tvUser = (TextView) view.findViewById(R.id.tv_user);
 		tvMotto = (TextView) view.findViewById(R.id.tv_motto);
 
-
-
 		ib_qrcode=(ImageButton) view.findViewById(R.id.ib_qrcode);
-        btLogout = (Button) view.findViewById(R.id.bt_logout);
+		btLogout = (Button) view.findViewById(R.id.bt_logout);
 		rlList = (RelativeLayout) view.findViewById(R.id.rl_list);
-        rlInfomation = (RelativeLayout) view.findViewById(R.id.rl_infomation);
-        rlEnshrine = (RelativeLayout) view.findViewById(R.id.rl_enshrine);
-        rlSettings = (RelativeLayout) view.findViewById(R.id.rl_settings);
+		rlInfomation = (RelativeLayout) view.findViewById(R.id.rl_infomation);
+		rlEnshrine = (RelativeLayout) view.findViewById(R.id.rl_enshrine);
+		rlSettings = (RelativeLayout) view.findViewById(R.id.rl_settings);
 
 		updateUser();
-        //显示放大二维码
-        ib_qrcode.setOnClickListener(new OnClickListener() {
+		//显示放大二维码
+		ib_qrcode.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				if (v == ib_qrcode) {
@@ -104,39 +105,39 @@ public class CenterFragment extends Fragment {
 			}
 		});
 
-        //登出按钮
-        btLogout.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                logOut();
+		//登出按钮
+		btLogout.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				logOut();
 				PrefUtils.setBoolean(getContext(), ConstantValue.IS_LOGIN, false);
 				unLogin();
-            }
-        });
+			}
+		});
 
-        //点击按钮修改信息
-        rlInfomation.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
+		//点击按钮修改信息
+		rlInfomation.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
 				startActivity(new Intent(getActivity(), UpdateInfoActivity.class));
-            }
-        });
+			}
+		});
 
-        //点击按钮添加好友
+		//点击按钮添加好友
 		rlList.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
+			@Override
+			public void onClick(View v) {
 				startActivity(new Intent(getContext(), ContactActivity.class));
-            }
-        });
+			}
+		});
 
 		//点击按钮添加好友
 		rlEnshrine.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
+			@Override
+			public void onClick(View v) {
 				startActivity(new Intent(getContext(), EnshrineActivity.class));
-            }
-        });
+			}
+		});
 
 	}
 
@@ -185,19 +186,18 @@ public class CenterFragment extends Fragment {
 	}
 
 	private void unLogin() {
-
 		llUnlogin.setVisibility(View.VISIBLE);
 		llCenter.setVisibility(View.GONE);
 		btLogin=(Button) view.findViewById(R.id.bt_login);
 		btRegister=(Button) view.findViewById(R.id.bt_register);
-        //点击按钮，登录
+		//点击按钮，登录
 		btLogin.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				startActivity(new Intent(getContext(), LoginActivity.class));
 			}
 		});
-        //点击按钮，注册
+		//点击按钮，注册
 		btRegister.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -206,12 +206,12 @@ public class CenterFragment extends Fragment {
 		});
 	}
 
-    /**
-     * 清除本地用户
-     */
-    private void logOut() {
-        BmobUser.logOut();
-    }
+	/**
+	 * 清除本地用户
+	 */
+	private void logOut() {
+		BmobUser.logOut();
+	}
 
 	/**
 	 * 解决Subscription内存泄露问题

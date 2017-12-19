@@ -1,5 +1,6 @@
 package com.stav.ideastreet.ui;
 
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -8,11 +9,20 @@ import android.widget.TextView;
 
 import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.view.annotation.ViewInject;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.imageaware.ImageAware;
+import com.nostra13.universalimageloader.core.imageaware.ImageViewAware;
+import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import com.stav.ideastreet.R;
 import com.stav.ideastreet.base.ImageLoaderFactory;
 import com.stav.ideastreet.base.ParentWithNaviActivity;
 import com.stav.ideastreet.bean.AddFriendMessage;
 import com.stav.ideastreet.bean.MyUser;
+import com.stav.ideastreet.utils.DisplayConfig;
+
+import org.xutils.image.ImageOptions;
+import org.xutils.x;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -71,6 +81,21 @@ public class UserInfoActivity extends ParentWithNaviActivity implements View.OnC
         info = new BmobIMUserInfo(user.getObjectId(), user.getUsername(), user.getAvatar());
         //加载头像
 //        ImageLoaderFactory.getLoader().loadAvator(iv_avator, user.getAvatar(), R.mipmap.head);
+
+
+        ImageOptions options=new ImageOptions.Builder()
+                //设置加载过程中的图片
+                .setLoadingDrawableId(R.drawable.ic_launcher)
+                //设置加载失败后的图片
+                .setFailureDrawableId(R.drawable.ic_launcher)
+                //设置使用缓存
+                .setUseMemCache(true)
+                //设置显示圆形图片
+                .setCircular(false)
+                //设置支持gif
+                .setIgnoreGif(false)
+                .build();
+        x.image().bind(iv_avator, user.getAvatar(), options);
         //显示名称
         tv_name.setText(user.getUsername());
     }

@@ -24,6 +24,7 @@ import com.stav.ideastreet.utils.ConstantValue;
 import com.stav.ideastreet.utils.PrefUtils;
 import com.stav.ideastreet.utils.StringUtils;
 
+
 import org.xutils.x;
 
 import java.io.BufferedReader;
@@ -88,8 +89,8 @@ public class BaseApplication extends Application {
 	public void onCreate() {
 
 		super.onCreate();
-		x.Ext.init(this);// xutils init ...
 		setInstance(this);
+		x.Ext.init(this);// xutils init ...
 		//bmob默认初始化
 		Bmob.initialize(this, APPID);
 		//bmobIM初始化

@@ -33,8 +33,10 @@ import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.view.annotation.ViewInject;
 import com.stav.ideastreet.R;
 import com.stav.ideastreet.base.ParentWithNaviActivity;
+import com.stav.ideastreet.bean.Avatar;
 import com.stav.ideastreet.bean.MyUser;
 import com.stav.ideastreet.bean.Post;
+import com.stav.ideastreet.bean.Song;
 import com.stav.ideastreet.util.DisplayUtils;
 import com.stav.ideastreet.util.EmotionGvAdapter;
 import com.stav.ideastreet.util.EmotionPagerAdapter;
@@ -42,18 +44,24 @@ import com.stav.ideastreet.util.EmotionUtils;
 import com.stav.ideastreet.util.StringUtils;
 import com.stav.ideastreet.util.Tools;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
 
 import cn.addapp.pickers.listeners.OnItemPickListener;
 import cn.addapp.pickers.listeners.OnSingleWheelListener;
 import cn.addapp.pickers.picker.SinglePicker;
+import cn.bmob.v3.BmobBatch;
+import cn.bmob.v3.BmobObject;
 import cn.bmob.v3.BmobUser;
+import cn.bmob.v3.datatype.BatchResult;
+import cn.bmob.v3.datatype.BmobFile;
 import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.QueryListListener;
 import cn.bmob.v3.listener.SaveListener;
+import cn.bmob.v3.listener.UploadBatchListener;
 
 import static com.stav.ideastreet.base.BaseApplication.showToast;
 
@@ -105,7 +113,9 @@ public class WriteActivity extends ParentWithNaviActivity implements AdapterView
             //退出该页面
             @Override
             public void clickLeft() {
-                finish();
+//                finish();
+                Log.e("stav1",imagepaths+"");
+                insertBatchDatasWithOne();
             }
 
             //发表微博
@@ -129,7 +139,6 @@ public class WriteActivity extends ParentWithNaviActivity implements AdapterView
         write.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
             }
 
             /**
@@ -463,6 +472,7 @@ public class WriteActivity extends ParentWithNaviActivity implements AdapterView
         }
     }
 
+
     /**
      * 发布微博，发表微博时关联了用户类型，是一对一的体现
      */
@@ -509,7 +519,59 @@ public class WriteActivity extends ParentWithNaviActivity implements AdapterView
             }
         });
     }
+    List<BmobObject> movies = new ArrayList<BmobObject>();
+    /**
+     * 此方法适用于批量更新数据且每条数据只有一个BmobFile字段
+     * 例如：批量上传电影Movies
+     * @Title: insertBatchDatasWithOne
+     * @throws
+     */
+    public void insertBatchDatasWithOne(){
 
+        String[] filePaths = new String[2];
+        filePaths[0] = imagepaths.get(0);
+        filePaths[1] = imagepaths.get(1);
+        BmobFile.uploadBatch(filePaths, new UploadBatchListener() {
+
+            @Override
+            public void onSuccess(List<BmobFile> files, List<String> urls) {
+                log("insertDataWithMany -onSuccess :"+urls.size()+"-----"+files+"----"+urls);
+                if(urls.size()==2){//如果全部上传完，则更新该条记录
+                    Song song =new Song("汪峰0","北京北京0",files.get(0),files.get(1));
+                    insertObject(song);
+                }else{
+                    //有可能上传不完整，中间可能会存在未上传成功的情况，你可以自行处理
+                }
+            }
+            @Override
+            public void onError(int statuscode, String errormsg) {
+                showToast("错误码"+statuscode +",错误描述："+errormsg);
+            }
+            @Override
+            public void onProgress(int curIndex, int curPercent, int total,int totalPercent) {
+                log("insertDataWithMany -onProgress :"+curIndex+"---"+curPercent+"---"+total+"----"+totalPercent);
+            }
+        });
+    }
+
+    /** 创建操作
+     * insertObject
+     * @return void
+     * @throws
+     */
+    private void insertObject(final BmobObject obj){
+        obj.save(new SaveListener<String>() {
+
+            @Override
+            public void done(String s, BmobException e) {
+                if(e==null){
+                    showToast("-->创建数据成功：" + s);
+                }else{
+                    showToast("-->创建数据失败：" + e.getErrorCode()+",msg = "+e.getMessage());
+                }
+            }
+        });
+    }
 
 }
 

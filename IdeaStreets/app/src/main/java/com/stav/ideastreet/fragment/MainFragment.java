@@ -60,7 +60,7 @@ public class MainFragment extends Fragment {
 
     static List<Post> weibos = new ArrayList<>();
     static List<PostOther> postOthers = new ArrayList<>();
-//    MainFragment.MAdapter adapter;
+    //    MainFragment.MAdapter adapter;
     MAdapter adapter;
 
     @Override
@@ -97,7 +97,7 @@ public class MainFragment extends Fragment {
         viewPagerItems.add(pagerTalentMarket);
 
         tabs = (PagerSlidingTabStrip) view.findViewById(R.id.tabs);
-		pager = (ViewPager) view.findViewById(R.id.pager);
+        pager = (ViewPager) view.findViewById(R.id.pager);
 
 
         // Xutils 实现原理，反射AFragment类，找注解变量，findviewbyid找到控件给变量赋值
@@ -212,25 +212,25 @@ public class MainFragment extends Fragment {
         MyUser user = BmobUser.getCurrentUser(MyUser.class);
         //等价于下面的sql语句查询
 //		String sql = "select include author,* from Post where author = pointer('_User', "+"'"+user.getObjectId()+"') ORDER BY updatedAt ASC LIMIT 3";
-		String sql = "select include author,* from Post where test = 0 ORDER BY updatedAt ASC";
-		new BmobQuery<Post>().doSQLQuery(sql, new SQLQueryListener<Post>(){
+        String sql = "select include author,* from Post where test = 0 ORDER BY updatedAt ASC";
+        new BmobQuery<Post>().doSQLQuery(sql, new SQLQueryListener<Post>(){
 
-			@Override
-			public void done(BmobQueryResult<Post> result, BmobException e) {
-				if(e ==null){
-					List<Post> list = result.getResults();
-					if(list!=null && list.size()>0){
-						weibos = list;
-						adapter.notifyDataSetChanged();
-						et_content.setText("");
-					}else{
-						Log.i("smile", "查询成功，无数据返回");
-					}
-				}else{
-					Log.i("smile", "错误码："+e.getErrorCode()+"，错误描述："+e.getMessage());
-				}
-			}
-		});
+            @Override
+            public void done(BmobQueryResult<Post> result, BmobException e) {
+                if(e ==null){
+                    List<Post> list = result.getResults();
+                    if(list!=null && list.size()>0){
+                        weibos = list;
+                        adapter.notifyDataSetChanged();
+                        et_content.setText("");
+                    }else{
+                        Log.i("smile", "查询成功，无数据返回");
+                    }
+                }else{
+                    Log.i("smile", "错误码："+e.getErrorCode()+"，错误描述："+e.getMessage());
+                }
+            }
+        });
 
     }
     public void findWeibo_b(){
