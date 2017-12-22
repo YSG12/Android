@@ -367,6 +367,7 @@ public class PublishActivity extends ParentWithNaviActivity implements AdapterVi
         // 创建微博信息
         Post weibo = new Post();
         weibo.setContent(content);
+        weibo.setComment(0);
         weibo.setSelector(mSelect);
         weibo.setPass(true);
 

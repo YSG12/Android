@@ -274,7 +274,7 @@ public class ChatFragment extends ParentWithNaviFragment {
 											user.getUsername(), user.getAvatar()));
 
 						} else {
-							toast(e.getMessage());
+//							toast(e.getMessage());
 						}
 					}
 				});
@@ -282,7 +282,7 @@ public class ChatFragment extends ParentWithNaviFragment {
 				BmobIM.getInstance().setOnConnectStatusChangeListener(new ConnectStatusChangeListener() {
 					@Override
 					public void onChange(ConnectionStatus status) {
-						toast(status.getMsg());
+//						toast(status.getMsg());
 						Logger.i(BmobIM.getInstance().getCurrentStatus().getMsg());
 					}
 				});

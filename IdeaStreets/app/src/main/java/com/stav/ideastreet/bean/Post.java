@@ -30,6 +30,8 @@ public class Post extends BmobObject {
     private String title;   //帖子标题
     private int test;   //帖子分类
     private int love;   //点赞个数
+
+    private int comment;   //评论个数
     private String selector;    //帖子分类
     private String content; //帖子内容
     private MyUser author;  // 微博发布者
@@ -44,8 +46,6 @@ public class Post extends BmobObject {
     private boolean myLove;//赞
     private boolean isPass;
     private String updownImg;//创意图片
-
-
 
     public String getTitle() {
         return title;
@@ -119,4 +119,11 @@ public class Post extends BmobObject {
     public void setUpdownImg(String updownImg) {
         this.updownImg = updownImg;
     }
+    public int getComment() {
+        return comment;
+    }
+    public void setComment(int comment) {
+        this.comment = comment;
+    }
+
 }

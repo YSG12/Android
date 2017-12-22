@@ -20,6 +20,7 @@ import android.widget.Toast;
 import com.orhanobut.logger.Logger;
 import com.stav.ideastreet.R;
 import com.stav.ideastreet.bean.MyUser;
+import com.stav.ideastreet.utils.ActivityManagerUtils;
 import com.stav.ideastreet.utils.ConstantValue;
 import com.stav.ideastreet.utils.PrefUtils;
 import com.stav.ideastreet.utils.StringUtils;
@@ -84,6 +85,10 @@ public class BaseApplication extends Application {
 	private static void setBaseApplication(BaseApplication a) {
 		BaseApplication.INSTANCE = a;
 	}
+	public Activity getTopActivity() {
+		return ActivityManagerUtils.getInstance().getTopActivity();
+	}
+
 
 	@Override
 	public void onCreate() {

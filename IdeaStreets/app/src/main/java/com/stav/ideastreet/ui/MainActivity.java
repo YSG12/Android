@@ -1,5 +1,6 @@
 package com.stav.ideastreet.ui;
 
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.PersistableBundle;
@@ -158,14 +159,8 @@ public class MainActivity extends ActionBarActivity {
         }
         switch (item.getItemId()){
             case R.id.search:
-                Toast.makeText(this, "search", 0).show();
-//                AppManager.getAppManager().AppExit(this);
-
+                startActivity(new Intent(MainActivity.this,SearchPostActivity.class));
                 break;
-//            case R.id.add:
-//                System.exit(0);
-////                Toast.makeText(this, "add", 0).show();
-//                break;
             case R.id.send:
                 showShare();
                 break;
@@ -233,7 +228,8 @@ public class MainActivity extends ActionBarActivity {
         // titleUrl是标题的网络链接，仅在人人网和QQ空间使用
         oks.setTitleUrl("http://47.94.129.228/ideastreet/");
         // text是分享文本，所有平台都需要这个字段
-        oks.setText("欢迎加入玩转创意街大家庭~");
+        oks.setText("欢迎加入玩转创意街大家庭~" +
+                "戳这里→→http://47.94.129.228/ideastreet/");
         // imagePath是图片的本地路径，Linked-In以外的平台都支持此参数
 //        oks.setImagePath("/sdcard/test.jpg");//确保SDcard下面存在此张图片
 //        oks.setImageUrl("http://47.94.129.228/ideastreet/images/logo-2.png");

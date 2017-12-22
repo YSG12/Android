@@ -32,4 +32,6 @@ public interface Constant {
 
 	public static final String SEX_MALE = "male";
 	public static final String SEX_FEMALE = "female";
+
+	public static String OFFICIAL_WEBSITE = "http://diandi.bmob.cn/";
 }

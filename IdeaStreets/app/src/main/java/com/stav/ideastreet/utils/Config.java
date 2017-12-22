@@ -18,4 +18,7 @@ public class Config {
     public static final int STATUS_VERIFY_REFUSE = 3;
     //好友请求：我发出的好友请求-暂未存储到本地数据库中
     public static final int STATUS_VERIFY_ME_SEND = 4;
+
+    public static String applicationId = "1401e8f1b9338a9390db3e5dc04c74c4";
+    public static String appId = "1102333196";
 }

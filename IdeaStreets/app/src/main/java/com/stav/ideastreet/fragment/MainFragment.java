@@ -8,29 +8,47 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.stav.ideastreet.R;
+import com.stav.ideastreet.adapter.MAdapter;
+import com.stav.ideastreet.base.BaseApplication;
 import com.stav.ideastreet.bean.MyUser;
 import com.stav.ideastreet.bean.Post;
 import com.stav.ideastreet.bean.PostOther;
 import com.stav.ideastreet.db.DatabaseUtil;
+import com.stav.ideastreet.sns.TencentShare;
+import com.stav.ideastreet.sns.TencentShareConstants;
+import com.stav.ideastreet.sns.TencentShareEntity;
 import com.stav.ideastreet.ui.CommentListActivity;
+import com.stav.ideastreet.ui.EnshrineActivity;
 import com.stav.ideastreet.ui.LoginActivity;
 import com.stav.ideastreet.ui.UserInfoActivity;
 import com.stav.ideastreet.util.StringUtils;
+import com.stav.ideastreet.utils.Constant;
 import com.stav.ideastreet.widget.PagerSlidingTabStrip;
 
+import org.xutils.image.ImageOptions;
+import org.xutils.x;
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import cn.bmob.v3.BmobQuery;
@@ -63,12 +81,34 @@ public class MainFragment extends Fragment {
     //    MainFragment.MAdapter adapter;
     MAdapter adapter;
 
+    private int pageNum;
+    private String lastItemTime;
+
+    protected ArrayList<Post> mListItems;
+    private PullToRefreshListView mPullRefreshListView;
+    private MAdapter mAdapter;
+    private ListView actualListView;
+
+    private TextView networkTips;
+    private ProgressBar progressbar;
+    private boolean pullFromUser;
+    public enum RefreshType{
+        REFRESH,LOAD_MORE
+    }
+    private RefreshType mRefreshType = RefreshType.LOAD_MORE;
+    private String getCurrentTime(){
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String times = formatter.format(new Date(System.currentTimeMillis()));
+        return times;
+    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = View.inflate(getActivity(), R.layout.pagertab, null);
         //        初始化每一页的内容
         inflater = LayoutInflater.from(getContext());
+        pageNum = 0;
+        lastItemTime = getCurrentTime();
 
         pagerCreativeOrnament = inflater.inflate(R.layout.pager_creative_ornament, null);
         pagerCuisine = inflater.inflate(R.layout.pager_cuisine, null);
@@ -110,51 +150,265 @@ public class MainFragment extends Fragment {
      * 人才市场pager
      */
     private void pagerTalentMarket() {
-        adapter = new MAdapter();
-        lv7 = (ListView) pagerTalentMarket.findViewById(R.id.listview);
-        lv7.setAdapter(adapter);
-        findWeibo_g();
-        adapter.notifyDataSetChanged();
+        mPullRefreshListView = (PullToRefreshListView)
+            pagerTalentMarket.findViewById(R.id.pull_refresh_list);
+        networkTips = (TextView) pagerTalentMarket.findViewById(R.id.networkTips);
+        progressbar = (ProgressBar) pagerTalentMarket.findViewById(R.id.progressBar);
+        mPullRefreshListView.setMode(PullToRefreshBase.Mode.BOTH);
+        mPullRefreshListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
+
+            @Override
+            public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
+                // TODO Auto-generated method stub
+                String label = DateUtils.formatDateTime(getContext(), System.currentTimeMillis(),
+                        DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_ABBREV_ALL);
+                refreshView.getLoadingLayoutProxy().setLastUpdatedLabel(label);
+                pullFromUser = true;
+                mRefreshType = RefreshType.REFRESH;
+                pageNum = 0;
+                lastItemTime = getCurrentTime();
+                findWeibo_g();
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
+                // TODO Auto-generated method stub
+                mRefreshType = RefreshType.LOAD_MORE;
+                findWeibo_g();
+                adapter.notifyDataSetChanged();
+            }
+        });
+        mPullRefreshListView.setOnLastItemVisibleListener(new PullToRefreshBase.OnLastItemVisibleListener() {
+
+            @Override
+            public void onLastItemVisible() {
+                // TODO Auto-generated method stub
+
+            }
+        });
+
+        actualListView = mPullRefreshListView.getRefreshableView();
+        mListItems = new ArrayList<Post>();
+        mAdapter = new MAdapter();
+        actualListView.setAdapter(mAdapter);
+
+        if(mListItems.size() == 0){
+            findWeibo_g();
+            adapter.notifyDataSetChanged();
+        }
+
     }
     /**
      * 创意家居pager
      */
     private void pagerCreativeLiving() {
-        adapter = new MAdapter();
-        lv6 = (ListView) pagerCreativeLiving.findViewById(R.id.listview);
-        lv6.setAdapter(adapter);
-        findWeibo_f();
-        adapter.notifyDataSetChanged();
+        mPullRefreshListView = (PullToRefreshListView)
+                pagerCreativeLiving.findViewById(R.id.pull_refresh_list);
+        networkTips = (TextView) pagerCreativeLiving.findViewById(R.id.networkTips);
+        progressbar = (ProgressBar) pagerCreativeLiving.findViewById(R.id.progressBar);
+        mPullRefreshListView.setMode(PullToRefreshBase.Mode.BOTH);
+        mPullRefreshListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
+
+            @Override
+            public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
+                // TODO Auto-generated method stub
+                String label = DateUtils.formatDateTime(getContext(), System.currentTimeMillis(),
+                        DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_ABBREV_ALL);
+                refreshView.getLoadingLayoutProxy().setLastUpdatedLabel(label);
+                pullFromUser = true;
+                mRefreshType = RefreshType.REFRESH;
+                pageNum = 0;
+                lastItemTime = getCurrentTime();
+                findWeibo_f();
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
+                // TODO Auto-generated method stub
+                mRefreshType = RefreshType.LOAD_MORE;
+                findWeibo_f();
+                adapter.notifyDataSetChanged();
+            }
+        });
+        mPullRefreshListView.setOnLastItemVisibleListener(new PullToRefreshBase.OnLastItemVisibleListener() {
+
+            @Override
+            public void onLastItemVisible() {
+                // TODO Auto-generated method stub
+
+            }
+        });
+
+        actualListView = mPullRefreshListView.getRefreshableView();
+        mListItems = new ArrayList<Post>();
+        mAdapter = new MAdapter();
+        actualListView.setAdapter(mAdapter);
+
+        if(mListItems.size() == 0){
+            findWeibo_f();
+            adapter.notifyDataSetChanged();
+        }
+
     }
     /**
      * 创意礼物pager
      */
     private void pagerCreativeGifts() {
-        adapter = new MAdapter();
-        lv5 = (ListView) pagerCreativeGifts.findViewById(R.id.listview);
-        lv5.setAdapter(adapter);
-        findWeibo_e();
-        adapter.notifyDataSetChanged();
+        mPullRefreshListView = (PullToRefreshListView)
+                pagerCreativeGifts.findViewById(R.id.pull_refresh_list);
+        networkTips = (TextView) pagerCreativeGifts.findViewById(R.id.networkTips);
+        progressbar = (ProgressBar) pagerCreativeGifts.findViewById(R.id.progressBar);
+        mPullRefreshListView.setMode(PullToRefreshBase.Mode.BOTH);
+        mPullRefreshListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
+
+            @Override
+            public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
+                // TODO Auto-generated method stub
+                String label = DateUtils.formatDateTime(getContext(), System.currentTimeMillis(),
+                        DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_ABBREV_ALL);
+                refreshView.getLoadingLayoutProxy().setLastUpdatedLabel(label);
+                pullFromUser = true;
+                mRefreshType = RefreshType.REFRESH;
+                pageNum = 0;
+                lastItemTime = getCurrentTime();
+                findWeibo_e();
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
+                // TODO Auto-generated method stub
+                mRefreshType = RefreshType.LOAD_MORE;
+                findWeibo_e();
+                adapter.notifyDataSetChanged();
+            }
+        });
+        mPullRefreshListView.setOnLastItemVisibleListener(new PullToRefreshBase.OnLastItemVisibleListener() {
+
+            @Override
+            public void onLastItemVisible() {
+                // TODO Auto-generated method stub
+
+            }
+        });
+
+        actualListView = mPullRefreshListView.getRefreshableView();
+        mListItems = new ArrayList<Post>();
+        mAdapter = new MAdapter();
+        actualListView.setAdapter(mAdapter);
+
+        if(mListItems.size() == 0){
+            findWeibo_e();
+            adapter.notifyDataSetChanged();
+        }
+
     }
     /**
      * 创意陶瓷pager
      */
     private void pagerCreativeCeramic() {
-        adapter = new MAdapter();
-        lv4 = (ListView) pagerCreativeCeramic.findViewById(R.id.listview);
-        lv4.setAdapter(adapter);
-        findWeibo_d();
-        adapter.notifyDataSetChanged();
+        mPullRefreshListView = (PullToRefreshListView)
+                pagerCreativeCeramic.findViewById(R.id.pull_refresh_list);
+        networkTips = (TextView) pagerCreativeCeramic.findViewById(R.id.networkTips);
+        progressbar = (ProgressBar) pagerCreativeCeramic.findViewById(R.id.progressBar);
+        mPullRefreshListView.setMode(PullToRefreshBase.Mode.BOTH);
+        mPullRefreshListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
+
+            @Override
+            public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
+                // TODO Auto-generated method stub
+                String label = DateUtils.formatDateTime(getContext(), System.currentTimeMillis(),
+                        DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_ABBREV_ALL);
+                refreshView.getLoadingLayoutProxy().setLastUpdatedLabel(label);
+                pullFromUser = true;
+                mRefreshType = RefreshType.REFRESH;
+                pageNum = 0;
+                lastItemTime = getCurrentTime();
+                findWeibo_d();
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
+                // TODO Auto-generated method stub
+                mRefreshType = RefreshType.LOAD_MORE;
+                findWeibo_d();
+                adapter.notifyDataSetChanged();
+            }
+        });
+        mPullRefreshListView.setOnLastItemVisibleListener(new PullToRefreshBase.OnLastItemVisibleListener() {
+
+            @Override
+            public void onLastItemVisible() {
+                // TODO Auto-generated method stub
+
+            }
+        });
+
+        actualListView = mPullRefreshListView.getRefreshableView();
+        mListItems = new ArrayList<Post>();
+        mAdapter = new MAdapter();
+        actualListView.setAdapter(mAdapter);
+
+        if(mListItems.size() == 0){
+            findWeibo_d();
+            adapter.notifyDataSetChanged();
+        }
+
     }
     /**
      * 创意设计pager
      */
-    private void pagerCreativeDesign() {
-        adapter = new MAdapter();
-        lv3 = (ListView) pagerCreativeDesign.findViewById(R.id.listview);
-        lv3.setAdapter(adapter);
-        findWeibo_c();
-        adapter.notifyDataSetChanged();
+    private void pagerCreativeDesign() {adapter = new MAdapter();
+        mPullRefreshListView = (PullToRefreshListView)
+                pagerCreativeDesign.findViewById(R.id.pull_refresh_list);
+        networkTips = (TextView) pagerCreativeDesign.findViewById(R.id.networkTips);
+        progressbar = (ProgressBar) pagerCreativeDesign.findViewById(R.id.progressBar);
+        mPullRefreshListView.setMode(PullToRefreshBase.Mode.BOTH);
+        mPullRefreshListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
+
+            @Override
+            public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
+                // TODO Auto-generated method stub
+                String label = DateUtils.formatDateTime(getContext(), System.currentTimeMillis(),
+                        DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_ABBREV_ALL);
+                refreshView.getLoadingLayoutProxy().setLastUpdatedLabel(label);
+                pullFromUser = true;
+                mRefreshType = RefreshType.REFRESH;
+                pageNum = 0;
+                lastItemTime = getCurrentTime();
+                findWeibo_c();
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
+                // TODO Auto-generated method stub
+                mRefreshType = RefreshType.LOAD_MORE;
+                findWeibo_c();
+                adapter.notifyDataSetChanged();
+            }
+        });
+        mPullRefreshListView.setOnLastItemVisibleListener(new PullToRefreshBase.OnLastItemVisibleListener() {
+
+            @Override
+            public void onLastItemVisible() {
+                // TODO Auto-generated method stub
+
+            }
+        });
+
+        actualListView = mPullRefreshListView.getRefreshableView();
+        mListItems = new ArrayList<Post>();
+        mAdapter = new MAdapter();
+        actualListView.setAdapter(mAdapter);
+
+        if(mListItems.size() == 0){
+            findWeibo_c();
+            adapter.notifyDataSetChanged();
+        }
 
     }
     /**
@@ -162,10 +416,53 @@ public class MainFragment extends Fragment {
      */
     private void pagerCuisine() {
         adapter = new MAdapter();
-        lv2 = (ListView) pagerCuisine.findViewById(R.id.listview);
-        lv2.setAdapter(adapter);
-        findWeibo_b();
-        adapter.notifyDataSetChanged();
+        mPullRefreshListView = (PullToRefreshListView)
+                pagerCuisine.findViewById(R.id.pull_refresh_list);
+        networkTips = (TextView) pagerCuisine.findViewById(R.id.networkTips);
+        progressbar = (ProgressBar) pagerCuisine.findViewById(R.id.progressBar);
+        mPullRefreshListView.setMode(PullToRefreshBase.Mode.BOTH);
+        mPullRefreshListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
+
+            @Override
+            public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
+                // TODO Auto-generated method stub
+                String label = DateUtils.formatDateTime(getContext(), System.currentTimeMillis(),
+                        DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_ABBREV_ALL);
+                refreshView.getLoadingLayoutProxy().setLastUpdatedLabel(label);
+                pullFromUser = true;
+                mRefreshType = RefreshType.REFRESH;
+                pageNum = 0;
+                lastItemTime = getCurrentTime();
+                findWeibo_b();
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
+                // TODO Auto-generated method stub
+                mRefreshType = RefreshType.LOAD_MORE;
+                findWeibo_b();
+                adapter.notifyDataSetChanged();
+            }
+        });
+        mPullRefreshListView.setOnLastItemVisibleListener(new PullToRefreshBase.OnLastItemVisibleListener() {
+
+            @Override
+            public void onLastItemVisible() {
+                // TODO Auto-generated method stub
+
+            }
+        });
+
+        actualListView = mPullRefreshListView.getRefreshableView();
+        mListItems = new ArrayList<Post>();
+        mAdapter = new MAdapter();
+        actualListView.setAdapter(mAdapter);
+
+        if(mListItems.size() == 0){
+            findWeibo_b();
+            adapter.notifyDataSetChanged();
+        }
     }
 
     /**
@@ -173,17 +470,81 @@ public class MainFragment extends Fragment {
      */
     private void pagerCreativeOrnament() {
         adapter = new MAdapter();
-        lv1 = (ListView) pagerCreativeOrnament.findViewById(R.id.listview);
-        lv1.setAdapter(adapter);
 
-        MyUser user = BmobUser.getCurrentUser(MyUser.class);
-        if (user == null){
-            Toast.makeText(getContext(), "欢迎来到玩转创意街，请您先注册并登录~", Toast.LENGTH_LONG).show();
-            startActivity(new Intent(getContext(), LoginActivity.class));
-        } else {
-            findWeibo_a();
-            adapter.notifyDataSetChanged();
+        mPullRefreshListView = (PullToRefreshListView)
+                pagerCreativeOrnament.findViewById(R.id.pull_refresh_list);
+        networkTips = (TextView) pagerCreativeOrnament.findViewById(R.id.networkTips);
+        progressbar = (ProgressBar) pagerCreativeOrnament.findViewById(R.id.progressBar);
+        mPullRefreshListView.setMode(PullToRefreshBase.Mode.BOTH);
+        mPullRefreshListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
+
+            @Override
+            public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
+                // TODO Auto-generated method stub
+                String label = DateUtils.formatDateTime(getContext(), System.currentTimeMillis(),
+                        DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_ABBREV_ALL);
+                refreshView.getLoadingLayoutProxy().setLastUpdatedLabel(label);
+                pullFromUser = true;
+                mRefreshType = RefreshType.REFRESH;
+                pageNum = 0;
+                lastItemTime = getCurrentTime();
+                MyUser user = BmobUser.getCurrentUser(MyUser.class);
+                if (user == null){
+                    Toast.makeText(getContext(), "欢迎来到玩转创意街，请您先注册并登录~", Toast.LENGTH_LONG).show();
+                    startActivity(new Intent(getContext(), LoginActivity.class));
+                } else {
+                    findWeibo_a();
+                    adapter.notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
+                // TODO Auto-generated method stub
+                mRefreshType = RefreshType.LOAD_MORE;
+                MyUser user = BmobUser.getCurrentUser(MyUser.class);
+                if (user == null){
+                    Toast.makeText(getContext(), "欢迎来到玩转创意街，请您先注册并登录~", Toast.LENGTH_LONG).show();
+                    startActivity(new Intent(getContext(), LoginActivity.class));
+                } else {
+                    findWeibo_a();
+                    adapter.notifyDataSetChanged();
+                }
+            }
+        });
+        mPullRefreshListView.setOnLastItemVisibleListener(new PullToRefreshBase.OnLastItemVisibleListener() {
+
+            @Override
+            public void onLastItemVisible() {
+                // TODO Auto-generated method stub
+
+            }
+        });
+
+        actualListView = mPullRefreshListView.getRefreshableView();
+        mListItems = new ArrayList<Post>();
+        mAdapter = new MAdapter();
+        actualListView.setAdapter(mAdapter);
+
+        if(mListItems.size() == 0){
+            MyUser user = BmobUser.getCurrentUser(MyUser.class);
+            if (user == null){
+                Toast.makeText(getContext(), "欢迎来到玩转创意街，请您先注册并登录~", Toast.LENGTH_LONG).show();
+                startActivity(new Intent(getContext(), LoginActivity.class));
+            } else {
+                findWeibo_a();
+                adapter.notifyDataSetChanged();
+            }
         }
+
+//        MyUser user = BmobUser.getCurrentUser(MyUser.class);
+//        if (user == null){
+//            Toast.makeText(getContext(), "欢迎来到玩转创意街，请您先注册并登录~", Toast.LENGTH_LONG).show();
+//            startActivity(new Intent(getContext(), LoginActivity.class));
+//        } else {
+//            findWeibo_a();
+//            adapter.notifyDataSetChanged();
+//        }
     }
 
     /**
@@ -217,17 +578,45 @@ public class MainFragment extends Fragment {
 
             @Override
             public void done(BmobQueryResult<Post> result, BmobException e) {
-                if(e ==null){
-                    List<Post> list = result.getResults();
-                    if(list!=null && list.size()>0){
+
+                List<Post> list = result.getResults();
+                if (e == null) {
+                    Log.i("stav", "find success." + list.size());
+                    if (list.size() != 0 && list.get(list.size() - 1) != null) {
+                        if (mRefreshType == RefreshType.REFRESH) {
+                            mListItems.clear();
+                        }
+                        if (list.size() < Constant.NUMBERS_PER_PAGE) {
+                            showToast("已加载完所有数据~");
+                        }
                         weibos = list;
-                        adapter.notifyDataSetChanged();
-                        et_content.setText("");
-                    }else{
-                        Log.i("smile", "查询成功，无数据返回");
+                        mListItems.addAll(list);
+                        mAdapter.notifyDataSetChanged();
+
+                        Log.i("stav", "DD" + (mListItems.get(mListItems.size() - 1) == null));
+                        setState(LOADING_COMPLETED);
+                        mPullRefreshListView.onRefreshComplete();
+                    } else {
+                        showToast("暂无更多数据~");
+                        if (list.size() == 0 && mListItems.size() == 0) {
+
+                            networkTips.setText("暂无收藏。快去首页收藏几个把~");
+                            setState(LOADING_FAILED);
+                            pageNum--;
+                            mPullRefreshListView.onRefreshComplete();
+
+                            Log.i("stav", "SIZE:" + list.size() + "ssssize" + mListItems.size());
+                            return;
+                        }
+                        pageNum--;
+                        setState(LOADING_COMPLETED);
+                        mPullRefreshListView.onRefreshComplete();
                     }
-                }else{
-                    Log.i("smile", "错误码："+e.getErrorCode()+"，错误描述："+e.getMessage());
+                } else {
+                    Log.i("stav", "find failed." + e);
+                    pageNum--;
+                    setState(LOADING_FAILED);
+                    mPullRefreshListView.onRefreshComplete();
                 }
             }
         });
@@ -241,17 +630,44 @@ public class MainFragment extends Fragment {
 
             @Override
             public void done(BmobQueryResult<Post> result, BmobException e) {
-                if(e ==null){
-                    List<Post> list = result.getResults();
-                    if(list!=null && list.size()>0){
+                List<Post> list = result.getResults();
+                if (e == null) {
+                    Log.i("stav", "find success." + list.size());
+                    if (list.size() != 0 && list.get(list.size() - 1) != null) {
+                        if (mRefreshType == RefreshType.REFRESH) {
+                            mListItems.clear();
+                        }
+                        if (list.size() < Constant.NUMBERS_PER_PAGE) {
+                            showToast("已加载完所有数据~");
+                        }
                         weibos = list;
-                        adapter.notifyDataSetChanged();
-                        et_content.setText("");
-                    }else{
-                        Log.i("smile", "查询成功，无数据返回");
+                        mListItems.addAll(list);
+                        mAdapter.notifyDataSetChanged();
+
+                        Log.i("stav", "DD" + (mListItems.get(mListItems.size() - 1) == null));
+                        setState(LOADING_COMPLETED);
+                        mPullRefreshListView.onRefreshComplete();
+                    } else {
+                        showToast("暂无更多数据~");
+                        if (list.size() == 0 && mListItems.size() == 0) {
+
+                            networkTips.setText("暂无收藏。快去首页收藏几个把~");
+                            setState(LOADING_FAILED);
+                            pageNum--;
+                            mPullRefreshListView.onRefreshComplete();
+
+                            Log.i("stav", "SIZE:" + list.size() + "ssssize" + mListItems.size());
+                            return;
+                        }
+                        pageNum--;
+                        setState(LOADING_COMPLETED);
+                        mPullRefreshListView.onRefreshComplete();
                     }
-                }else{
-                    Log.i("smile", "错误码："+e.getErrorCode()+"，错误描述："+e.getMessage());
+                } else {
+                    Log.i("stav", "find failed." + e);
+                    pageNum--;
+                    setState(LOADING_FAILED);
+                    mPullRefreshListView.onRefreshComplete();
                 }
             }
         });
@@ -265,17 +681,44 @@ public class MainFragment extends Fragment {
 
             @Override
             public void done(BmobQueryResult<Post> result, BmobException e) {
-                if(e ==null){
-                    List<Post> list = result.getResults();
-                    if(list!=null && list.size()>0){
+                List<Post> list = result.getResults();
+                if (e == null) {
+                    Log.i("stav", "find success." + list.size());
+                    if (list.size() != 0 && list.get(list.size() - 1) != null) {
+                        if (mRefreshType == RefreshType.REFRESH) {
+                            mListItems.clear();
+                        }
+                        if (list.size() < Constant.NUMBERS_PER_PAGE) {
+                            showToast("已加载完所有数据~");
+                        }
                         weibos = list;
-                        adapter.notifyDataSetChanged();
-                        et_content.setText("");
-                    }else{
-                        Log.i("smile", "查询成功，无数据返回");
+                        mListItems.addAll(list);
+                        mAdapter.notifyDataSetChanged();
+
+                        Log.i("stav", "DD" + (mListItems.get(mListItems.size() - 1) == null));
+                        setState(LOADING_COMPLETED);
+                        mPullRefreshListView.onRefreshComplete();
+                    } else {
+                        showToast("暂无更多数据~");
+                        if (list.size() == 0 && mListItems.size() == 0) {
+
+                            networkTips.setText("暂无收藏。快去首页收藏几个把~");
+                            setState(LOADING_FAILED);
+                            pageNum--;
+                            mPullRefreshListView.onRefreshComplete();
+
+                            Log.i("stav", "SIZE:" + list.size() + "ssssize" + mListItems.size());
+                            return;
+                        }
+                        pageNum--;
+                        setState(LOADING_COMPLETED);
+                        mPullRefreshListView.onRefreshComplete();
                     }
-                }else{
-                    Log.i("smile", "错误码："+e.getErrorCode()+"，错误描述："+e.getMessage());
+                } else {
+                    Log.i("stav", "find failed." + e);
+                    pageNum--;
+                    setState(LOADING_FAILED);
+                    mPullRefreshListView.onRefreshComplete();
                 }
             }
         });
@@ -289,17 +732,44 @@ public class MainFragment extends Fragment {
 
             @Override
             public void done(BmobQueryResult<Post> result, BmobException e) {
-                if(e ==null){
-                    List<Post> list = result.getResults();
-                    if(list!=null && list.size()>0){
+                List<Post> list = result.getResults();
+                if (e == null) {
+                    Log.i("stav", "find success." + list.size());
+                    if (list.size() != 0 && list.get(list.size() - 1) != null) {
+                        if (mRefreshType == RefreshType.REFRESH) {
+                            mListItems.clear();
+                        }
+                        if (list.size() < Constant.NUMBERS_PER_PAGE) {
+                            showToast("已加载完所有数据~");
+                        }
                         weibos = list;
-                        adapter.notifyDataSetChanged();
-                        et_content.setText("");
-                    }else{
-                        Log.i("smile", "查询成功，无数据返回");
+                        mListItems.addAll(list);
+                        mAdapter.notifyDataSetChanged();
+
+                        Log.i("stav", "DD" + (mListItems.get(mListItems.size() - 1) == null));
+                        setState(LOADING_COMPLETED);
+                        mPullRefreshListView.onRefreshComplete();
+                    } else {
+                        showToast("暂无更多数据~");
+                        if (list.size() == 0 && mListItems.size() == 0) {
+
+                            networkTips.setText("暂无收藏。快去首页收藏几个把~");
+                            setState(LOADING_FAILED);
+                            pageNum--;
+                            mPullRefreshListView.onRefreshComplete();
+
+                            Log.i("stav", "SIZE:" + list.size() + "ssssize" + mListItems.size());
+                            return;
+                        }
+                        pageNum--;
+                        setState(LOADING_COMPLETED);
+                        mPullRefreshListView.onRefreshComplete();
                     }
-                }else{
-                    Log.i("smile", "错误码："+e.getErrorCode()+"，错误描述："+e.getMessage());
+                } else {
+                    Log.i("stav", "find failed." + e);
+                    pageNum--;
+                    setState(LOADING_FAILED);
+                    mPullRefreshListView.onRefreshComplete();
                 }
             }
         });
@@ -313,17 +783,44 @@ public class MainFragment extends Fragment {
 
             @Override
             public void done(BmobQueryResult<Post> result, BmobException e) {
-                if(e ==null){
-                    List<Post> list = result.getResults();
-                    if(list!=null && list.size()>0){
+                List<Post> list = result.getResults();
+                if (e == null) {
+                    Log.i("stav", "find success." + list.size());
+                    if (list.size() != 0 && list.get(list.size() - 1) != null) {
+                        if (mRefreshType == RefreshType.REFRESH) {
+                            mListItems.clear();
+                        }
+                        if (list.size() < Constant.NUMBERS_PER_PAGE) {
+                            showToast("已加载完所有数据~");
+                        }
                         weibos = list;
-                        adapter.notifyDataSetChanged();
-                        et_content.setText("");
-                    }else{
-                        Log.i("smile", "查询成功，无数据返回");
+                        mListItems.addAll(list);
+                        mAdapter.notifyDataSetChanged();
+
+                        Log.i("stav", "DD" + (mListItems.get(mListItems.size() - 1) == null));
+                        setState(LOADING_COMPLETED);
+                        mPullRefreshListView.onRefreshComplete();
+                    } else {
+                        showToast("暂无更多数据~");
+                        if (list.size() == 0 && mListItems.size() == 0) {
+
+                            networkTips.setText("暂无收藏。快去首页收藏几个把~");
+                            setState(LOADING_FAILED);
+                            pageNum--;
+                            mPullRefreshListView.onRefreshComplete();
+
+                            Log.i("stav", "SIZE:" + list.size() + "ssssize" + mListItems.size());
+                            return;
+                        }
+                        pageNum--;
+                        setState(LOADING_COMPLETED);
+                        mPullRefreshListView.onRefreshComplete();
                     }
-                }else{
-                    Log.i("smile", "错误码："+e.getErrorCode()+"，错误描述："+e.getMessage());
+                } else {
+                    Log.i("stav", "find failed." + e);
+                    pageNum--;
+                    setState(LOADING_FAILED);
+                    mPullRefreshListView.onRefreshComplete();
                 }
             }
         });
@@ -337,17 +834,44 @@ public class MainFragment extends Fragment {
 
             @Override
             public void done(BmobQueryResult<Post> result, BmobException e) {
-                if(e ==null){
-                    List<Post> list = result.getResults();
-                    if(list!=null && list.size()>0){
+                List<Post> list = result.getResults();
+                if (e == null) {
+                    Log.i("stav", "find success." + list.size());
+                    if (list.size() != 0 && list.get(list.size() - 1) != null) {
+                        if (mRefreshType == RefreshType.REFRESH) {
+                            mListItems.clear();
+                        }
+                        if (list.size() < Constant.NUMBERS_PER_PAGE) {
+                            showToast("已加载完所有数据~");
+                        }
                         weibos = list;
-                        adapter.notifyDataSetChanged();
-                        et_content.setText("");
-                    }else{
-                        Log.i("smile", "查询成功，无数据返回");
+                        mListItems.addAll(list);
+                        mAdapter.notifyDataSetChanged();
+
+                        Log.i("stav", "DD" + (mListItems.get(mListItems.size() - 1) == null));
+                        setState(LOADING_COMPLETED);
+                        mPullRefreshListView.onRefreshComplete();
+                    } else {
+                        showToast("暂无更多数据~");
+                        if (list.size() == 0 && mListItems.size() == 0) {
+
+                            networkTips.setText("暂无收藏。快去首页收藏几个把~");
+                            setState(LOADING_FAILED);
+                            pageNum--;
+                            mPullRefreshListView.onRefreshComplete();
+
+                            Log.i("stav", "SIZE:" + list.size() + "ssssize" + mListItems.size());
+                            return;
+                        }
+                        pageNum--;
+                        setState(LOADING_COMPLETED);
+                        mPullRefreshListView.onRefreshComplete();
                     }
-                }else{
-                    Log.i("smile", "错误码："+e.getErrorCode()+"，错误描述："+e.getMessage());
+                } else {
+                    Log.i("stav", "find failed." + e);
+                    pageNum--;
+                    setState(LOADING_FAILED);
+                    mPullRefreshListView.onRefreshComplete();
                 }
             }
         });
@@ -361,17 +885,44 @@ public class MainFragment extends Fragment {
 
             @Override
             public void done(BmobQueryResult<Post> result, BmobException e) {
-                if(e ==null){
-                    List<Post> list = result.getResults();
-                    if(list!=null && list.size()>0){
+                List<Post> list = result.getResults();
+                if (e == null) {
+                    Log.i("stav", "find success." + list.size());
+                    if (list.size() != 0 && list.get(list.size() - 1) != null) {
+                        if (mRefreshType == RefreshType.REFRESH) {
+                            mListItems.clear();
+                        }
+                        if (list.size() < Constant.NUMBERS_PER_PAGE) {
+                            showToast("已加载完所有数据~");
+                        }
                         weibos = list;
-                        adapter.notifyDataSetChanged();
-                        et_content.setText("");
-                    }else{
-                        Log.i("smile", "查询成功，无数据返回");
+                        mListItems.addAll(list);
+                        mAdapter.notifyDataSetChanged();
+
+                        Log.i("stav", "DD" + (mListItems.get(mListItems.size() - 1) == null));
+                        setState(LOADING_COMPLETED);
+                        mPullRefreshListView.onRefreshComplete();
+                    } else {
+                        showToast("暂无更多数据~");
+                        if (list.size() == 0 && mListItems.size() == 0) {
+
+                            networkTips.setText("暂无收藏。快去首页收藏几个把~");
+                            setState(LOADING_FAILED);
+                            pageNum--;
+                            mPullRefreshListView.onRefreshComplete();
+
+                            Log.i("stav", "SIZE:" + list.size() + "ssssize" + mListItems.size());
+                            return;
+                        }
+                        pageNum--;
+                        setState(LOADING_COMPLETED);
+                        mPullRefreshListView.onRefreshComplete();
                     }
-                }else{
-                    Log.i("smile", "错误码："+e.getErrorCode()+"，错误描述："+e.getMessage());
+                } else {
+                    Log.i("stav", "find failed." + e);
+                    pageNum--;
+                    setState(LOADING_FAILED);
+                    mPullRefreshListView.onRefreshComplete();
                 }
             }
         });
@@ -507,12 +1058,14 @@ public class MainFragment extends Fragment {
             TextView tv_author;
             TextView tv_selector;
             TextView tv_createAt;
-            //            TextView tv_comment_num;
+            TextView tv_comment_num;
             TextView tv_like_num;
             ImageButton ib_enshrine;
             ImageButton ib_author;
             ImageButton ib_commment;
             ImageButton ib_like;
+            ImageButton ib_share;
+            ImageView iv_img;
         }
 
         @Override
@@ -541,12 +1094,14 @@ public class MainFragment extends Fragment {
                 holder.tv_author = (TextView) convertView.findViewById(R.id.tv_author);
                 holder.tv_selector = (TextView) convertView.findViewById(R.id.tv_selector);
                 holder.tv_createAt = (TextView) convertView.findViewById(R.id.tv_createAt);
-//                holder.tv_comment_num = (TextView) convertView.findViewById(R.id.tv_comment_num);
+                holder.tv_comment_num = (TextView) convertView.findViewById(R.id.tv_comment_num);
                 holder.tv_like_num = (TextView) convertView.findViewById(R.id.tv_like_num);
                 holder.ib_enshrine = (ImageButton) convertView.findViewById(R.id.ib_enshrine);
                 holder.ib_author = (ImageButton) convertView.findViewById(R.id.ib_author);
                 holder.ib_commment = (ImageButton) convertView.findViewById(R.id.ib_commment);
                 holder.ib_like = (ImageButton) convertView.findViewById(R.id.ib_like);
+                holder.iv_img = (ImageView) convertView.findViewById(R.id.iv_img);
+                holder.ib_share = (ImageButton) convertView.findViewById(R.id.ib_share);
 
                 convertView.setTag(holder);
             } else {
@@ -559,6 +1114,38 @@ public class MainFragment extends Fragment {
             holder.tv_author.setText(user == null ? "" : user.getUsername()); //发布人
             holder.tv_createAt.setText(weibo.getCreatedAt());   //创意发布时间
             holder.tv_selector.setText(weibo.getSelector());    //创意分类
+
+
+
+            if (weibo.getUpdownImg() != null) {
+                holder.iv_img.setVisibility(View.VISIBLE);
+
+                ImageOptions options=new ImageOptions.Builder()
+//                        //设置加载过程中的图片
+//                        .setLoadingDrawableId(R.mipmap.default_head)
+//                        //设置加载失败后的图片
+//                        .setFailureDrawableId(R.mipmap.default_head)
+                        //设置使用缓存
+                        .setUseMemCache(true)
+                        //设置显示圆形图片
+                        .setCircular(false)
+                        //设置支持gif
+                        .setIgnoreGif(false)
+                        .build();
+
+                x.image().bind(holder.iv_img, weibo.getUpdownImg(), options);
+            }
+
+            holder.ib_share.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    showToast("分享给好友看哦~");
+                    final TencentShare tencentShare = new TencentShare(getActivity(),
+                            getQQShareEntity(weibo));
+                    tencentShare.shareToQQ();
+                }
+            });
 
             //当点赞数为0时不显示
             if (holder.tv_like_num.getText() == 0 + "") {
@@ -642,6 +1229,8 @@ public class MainFragment extends Fragment {
             // 特殊文字处理,将表情等转换一下
             holder.tv_content.setText(StringUtils.getEmotionContent(getActivity(), holder.tv_content, str)); //发布创意内容
 
+
+            holder.tv_comment_num.setText(weibo.getComment()+"");
             //点击进入创意评论页
             holder.ib_commment.setOnClickListener(new View.OnClickListener() {
 
@@ -744,6 +1333,57 @@ public class MainFragment extends Fragment {
         }
     }
 
+    private static final int LOADING = 1;
+    private static final int LOADING_COMPLETED = 2;
+    private static final int LOADING_FAILED =3;
+    private static final int NORMAL = 4;
+    public void setState(int state){
+        switch (state) {
+            case LOADING:
+                if(weibos.size() == 0){
+                    mPullRefreshListView.setVisibility(View.GONE);
+                    progressbar.setVisibility(View.VISIBLE);
+                }
+                networkTips.setVisibility(View.GONE);
 
+                break;
+            case LOADING_COMPLETED:
+                networkTips.setVisibility(View.GONE);
+                progressbar.setVisibility(View.GONE);
+
+                mPullRefreshListView.setVisibility(View.VISIBLE);
+                mPullRefreshListView.setMode(PullToRefreshBase.Mode.BOTH);
+
+
+                break;
+            case LOADING_FAILED:
+                if(weibos.size()==0){
+                    mPullRefreshListView.setVisibility(View.VISIBLE);
+                    mPullRefreshListView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
+                    networkTips.setVisibility(View.VISIBLE);
+                }
+                progressbar.setVisibility(View.GONE);
+                break;
+            case NORMAL:
+
+                break;
+            default:
+                break;
+        }
+    }
+
+    private TencentShareEntity getQQShareEntity(Post post) {
+        String title = "玩转创意街";
+        String comment = post.getContent();
+        String img = null;
+//        if (post.getContentfigureurl() != null) {
+////            img = post.getUpdownImg().getFileUrl(mContext);
+//        } else {
+            img = TencentShareConstants.DEFAULT_IMG_URL;
+//        }
+        String summary = post.getContent();
+        TencentShareEntity entity = new TencentShareEntity(title, img, TencentShareConstants.WEB, summary, comment);
+        return entity;
+    }
 
 }

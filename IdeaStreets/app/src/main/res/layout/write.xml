@@ -53,7 +53,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/space_3"
         android:onClick="onOptionPicker"
-        android:background="@drawable/btn_login_selector"
+        android:background="@drawable/bt_login_bg"
         android:text="@string/idea_default"/>
 
 
@@ -130,7 +130,7 @@
                 android:id="@+id/open_pic_tips"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="添加图片"
+                android:text="@string/addImg"
                 android:textSize="@dimen/text_size_16"
                 android:textColor="#888888"
                 android:textStyle="normal"
@@ -167,7 +167,7 @@
                 android:textSize="@dimen/text_size_16"
                 android:textColor="#888888"
                 android:textStyle="normal"
-                android:text="拍照添加"
+                android:text="@string/cameraImg"
                 android:gravity="center"
                 android:layout_marginLeft="8dip"
                 />

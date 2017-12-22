@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.stav.ideastreet.R;
 import com.stav.ideastreet.base.BaseActivity;
@@ -29,6 +30,7 @@ import cn.bmob.v3.datatype.BmobPointer;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.SaveListener;
+import cn.bmob.v3.listener.UpdateListener;
 
 /**
  * 评论界面
@@ -76,8 +78,15 @@ public class CommentListActivity extends BaseActivity {
         query.findObjects(new FindListener<Comment>() {
 
             @Override
-            public void done(List<Comment> object, BmobException e) {
+            public void done(final List<Comment> object, BmobException e) {
                 if(e==null){
+                    weibo.setComment(object.size());
+                    weibo.update(new UpdateListener() {
+                        @Override
+                        public void done(BmobException e) {
+                            Log.d("stav1","评论个数为"+object.size());
+                        }
+                    });
                     comments = object;
                     adapter.notifyDataSetChanged();
                     et_content.setText("");

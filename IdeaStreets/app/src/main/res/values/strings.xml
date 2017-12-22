@@ -305,6 +305,7 @@
     <string name="drawer_open">open</string>
     <string name="drawer_close">close</string>
     <string name="share">陶瓷创意街</string>
+    <string name="share_idea">分享</string>
     <string name="share_now">随时随刻分享~~</string>
     <string name="user_name">用户名</string>
     <string name="user_password">密码</string>
@@ -365,4 +366,6 @@
     <string name="limit_font">140</string>
     <string name="check">查看</string>
     <string name="search">搜索</string>
+    <string name="addImg">添加图片</string>
+    <string name="cameraImg">拍照添加</string>
 </resources>

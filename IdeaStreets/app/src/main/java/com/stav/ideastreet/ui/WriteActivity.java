@@ -91,6 +91,8 @@ public class WriteActivity extends ParentWithNaviActivity implements AdapterView
     private EditText write;
     @ViewInject(R.id.open_pic)
     private ImageView open_pic;
+    @ViewInject(R.id.take_pic)
+    private ImageView take_pic;
     @ViewInject(R.id.open_layout)
     private LinearLayout open_layout;
     @ViewInject(R.id.take_layout)
@@ -287,8 +289,6 @@ public class WriteActivity extends ParentWithNaviActivity implements AdapterView
         take_layout.setOnClickListener(this);
         open_pic.setOnClickListener(this);
 
-
-
     }
 
     @Override
@@ -400,10 +400,10 @@ public class WriteActivity extends ParentWithNaviActivity implements AdapterView
                     if (file.exists()) {
                         Bitmap bitmap = compressImageFromFile(files);
                         targeturl = saveToSdCard(bitmap);
-                        open_pic.setBackgroundDrawable(new BitmapDrawable(bitmap));
+                        take_pic.setBackgroundDrawable(new BitmapDrawable(bitmap));
                         open_layout.setVisibility(View.GONE);
-                    } else {
 
+                        Log.i("stav1", "get album:" + targeturl);
                     }
                     break;
                 default:
@@ -422,10 +422,8 @@ public class WriteActivity extends ParentWithNaviActivity implements AdapterView
                 out.close();
             }
         } catch (FileNotFoundException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         Log.i("stav1", file.getAbsolutePath());
@@ -560,6 +558,7 @@ public class WriteActivity extends ParentWithNaviActivity implements AdapterView
      * 发布微博，发表微博时关联了用户类型，是一对一的体现
      */
     private void publishWeibo(String content){
+        uploadImg();
         MyUser user = BmobUser.getCurrentUser(MyUser.class);
         String mSelect = bt_select.getText().toString();
         if(user == null){
@@ -574,12 +573,9 @@ public class WriteActivity extends ParentWithNaviActivity implements AdapterView
         weibo.setContent(content);
         weibo.setSelector(mSelect);
         weibo.setLove(0);
-        if (imgUrl == null){
-            weibo.setUpdownImg("");
-        }else {
-            weibo.setUpdownImg(imgUrl);
-        }
+        weibo.setUpdownImg(imgUrl);
         weibo.setPass(true);
+        weibo.setComment(0);
 
 
         String[] str1 = new String[] {"创意饰品","创意美食","创意设计","创意陶瓷","创意礼物","创意家居","人才市场"};
