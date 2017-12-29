@@ -149,9 +149,7 @@ public class PublishActivity extends ParentWithNaviActivity implements AdapterVi
         setContentView(R.layout.publish);
         initNaviView();
         ViewUtils.inject(this);
-        imagepaths = new ArrayList<>();
 
-        final String mText = write.getText().toString();
         initData();
 
         //注册输入框内容监听器
@@ -166,6 +164,7 @@ public class PublishActivity extends ParentWithNaviActivity implements AdapterVi
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 boolean flag = false;
+                String mText = write.getText().toString();
                 int len = mText.length();
                 if (len > 140) {
                     total_text_num.setTextColor(Color.RED);
@@ -370,7 +369,7 @@ public class PublishActivity extends ParentWithNaviActivity implements AdapterVi
         weibo.setComment(0);
         weibo.setSelector(mSelect);
         weibo.setPass(true);
-
+        weibo.setAuthorName(user.getUsername());
 
         String[] str1 = new String[] {"创意饰品","创意美食","创意设计","创意陶瓷","创意礼物","创意家居","人才市场"};
         int[] intTemp = new int[str1.length];

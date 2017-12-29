@@ -383,6 +383,8 @@
         </activity>
         <activity android:name=".ui.SearchPostActivity">
         </activity>
+        <activity android:name=".ui.MyIdeaActivity">
+        </activity>
     </application>
 
 </manifest>

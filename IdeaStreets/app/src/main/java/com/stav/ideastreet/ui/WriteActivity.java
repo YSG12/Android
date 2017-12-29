@@ -36,6 +36,7 @@ import android.widget.Toast;
 import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.view.annotation.ViewInject;
 import com.stav.ideastreet.R;
+import com.stav.ideastreet.base.BaseApplication;
 import com.stav.ideastreet.base.ParentWithNaviActivity;
 import com.stav.ideastreet.bean.Avatar;
 import com.stav.ideastreet.bean.MyUser;
@@ -48,6 +49,8 @@ import com.stav.ideastreet.util.EmotionUtils;
 import com.stav.ideastreet.util.StringUtils;
 import com.stav.ideastreet.util.Tools;
 import com.stav.ideastreet.utils.CacheUtils;
+import com.stav.ideastreet.utils.ConstantValue;
+import com.stav.ideastreet.utils.PrefUtils;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -71,6 +74,7 @@ import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.ProgressCallback;
 import cn.bmob.v3.listener.QueryListListener;
 import cn.bmob.v3.listener.SaveListener;
+import cn.bmob.v3.listener.UpdateListener;
 import cn.bmob.v3.listener.UploadBatchListener;
 import cn.bmob.v3.listener.UploadFileListener;
 import rx.Observable;
@@ -97,8 +101,6 @@ public class WriteActivity extends ParentWithNaviActivity implements AdapterView
     private LinearLayout open_layout;
     @ViewInject(R.id.take_layout)
     private LinearLayout take_layout;
-//    @ViewInject(R.id.images)
-//    private GridView gridView;
     @ViewInject(R.id.total_text_num)
     private TextView total_text_num = null;
     @ViewInject(R.id.ll_emotion_dashboard)
@@ -112,7 +114,6 @@ public class WriteActivity extends ParentWithNaviActivity implements AdapterView
     // 发送图片的路径
     private String image_path;
     private Bitmap bmp;
-    private ArrayList<String> imagepaths;
     private ArrayList<HashMap<String, Object>> imageItem;
     private SimpleAdapter simpleAdapter;     //适配器
     private Tools tools;
@@ -120,8 +121,9 @@ public class WriteActivity extends ParentWithNaviActivity implements AdapterView
     private EmotionPagerAdapter emotionPagerGvAdapter;
     private static final int REQUEST_CODE_ALBUM = 1;
     private static final int REQUEST_CODE_CAMERA = 2;
-    String imgUrl;
     String targeturl = null;
+    private String imgUrl;
+
     /**
      * 设置actionBar
      * @return
@@ -140,8 +142,8 @@ public class WriteActivity extends ParentWithNaviActivity implements AdapterView
             //退出该页面
             @Override
             public void clickLeft() {
-                finish();
-//                showToast(imgUrl+"");
+//                finish();
+                showToast(imgUrl+"");
             }
 
             //发表微博
@@ -152,7 +154,7 @@ public class WriteActivity extends ParentWithNaviActivity implements AdapterView
         };
     }
 
-    private void uploadImg(){
+    private void uploadImg(final Post weibo){
         final BmobFile bmobFile = new BmobFile(new File(targeturl));
         bmobFile.uploadObservable(new ProgressCallback() {
             @Override
@@ -162,14 +164,22 @@ public class WriteActivity extends ParentWithNaviActivity implements AdapterView
         }).doOnNext(new Action1<Void>() {
             @Override
             public void call(Void aVoid) {
-                String url = bmobFile.getUrl();
+                final String url = bmobFile.getUrl();
                 log("上传成功："+url+","+bmobFile.getFilename());
-                imgUrl = url;
+                weibo.setUpdownImg(url);
+                weibo.update(new UpdateListener() {
+                    @Override
+                    public void done(BmobException e) {
+                        if (e==null){
+                            Log.d("stav1", "上传成功");
+                        }
+                    }
+                });
             }
         }).concatMap(new Func1<Void, Observable<String>>() {//将bmobFile保存到movie表中
             @Override
             public Observable<String> call(Void aVoid) {
-                return saveObservable(new Avatar("冰封：重生之门",bmobFile));
+                return saveObservable(new Avatar(BmobUser.getCurrentUser().getUsername(),bmobFile));
             }
         }).concatMap(new Func1<String, Observable<String>>() {//下载文件
             @Override
@@ -214,10 +224,7 @@ public class WriteActivity extends ParentWithNaviActivity implements AdapterView
         setContentView(R.layout.write);
         initNaviView();
         ViewUtils.inject(this);
-        imagepaths = new ArrayList<>();
-
         initData();
-
         //注册输入框内容监听器
         write.addTextChangedListener(new TextWatcher() {
             @Override
@@ -245,14 +252,12 @@ public class WriteActivity extends ParentWithNaviActivity implements AdapterView
 
             }
         });
-
         //初始化表情包加载
         initEmotion();
     }
 
     //发布创意
     private void publish() {
-        uploadImg();
         String mText = write.getText().toString();
         int len = mText.length();
         if (len == 0) {
@@ -260,23 +265,11 @@ public class WriteActivity extends ParentWithNaviActivity implements AdapterView
         } else if (len > 140) {
             Toast.makeText(WriteActivity.this, "超出字数限制！", Toast.LENGTH_SHORT).show();
         } else {
-            if (imagepaths.size() > 0) {
-                publishWeibo(mText);
-                Toast.makeText(WriteActivity.this, "图片微博", Toast.LENGTH_SHORT).show();
-                //进入微博主界面
-                Intent intent = new Intent(WriteActivity.this, MainActivity.class);
-                startActivity(intent);
-                WriteActivity.this.finish();
-            } else {
-                publishWeibo(mText);
-                Toast.makeText(WriteActivity.this, "文字微博", Toast.LENGTH_SHORT).show();
-
-                //进入微博主界面
-                Intent intent = new Intent(WriteActivity.this, MainActivity.class);
-                startActivity(intent);
-                WriteActivity.this.finish();
-
-            }
+            publishWeibo(mText);
+            //进入微博主界面
+            Intent intent = new Intent(WriteActivity.this, MainActivity.class);
+            startActivity(intent);
+            WriteActivity.this.finish();
         }
     }
 
@@ -557,8 +550,9 @@ public class WriteActivity extends ParentWithNaviActivity implements AdapterView
     /**
      * 发布微博，发表微博时关联了用户类型，是一对一的体现
      */
+
     private void publishWeibo(String content){
-        uploadImg();
+
         MyUser user = BmobUser.getCurrentUser(MyUser.class);
         String mSelect = bt_select.getText().toString();
         if(user == null){
@@ -569,14 +563,14 @@ public class WriteActivity extends ParentWithNaviActivity implements AdapterView
             return;
         }
         // 创建微博信息
-        Post weibo = new Post();
+        final Post weibo = new Post();
         weibo.setContent(content);
         weibo.setSelector(mSelect);
         weibo.setLove(0);
         weibo.setUpdownImg(imgUrl);
         weibo.setPass(true);
         weibo.setComment(0);
-
+        weibo.setAuthorName(user.getUsername());
 
         String[] str1 = new String[] {"创意饰品","创意美食","创意设计","创意陶瓷","创意礼物","创意家居","人才市场"};
         int[] intTemp = new int[str1.length];
@@ -596,6 +590,7 @@ public class WriteActivity extends ParentWithNaviActivity implements AdapterView
             public void done(String s, BmobException e) {
                 if(e==null){
                     showToast("发布成功");
+                    uploadImg(weibo);
                 }else{
                     Log.e("tag", "done: "+(e));
                 }

@@ -177,7 +177,7 @@ public class UpdateInfoActivity extends ActionBarActivity implements FileChooser
                     @Override
                     public void done(BmobException e) {
                         if (e==null) {
-                            showToast("123");
+
                         } else {
                             Log.d("stav1",e+"");
                         }

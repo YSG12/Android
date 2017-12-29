@@ -44,6 +44,8 @@ public class MyUser extends BmobUser {
     private String avatar;
     private BmobFile ivAvatar;
 
+    private String imgUrl;
+
     public String getSex() {
         return sex;
     }
@@ -109,6 +111,12 @@ public class MyUser extends BmobUser {
     }
     public void setMotto(String motto) {
         this.motto = motto;
+    }
+    public String getImgUrl() {
+        return imgUrl;
+    }
+    public void setImgUrl(String imgUrl) {
+        this.imgUrl = imgUrl;
     }
 
     @Override

@@ -10,6 +10,7 @@ public class ConstantValue extends Object {
      * 个人中心页面是否登录
      */
     public static final String IS_LOGIN = "isLogin";
+    public static final String IMG_URL = "imgUrl";
 
     /**
      * 双击退出

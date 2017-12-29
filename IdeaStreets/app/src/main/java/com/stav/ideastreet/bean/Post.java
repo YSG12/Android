@@ -38,6 +38,9 @@ public class Post extends BmobObject {
     private BmobFile image; //微博图片
 
 
+    private String authorName; //作者名字
+
+
     /**
      *  一对多关系：用于存储喜欢该帖子的所有用户
      */
@@ -125,5 +128,10 @@ public class Post extends BmobObject {
     public void setComment(int comment) {
         this.comment = comment;
     }
-
+    public String getAuthorName() {
+        return authorName;
+    }
+    public void setAuthorName(String authorName) {
+        this.authorName = authorName;
+    }
 }

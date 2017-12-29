@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:id="@+id/ly_main_weixin"
               android:layout_width="fill_parent"
               android:layout_height="fill_parent"
@@ -24,6 +24,8 @@
         android:paddingTop="3dp"/>
 
 <RelativeLayout
+    android:id="@+id/rl"
+    android:layout_below="@+id/write"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -48,12 +50,13 @@
 </RelativeLayout>
 
     <Button
+        android:layout_below="@id/rl"
         android:id="@+id/bt_select"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/space_3"
         android:onClick="onOptionPicker"
-        android:background="@drawable/btn_login_selector"
+        android:background="@drawable/bt_login_bg"
         android:text="@string/idea_default"/>
 
     <LinearLayout
@@ -71,4 +74,4 @@
         </android.support.v4.view.ViewPager>
     </LinearLayout>
 
-</LinearLayout>
+</RelativeLayout>

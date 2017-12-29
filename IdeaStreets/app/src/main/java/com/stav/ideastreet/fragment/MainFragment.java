@@ -620,7 +620,6 @@ public class MainFragment extends Fragment {
                 }
             }
         });
-
     }
     public void findWeibo_b(){
         MyUser user = BmobUser.getCurrentUser(MyUser.class);
@@ -1114,13 +1113,26 @@ public class MainFragment extends Fragment {
             holder.tv_author.setText(user == null ? "" : user.getUsername()); //发布人
             holder.tv_createAt.setText(weibo.getCreatedAt());   //创意发布时间
             holder.tv_selector.setText(weibo.getSelector());    //创意分类
+            ImageOptions options =new ImageOptions.Builder()
+                    //设置加载过程中的图片
+                    .setLoadingDrawableId(R.mipmap.default_head)
+                    //设置加载失败后的图片
+                    .setFailureDrawableId(R.mipmap.default_head)
+                    //设置使用缓存
+                    .setUseMemCache(true)
+                    //设置显示圆形图片
+                    .setCircular(false)
+                    //设置支持gif
+                    .setIgnoreGif(false)
+                    .build();
 
+            x.image().bind(holder.ib_author, user.getAvatar(), options);
 
 
             if (weibo.getUpdownImg() != null) {
                 holder.iv_img.setVisibility(View.VISIBLE);
 
-                ImageOptions options=new ImageOptions.Builder()
+                ImageOptions option_avatar =new ImageOptions.Builder()
 //                        //设置加载过程中的图片
 //                        .setLoadingDrawableId(R.mipmap.default_head)
 //                        //设置加载失败后的图片
@@ -1133,7 +1145,7 @@ public class MainFragment extends Fragment {
                         .setIgnoreGif(false)
                         .build();
 
-                x.image().bind(holder.iv_img, weibo.getUpdownImg(), options);
+                x.image().bind(holder.iv_img, weibo.getUpdownImg(), option_avatar);
             }
 
             holder.ib_share.setOnClickListener(new View.OnClickListener() {

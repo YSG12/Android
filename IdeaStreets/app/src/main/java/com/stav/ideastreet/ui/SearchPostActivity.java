@@ -58,6 +58,8 @@ public class SearchPostActivity extends ParentWithNaviActivity implements View.O
             return;
         }
 
+
+
     }
 
     @Override

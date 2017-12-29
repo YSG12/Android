@@ -20,6 +20,8 @@ import android.widget.Toast;
 import com.orhanobut.logger.Logger;
 import com.stav.ideastreet.R;
 import com.stav.ideastreet.bean.MyUser;
+import com.stav.ideastreet.bean.Post;
+import com.stav.ideastreet.utils.ACache;
 import com.stav.ideastreet.utils.ActivityManagerUtils;
 import com.stav.ideastreet.utils.ConstantValue;
 import com.stav.ideastreet.utils.PrefUtils;
@@ -46,6 +48,16 @@ public class BaseApplication extends Application {
 	static Context _context;
 	static Resources _resource;
 	private static String lastToast = "";
+
+	public Post getCurrentPost() {
+		return currentPost;
+	}
+
+	public void setCurrentPost(Post currentPost) {
+		this.currentPost = currentPost;
+	}
+
+	private Post currentPost;
 	private static long lastToastTime;
 	private static BaseApplication myApplication = null;
 
@@ -109,6 +121,15 @@ public class BaseApplication extends Application {
 
 		_context = getApplicationContext();
 		_resource = _context.getResources();
+	}
+
+	private ACache mACache;
+	public ACache getCache() {
+		if (mACache == null) {
+			return ACache.get(getApplicationContext());
+		} else {
+			return mACache;
+		}
 	}
 
 	/**

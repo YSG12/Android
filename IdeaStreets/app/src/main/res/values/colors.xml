@@ -13,6 +13,9 @@
     <color name="button_press">#F1F1F1</color>
     <color name="button_text">#000000</color>
 
+    <color name="yy_color">#ff526fb1</color>
+    <color name="theme_color">#D95555</color>
+    <color name="second_color">#888888</color>
     <!-- 常用颜色值 -->
     <color name="white40">#40FFFFFF</color>
     <color name="white">#FFFFFF</color>
@@ -102,6 +105,7 @@
     <color name="circle_background">#fff2f2f2</color>
     <color name="line_background">#ffcccccc</color>
     <color name="done_text_color_normal">#ff333333</color>
+    <color name="text_gray_fav">#ff666666</color>
     <color name="done_text_color_disabled">#ffcccccc</color>
     <!--     <color name="blue">#ff33cc33</color> -->
     <color name="darker_blue">#ff00cc99</color>
