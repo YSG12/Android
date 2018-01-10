@@ -138,7 +138,6 @@ public class PublishActivity extends ParentWithNaviActivity implements AdapterVi
             @Override
             public void clickRight() {
                 publish();
-
             }
         };
     }
@@ -369,8 +368,8 @@ public class PublishActivity extends ParentWithNaviActivity implements AdapterVi
         weibo.setComment(0);
         weibo.setSelector(mSelect);
         weibo.setPass(true);
+        weibo.setUpdownImg("");
         weibo.setAuthorName(user.getUsername());
-
         String[] str1 = new String[] {"创意饰品","创意美食","创意设计","创意陶瓷","创意礼物","创意家居","人才市场"};
         int[] intTemp = new int[str1.length];
         int num;
@@ -381,7 +380,6 @@ public class PublishActivity extends ParentWithNaviActivity implements AdapterVi
                 weibo.setTest(num);
             }
         }
-
         weibo.setAuthor(user);
         weibo.save(new SaveListener<String>() {
 

@@ -13,10 +13,11 @@ import android.widget.RelativeLayout;
 import com.lidroid.xutils.ViewUtils;
 import com.stav.ideastreet.R;
 import com.stav.ideastreet.ui.MyIdeaActivity;
+import com.stav.ideastreet.ui.SearchPostActivity;
 import com.stav.ideastreet.ui.SearchUserActivity;
 
 public class DiscoveryFragment extends Fragment implements OnClickListener {
-	LinearLayout ll_find_friend,rl_active;
+	LinearLayout ll_find_friend,rl_active,rl_search_post;
     private View view;
 
     @Override
@@ -30,8 +31,10 @@ public class DiscoveryFragment extends Fragment implements OnClickListener {
 	private void initUI() {
 		ll_find_friend = (LinearLayout) view.findViewById(R.id.ll_find_friend);
 		rl_active = (LinearLayout) view.findViewById(R.id.rl_active);
+		rl_search_post = (LinearLayout) view.findViewById(R.id.rl_search_post);
 		ll_find_friend.setOnClickListener(this);
 		rl_active.setOnClickListener(this);
+		rl_search_post.setOnClickListener(this);
 	}
 
 	@Override
@@ -42,6 +45,9 @@ public class DiscoveryFragment extends Fragment implements OnClickListener {
 				break;
 			case R.id.rl_active:
 				startActivity(new Intent(getActivity(), MyIdeaActivity.class));
+				break;
+			case R.id.rl_search_post:
+				startActivity(new Intent(getActivity(), SearchPostActivity.class));
 				break;
             default:
                 break;

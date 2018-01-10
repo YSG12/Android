@@ -87,6 +87,7 @@ public class CommentListActivity extends BaseActivity {
         initUI();
         weibo.setObjectId(getIntent().getStringExtra("objectId"));
         initData();
+        initData();
         adapter = new MyAdapter(this);
         et_content = (EditText) findViewById(R.id.comment_content);
         btn_publish = (Button) findViewById(R.id.comment_commit);
@@ -105,9 +106,54 @@ public class CommentListActivity extends BaseActivity {
             public void onClick(View v) {
                 publishComment(et_content.getText().toString());
                 adapter.notifyDataSetChanged();
+
             }
         });
         findComments();
+    }
+
+    private void initData1() {
+        String ivatar = getIntent().getStringExtra("ivatar");
+        String imgUrl = getIntent().getStringExtra("imgUrl");
+        String content = getIntent().getStringExtra("content");
+        String authorName = getIntent().getStringExtra("authorName");
+
+        userName.setText(authorName);
+        commentItemContent.setText(StringUtils.getEmotionContent(getApplicationContext(), commentItemContent, content));
+        ImageOptions options=new ImageOptions.Builder()
+                //设置加载过程中的图片
+                .setLoadingDrawableId(R.mipmap.default_head)
+                //设置加载失败后的图片
+                .setFailureDrawableId(R.mipmap.default_head)
+                //设置使用缓存
+                .setUseMemCache(true)
+                //设置显示圆形图片
+                .setCircular(false)
+                //设置支持gif
+                .setIgnoreGif(false)
+                .build();
+        x.image().bind(userLogo, ivatar, options);
+
+        if (imgUrl.isEmpty()) {
+            commentItemImage.setVisibility(View.GONE);
+        } else {
+            commentItemImage.setVisibility(View.VISIBLE);
+            ImageOptions options1=new ImageOptions.Builder()
+                    //设置加载过程中的图片
+                    .setLoadingDrawableId(R.mipmap.default_head)
+                    //设置加载失败后的图片
+                    .setFailureDrawableId(R.mipmap.default_head)
+                    //设置使用缓存
+                    .setUseMemCache(true)
+                    //设置显示圆形图片
+                    .setCircular(false)
+                    //设置支持gif
+                    .setIgnoreGif(false)
+                    .build();
+
+            x.image().bind(commentItemImage, imgUrl, options1);
+        }
+
     }
 
     /**
@@ -136,6 +182,7 @@ public class CommentListActivity extends BaseActivity {
 
     private void initData() {
         BmobQuery<Post> post = new BmobQuery<Post>();
+
         post.addWhereEqualTo("objectId",weibo.getObjectId());
         post.findObjects(new FindListener<Post>() {
             @Override
@@ -188,6 +235,7 @@ public class CommentListActivity extends BaseActivity {
                         .build();
 
                 x.image().bind(userLogo, user.getAvatar(), options);
+
             }
         });
     }
@@ -223,6 +271,7 @@ public class CommentListActivity extends BaseActivity {
                         }
                     });
                     adapter.notifyDataSetChanged();
+                    setListViewHeightBasedOnChildren(commentList);
                     et_content.setText("");
                 }else{
                     Log.d("",e+"");
@@ -255,6 +304,7 @@ public class CommentListActivity extends BaseActivity {
                     findComments();
                     et_content.setText("");
                     adapter.notifyDataSetChanged();
+                    setListViewHeightBasedOnChildren(commentList);
                     toast("评论成功");
                 }else{
                     Log.d("",e+"");

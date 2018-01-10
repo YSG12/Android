@@ -56,7 +56,9 @@ import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.datatype.BmobQueryResult;
 import cn.bmob.v3.datatype.BmobRelation;
 import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.SQLQueryListener;
+import cn.bmob.v3.listener.SaveListener;
 import cn.bmob.v3.listener.UpdateListener;
 import rx.Subscription;
 import rx.subscriptions.CompositeSubscription;
@@ -109,7 +111,6 @@ public class MainFragment extends Fragment {
         inflater = LayoutInflater.from(getContext());
         pageNum = 0;
         lastItemTime = getCurrentTime();
-
         pagerCreativeOrnament = inflater.inflate(R.layout.pager_creative_ornament, null);
         pagerCuisine = inflater.inflate(R.layout.pager_cuisine, null);
         pagerCreativeDesign = inflater.inflate(R.layout.pager_creative_design, null);
@@ -552,35 +553,15 @@ public class MainFragment extends Fragment {
      */
     public void findWeibo_a(){
 
-//        MyUser user = BmobUser.getCurrentUser(MyUser.class);
-//        BmobQuery<Post> query = new BmobQuery<Post>();
-//        query.addWhereEqualTo("author", user);	// 查询当前用户的所有微博
-//        query.order("-updatedAt");
-//        query.include("author");// 希望在查询微博信息的同时也把发布人的信息查询出来，可以使用include方法
-//        query.findObjects(new FindListener<Post>() {
-//            @Override
-//            public void done(List<Post> object, BmobException e) {
-//                if(e==null){
-//                    weibos = object;
-//                    adapter.notifyDataSetChanged();
-//                    et_content.setText("");
-//                }else{
-//                    Log.d("",""+e);
-//                }
-//            }
-//
-//        });
         MyUser user = BmobUser.getCurrentUser(MyUser.class);
-        //等价于下面的sql语句查询
-//		String sql = "select include author,* from Post where author = pointer('_User', "+"'"+user.getObjectId()+"') ORDER BY updatedAt ASC LIMIT 3";
-        String sql = "select include author,* from Post where test = 0 ORDER BY updatedAt ASC";
-        new BmobQuery<Post>().doSQLQuery(sql, new SQLQueryListener<Post>(){
-
+        BmobQuery<Post> query = new BmobQuery<Post>();
+        query.addWhereEqualTo("selector", "创意饰品");	// 查询当前用户的所有微博
+        query.order("-updatedAt");
+        query.include("author");// 希望在查询微博信息的同时也把发布人的信息查询出来，可以使用include方法
+        query.findObjects(new FindListener<Post>() {
             @Override
-            public void done(BmobQueryResult<Post> result, BmobException e) {
-
-                List<Post> list = result.getResults();
-                if (e == null) {
+            public void done(List<Post> list, BmobException e) {
+                if(e==null){
                     Log.i("stav", "find success." + list.size());
                     if (list.size() != 0 && list.get(list.size() - 1) != null) {
                         if (mRefreshType == RefreshType.REFRESH) {
@@ -600,7 +581,7 @@ public class MainFragment extends Fragment {
                         showToast("暂无更多数据~");
                         if (list.size() == 0 && mListItems.size() == 0) {
 
-                            networkTips.setText("暂无收藏。快去首页收藏几个把~");
+                            networkTips.setText("暂无创意。快去发布几个吧~");
                             setState(LOADING_FAILED);
                             pageNum--;
                             mPullRefreshListView.onRefreshComplete();
@@ -620,17 +601,18 @@ public class MainFragment extends Fragment {
                 }
             }
         });
+
     }
     public void findWeibo_b(){
         MyUser user = BmobUser.getCurrentUser(MyUser.class);
-//		String sql = "select include author,* from Post where author = pointer('_User', "+"'"+user.getObjectId()+"') ORDER BY updatedAt ASC LIMIT 3";
-        String sql = "select include author,* from Post where test = 1 ORDER BY updatedAt ASC";
-        new BmobQuery<Post>().doSQLQuery(sql, new SQLQueryListener<Post>(){
-
+        BmobQuery<Post> query = new BmobQuery<Post>();
+        query.addWhereEqualTo("selector", "创意美食");	// 查询当前用户的所有微博
+        query.order("-updatedAt");
+        query.include("author");// 希望在查询微博信息的同时也把发布人的信息查询出来，可以使用include方法
+        query.findObjects(new FindListener<Post>() {
             @Override
-            public void done(BmobQueryResult<Post> result, BmobException e) {
-                List<Post> list = result.getResults();
-                if (e == null) {
+            public void done(List<Post> list, BmobException e) {
+                if(e==null){
                     Log.i("stav", "find success." + list.size());
                     if (list.size() != 0 && list.get(list.size() - 1) != null) {
                         if (mRefreshType == RefreshType.REFRESH) {
@@ -650,7 +632,7 @@ public class MainFragment extends Fragment {
                         showToast("暂无更多数据~");
                         if (list.size() == 0 && mListItems.size() == 0) {
 
-                            networkTips.setText("暂无收藏。快去首页收藏几个把~");
+                            networkTips.setText("暂无创意。快去发布几个吧~");
                             setState(LOADING_FAILED);
                             pageNum--;
                             mPullRefreshListView.onRefreshComplete();
@@ -674,14 +656,14 @@ public class MainFragment extends Fragment {
     }
     public void findWeibo_c(){
         MyUser user = BmobUser.getCurrentUser(MyUser.class);
-//		String sql = "select include author,* from Post where author = pointer('_User', "+"'"+user.getObjectId()+"') ORDER BY updatedAt ASC LIMIT 3";
-        String sql = "select include author,* from Post where test = 2 ORDER BY updatedAt ASC";
-        new BmobQuery<Post>().doSQLQuery(sql, new SQLQueryListener<Post>(){
-
+        BmobQuery<Post> query = new BmobQuery<Post>();
+        query.addWhereEqualTo("selector", "创意设计");	// 查询当前用户的所有微博
+        query.order("-updatedAt");
+        query.include("author");// 希望在查询微博信息的同时也把发布人的信息查询出来，可以使用include方法
+        query.findObjects(new FindListener<Post>() {
             @Override
-            public void done(BmobQueryResult<Post> result, BmobException e) {
-                List<Post> list = result.getResults();
-                if (e == null) {
+            public void done(List<Post> list, BmobException e) {
+                if(e==null){
                     Log.i("stav", "find success." + list.size());
                     if (list.size() != 0 && list.get(list.size() - 1) != null) {
                         if (mRefreshType == RefreshType.REFRESH) {
@@ -701,7 +683,7 @@ public class MainFragment extends Fragment {
                         showToast("暂无更多数据~");
                         if (list.size() == 0 && mListItems.size() == 0) {
 
-                            networkTips.setText("暂无收藏。快去首页收藏几个把~");
+                            networkTips.setText("暂无创意。快去发布几个吧~");
                             setState(LOADING_FAILED);
                             pageNum--;
                             mPullRefreshListView.onRefreshComplete();
@@ -725,14 +707,14 @@ public class MainFragment extends Fragment {
     }
     public void findWeibo_d(){
         MyUser user = BmobUser.getCurrentUser(MyUser.class);
-//		String sql = "select include author,* from Post where author = pointer('_User', "+"'"+user.getObjectId()+"') ORDER BY updatedAt ASC LIMIT 3";
-        String sql = "select include author,* from Post where test = 3 ORDER BY updatedAt ASC";
-        new BmobQuery<Post>().doSQLQuery(sql, new SQLQueryListener<Post>(){
-
+        BmobQuery<Post> query = new BmobQuery<Post>();
+        query.addWhereEqualTo("selector", "创意陶瓷");	// 查询当前用户的所有微博
+        query.order("-updatedAt");
+        query.include("author");// 希望在查询微博信息的同时也把发布人的信息查询出来，可以使用include方法
+        query.findObjects(new FindListener<Post>() {
             @Override
-            public void done(BmobQueryResult<Post> result, BmobException e) {
-                List<Post> list = result.getResults();
-                if (e == null) {
+            public void done(List<Post> list, BmobException e) {
+                if(e==null){
                     Log.i("stav", "find success." + list.size());
                     if (list.size() != 0 && list.get(list.size() - 1) != null) {
                         if (mRefreshType == RefreshType.REFRESH) {
@@ -752,7 +734,7 @@ public class MainFragment extends Fragment {
                         showToast("暂无更多数据~");
                         if (list.size() == 0 && mListItems.size() == 0) {
 
-                            networkTips.setText("暂无收藏。快去首页收藏几个把~");
+                            networkTips.setText("暂无创意。快去发布几个吧~");
                             setState(LOADING_FAILED);
                             pageNum--;
                             mPullRefreshListView.onRefreshComplete();
@@ -776,14 +758,14 @@ public class MainFragment extends Fragment {
     }
     public void findWeibo_e(){
         MyUser user = BmobUser.getCurrentUser(MyUser.class);
-//		String sql = "select include author,* from Post where author = pointer('_User', "+"'"+user.getObjectId()+"') ORDER BY updatedAt ASC LIMIT 3";
-        String sql = "select include author,* from Post where test = 4 ORDER BY updatedAt ASC";
-        new BmobQuery<Post>().doSQLQuery(sql, new SQLQueryListener<Post>(){
-
+        BmobQuery<Post> query = new BmobQuery<Post>();
+        query.addWhereEqualTo("selector", "创意礼物");	// 查询当前用户的所有微博
+        query.order("-updatedAt");
+        query.include("author");// 希望在查询微博信息的同时也把发布人的信息查询出来，可以使用include方法
+        query.findObjects(new FindListener<Post>() {
             @Override
-            public void done(BmobQueryResult<Post> result, BmobException e) {
-                List<Post> list = result.getResults();
-                if (e == null) {
+            public void done(List<Post> list, BmobException e) {
+                if(e==null){
                     Log.i("stav", "find success." + list.size());
                     if (list.size() != 0 && list.get(list.size() - 1) != null) {
                         if (mRefreshType == RefreshType.REFRESH) {
@@ -803,7 +785,7 @@ public class MainFragment extends Fragment {
                         showToast("暂无更多数据~");
                         if (list.size() == 0 && mListItems.size() == 0) {
 
-                            networkTips.setText("暂无收藏。快去首页收藏几个把~");
+                            networkTips.setText("暂无创意。快去发布几个吧~");
                             setState(LOADING_FAILED);
                             pageNum--;
                             mPullRefreshListView.onRefreshComplete();
@@ -827,14 +809,14 @@ public class MainFragment extends Fragment {
     }
     public void findWeibo_f(){
         MyUser user = BmobUser.getCurrentUser(MyUser.class);
-//		String sql = "select include author,* from Post where author = pointer('_User', "+"'"+user.getObjectId()+"') ORDER BY updatedAt ASC LIMIT 3";
-        String sql = "select include author,* from Post where test = 5 ORDER BY updatedAt ASC";
-        new BmobQuery<Post>().doSQLQuery(sql, new SQLQueryListener<Post>(){
-
+        BmobQuery<Post> query = new BmobQuery<Post>();
+        query.addWhereEqualTo("selector", "创意家居");	// 查询当前用户的所有微博
+        query.order("-updatedAt");
+        query.include("author");// 希望在查询微博信息的同时也把发布人的信息查询出来，可以使用include方法
+        query.findObjects(new FindListener<Post>() {
             @Override
-            public void done(BmobQueryResult<Post> result, BmobException e) {
-                List<Post> list = result.getResults();
-                if (e == null) {
+            public void done(List<Post> list, BmobException e) {
+                if(e==null){
                     Log.i("stav", "find success." + list.size());
                     if (list.size() != 0 && list.get(list.size() - 1) != null) {
                         if (mRefreshType == RefreshType.REFRESH) {
@@ -854,7 +836,7 @@ public class MainFragment extends Fragment {
                         showToast("暂无更多数据~");
                         if (list.size() == 0 && mListItems.size() == 0) {
 
-                            networkTips.setText("暂无收藏。快去首页收藏几个把~");
+                            networkTips.setText("暂无创意。快去发布几个吧~");
                             setState(LOADING_FAILED);
                             pageNum--;
                             mPullRefreshListView.onRefreshComplete();
@@ -874,18 +856,17 @@ public class MainFragment extends Fragment {
                 }
             }
         });
-
     }
     public void findWeibo_g(){
         MyUser user = BmobUser.getCurrentUser(MyUser.class);
-//		String sql = "select include author,* from Post where author = pointer('_User', "+"'"+user.getObjectId()+"') ORDER BY updatedAt ASC LIMIT 3";
-        String sql = "select include author,* from Post where test = 6 ORDER BY updatedAt ASC";
-        new BmobQuery<Post>().doSQLQuery(sql, new SQLQueryListener<Post>(){
-
+        BmobQuery<Post> query = new BmobQuery<Post>();
+        query.addWhereEqualTo("selector", "人才市场");	// 查询当前用户的所有微博
+        query.order("-updatedAt");
+        query.include("author");// 希望在查询微博信息的同时也把发布人的信息查询出来，可以使用include方法
+        query.findObjects(new FindListener<Post>() {
             @Override
-            public void done(BmobQueryResult<Post> result, BmobException e) {
-                List<Post> list = result.getResults();
-                if (e == null) {
+            public void done(List<Post> list, BmobException e) {
+                if(e==null){
                     Log.i("stav", "find success." + list.size());
                     if (list.size() != 0 && list.get(list.size() - 1) != null) {
                         if (mRefreshType == RefreshType.REFRESH) {
@@ -905,7 +886,7 @@ public class MainFragment extends Fragment {
                         showToast("暂无更多数据~");
                         if (list.size() == 0 && mListItems.size() == 0) {
 
-                            networkTips.setText("暂无收藏。快去首页收藏几个把~");
+                            networkTips.setText("暂无创意。快去发布几个吧~");
                             setState(LOADING_FAILED);
                             pageNum--;
                             mPullRefreshListView.onRefreshComplete();
@@ -1250,6 +1231,10 @@ public class MainFragment extends Fragment {
                 public void onClick(View v) {
                     Intent intent = new Intent(getActivity(), CommentListActivity.class);
                     intent.putExtra("objectId", weibo.getObjectId());
+                    intent.putExtra("authorName", weibo.getAuthorName());
+                    intent.putExtra("ivatar", weibo.getAuthor().getAvatar());
+                    intent.putExtra("content", weibo.getContent());
+                    intent.putExtra("imgUrl", weibo.getUpdownImg());
                     getActivity().startActivity(intent);
                 }
             });
@@ -1270,7 +1255,6 @@ public class MainFragment extends Fragment {
         }
 
         private void onClickFav(View v, final Post weibo, ViewHolder holder) {
-            // TODO Auto-generated method stub
             MyUser user = BmobUser.getCurrentUser(MyUser.class);
             if (user != null && user.getSessionToken() != null) {
                 BmobRelation favRelaton = new BmobRelation();
@@ -1297,7 +1281,6 @@ public class MainFragment extends Fragment {
                                     }
                                 });
                             } else {
-                                // TODO Auto-generated method stub
                                 Log.i("stav", "收藏失败。请检查网络~");
                                 showToast("收藏失败。请检查网络~" + e);
                             }

@@ -211,19 +211,6 @@
                     style="@style/option_item_more"/>
             </RelativeLayout>
 
-            <Button
-                android:layout_marginTop="@dimen/space_10"
-                android:id="@+id/bt_logout"
-                android:layout_width="160dp"
-                android:gravity="center"
-                android:paddingTop="@dimen/space_8"
-                android:paddingBottom="@dimen/space_8"
-                android:text="@string/logout"
-                android:textColor="@android:color/black"
-                android:layout_gravity="center_horizontal"
-                android:textSize="18sp"
-                android:background="@drawable/btn_register_bg"
-                android:layout_height="wrap_content"/>
 
         </LinearLayout>
 

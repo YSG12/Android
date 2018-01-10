@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/ly_main_weixin"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:orientation="vertical">
+
+    <include android:id="@+id/ll" layout="@layout/include_navi"/>
+
+    <ImageView
+        android:id="@+id/iv_logo"
+        android:layout_centerInParent="true"
+        android:background="@mipmap/ic_launcher"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <TextView
+        android:id="@+id/tv_level"
+        android:text="@string/level"
+        android:layout_marginTop="150dp"
+        android:layout_below="@+id/iv_logo"
+        android:layout_centerHorizontal="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <TextView
+        android:text="@string/info"
+        android:layout_marginTop="@dimen/space_10"
+        android:layout_centerHorizontal="true"
+        android:textColor="#40AA53"
+        android:layout_below="@+id/tv_level"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+</RelativeLayout>

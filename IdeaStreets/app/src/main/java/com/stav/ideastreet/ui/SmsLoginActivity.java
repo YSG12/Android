@@ -69,16 +69,7 @@ public class SmsLoginActivity extends Activity implements View.OnClickListener {
      * 通过短信验证码登录
      */
     private void loginByPhoneCode() {
-        //1、调用请求验证码接口
-//		BmobSMS.requestSMSCode("手机号码", "模板名称",new QueryListener<Integer>() {
-//
-//			@Override
-//			public void done(Integer smsId,BmobException ex) {
-//				if(ex==null){//验证码发送成功
-//					log("短信id："+smsId);
-//				}
-//			}
-//		});
+
         String number = mUserPhone.getText().toString();
         String code = mSmsCode.getText().toString();
         //2、使用验证码进行登陆

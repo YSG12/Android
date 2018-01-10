@@ -226,6 +226,7 @@
     <string name="blog">博客</string>
     <string name="information">资料</string>
     <string name="qrcode">二维码</string>
+    <string name="about">关于</string>
     <string name="message">消息</string>
     <string name="team">团队</string>
     <string name="note">便签</string>
@@ -234,7 +235,7 @@
 
     <string name="active">创意圈</string>
     <string name="activities">活动</string>
-    <string name="scan">扫一扫</string>
+    <string name="searchPost">找创意</string>
     <string name="friends">同城</string>
     <string name="find_oscer">找人</string>
     <string name="shake">摇一摇</string>
@@ -368,4 +369,6 @@
     <string name="search">搜索</string>
     <string name="addImg">添加图片</string>
     <string name="cameraImg">拍照添加</string>
+    <string name="level">软件版本：1.0.1</string>
+    <string name="info">stav 617946852@qq.com</string>
 </resources>

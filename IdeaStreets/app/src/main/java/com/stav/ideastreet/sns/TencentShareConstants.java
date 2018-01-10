@@ -13,19 +13,19 @@ package com.stav.ideastreet.sns;
 
 public interface TencentShareConstants {
 
-    String TITLE = "推荐一个好应用哦~";
+    String TITLE = "分享这个创意哦";
 
-    String IMG_URL = "http://mydata123.oss-cn-hangzhou.aliyuncs.com/%E7%82%B9%E6%BB%B4%E5%8F%91%E5%B8%83/launcher.png";
+    String IMG_URL = "http://47.94.129.228/ideastreet/logo_2.png";
 
-    String TARGET_URL = "http://diandiyun.oss-cn-beijing.aliyuncs.com/release/diandi.apk";
+    String TARGET_URL = "http://47.94.129.228/ideastreet/ideastreet.apk";
 
-    String SUMMARY = "点滴,用心,助你翻开新的篇章";
+    String SUMMARY = "玩转创意街，感受创意带来的魅力~";
 
-    String WEB = "http://diandi.bmob.cn";
+    String WEB = "http://47.94.129.228/ideastreet";
 
     String COMMENT = "";
 
-    String DEFAULT_IMG_URL = "http://mydata123.oss-cn-hangzhou.aliyuncs.com/%E7%82%B9%E6%BB%B4%E5%8F%91%E5%B8%83/launcher.png";
+    String DEFAULT_IMG_URL = "http://47.94.129.228/ideastreet/logo_2.png";
 
 
     public static final String SHARE_TO_QQ_IMAGE_URL = "imageUrl";

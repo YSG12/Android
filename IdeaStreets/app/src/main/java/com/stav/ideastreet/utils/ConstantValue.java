@@ -6,6 +6,11 @@ package com.stav.ideastreet.utils;
  */
 public class ConstantValue extends Object {
 
+
+    /**
+     * 是否开启更新的key
+     */
+    public static final String OPEN_UPDATE = "open_update";
     /**
      * 个人中心页面是否登录
      */

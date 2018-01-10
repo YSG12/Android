@@ -19,6 +19,7 @@ import com.stav.ideastreet.ui.EnshrineActivity;
 import com.stav.ideastreet.R;
 import com.stav.ideastreet.bean.MyUser;
 import com.stav.ideastreet.ui.ContactActivity;
+import com.stav.ideastreet.ui.SettingsActivity;
 import com.stav.ideastreet.ui.UpdateInfoActivity;
 import com.stav.ideastreet.ui.LoginActivity;
 import com.stav.ideastreet.ui.RegisterActivity;
@@ -44,7 +45,7 @@ import static com.stav.ideastreet.base.BaseApplication.showToast;
 
 public class CenterFragment extends Fragment {
 
-	private Button btLogin,btRegister,btLogout;
+	private Button btLogin,btRegister;
 	private ImageButton ib_qrcode;
 	private ImageView ivIcon;
 	private TextView tvMotto,tvUser;
@@ -86,7 +87,6 @@ public class CenterFragment extends Fragment {
 		tvMotto = (TextView) view.findViewById(R.id.tv_motto);
 
 		ib_qrcode=(ImageButton) view.findViewById(R.id.ib_qrcode);
-		btLogout = (Button) view.findViewById(R.id.bt_logout);
 		rlList = (RelativeLayout) view.findViewById(R.id.rl_list);
 		rlInfomation = (RelativeLayout) view.findViewById(R.id.rl_infomation);
 		rlEnshrine = (RelativeLayout) view.findViewById(R.id.rl_enshrine);
@@ -105,15 +105,6 @@ public class CenterFragment extends Fragment {
 			}
 		});
 
-		//登出按钮
-		btLogout.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				logOut();
-				PrefUtils.setBoolean(getContext(), ConstantValue.IS_LOGIN, false);
-				unLogin();
-			}
-		});
 
 		//点击按钮修改信息
 		rlInfomation.setOnClickListener(new OnClickListener() {
@@ -123,7 +114,15 @@ public class CenterFragment extends Fragment {
 			}
 		});
 
-		//点击按钮添加好友
+		//点击按钮修改信息
+		rlSettings.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				startActivity(new Intent(getActivity(), SettingsActivity.class));
+			}
+		});
+
+		//点击按钮进入设置页面
 		rlList.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -206,12 +205,6 @@ public class CenterFragment extends Fragment {
 		});
 	}
 
-	/**
-	 * 清除本地用户
-	 */
-	private void logOut() {
-		BmobUser.logOut();
-	}
 
 	/**
 	 * 解决Subscription内存泄露问题

@@ -80,8 +80,6 @@ public class ChatActivity extends ParentWithNaviActivity implements MessageListH
     @ViewInject(R.id.edit_msg)
     EditText edit_msg;
 
-    @ViewInject(R.id.btn_chat_add)
-    Button btn_chat_add;
     @ViewInject(R.id.btn_chat_emo)
     Button btn_chat_emo;
     @ViewInject(R.id.btn_speak)
@@ -144,7 +142,6 @@ public class ChatActivity extends ParentWithNaviActivity implements MessageListH
     private void initUI() {
         edit_msg.setOnClickListener(this);
         btn_chat_emo.setOnClickListener(this);
-        btn_chat_add.setOnClickListener(this);
         btn_chat_voice.setOnClickListener(this);
         btn_chat_keyboard.setOnClickListener(this);
         btn_chat_send.setOnClickListener(this);
@@ -395,21 +392,6 @@ public class ChatActivity extends ParentWithNaviActivity implements MessageListH
                     if (layout_add.getVisibility() == View.VISIBLE) {
                         layout_add.setVisibility(View.GONE);
                         layout_emo.setVisibility(View.VISIBLE);
-                    } else {
-                        layout_more.setVisibility(View.GONE);
-                    }
-                }
-                break;
-            case R.id.btn_chat_add:
-                if (layout_more.getVisibility() == View.GONE) {
-                    layout_more.setVisibility(View.VISIBLE);
-                    layout_add.setVisibility(View.VISIBLE);
-                    layout_emo.setVisibility(View.GONE);
-                    hideSoftInputView();
-                } else {
-                    if (layout_emo.getVisibility() == View.VISIBLE) {
-                        layout_emo.setVisibility(View.GONE);
-                        layout_add.setVisibility(View.VISIBLE);
                     } else {
                         layout_more.setVisibility(View.GONE);
                     }

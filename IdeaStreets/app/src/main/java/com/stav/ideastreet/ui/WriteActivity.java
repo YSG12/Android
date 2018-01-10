@@ -142,8 +142,8 @@ public class WriteActivity extends ParentWithNaviActivity implements AdapterView
             //退出该页面
             @Override
             public void clickLeft() {
-//                finish();
-                showToast(imgUrl+"");
+                finish();
+//                showToast(imgUrl+"");
             }
 
             //发表微博
